@@ -1,0 +1,6 @@
+[TODO]
+
+* Intercept global key event.
+* Make app a menu bar icon.
+* Add preferences and make accessible through menu bar icon.
+* Add keybindng setting

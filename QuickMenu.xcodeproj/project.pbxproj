@@ -12,6 +12,7 @@
 		487835971B3B91E700BC911B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 487835961B3B91E700BC911B /* Images.xcassets */; };
 		4878359A1B3B91E700BC911B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 487835981B3B91E700BC911B /* Main.storyboard */; };
 		487835A61B3B91E700BC911B /* QuickMenuTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487835A51B3B91E700BC911B /* QuickMenuTests.swift */; };
+		487835B01B3B9C0B00BC911B /* notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 487835AF1B3B9C0B00BC911B /* notes.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +35,7 @@
 		4878359F1B3B91E700BC911B /* QuickMenuTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QuickMenuTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		487835A41B3B91E700BC911B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		487835A51B3B91E700BC911B /* QuickMenuTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickMenuTests.swift; sourceTree = "<group>"; };
+		487835AF1B3B9C0B00BC911B /* notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = notes.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,12 +56,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		486B29E81B3BC617002DAE0B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		487835841B3B91E600BC911B = {
 			isa = PBXGroup;
 			children = (
 				4878358F1B3B91E700BC911B /* QuickMenu */,
 				487835A21B3B91E700BC911B /* QuickMenuTests */,
+				487835A31B3B91E700BC911B /* Supporting Files */,
 				4878358E1B3B91E700BC911B /* Products */,
+				486B29E81B3BC617002DAE0B /* Frameworks */,
+				487835AF1B3B9C0B00BC911B /* notes.txt */,
 			);
 			sourceTree = "<group>";
 		};
@@ -96,7 +108,6 @@
 			isa = PBXGroup;
 			children = (
 				487835A51B3B91E700BC911B /* QuickMenuTests.swift */,
-				487835A31B3B91E700BC911B /* Supporting Files */,
 			);
 			path = QuickMenuTests;
 			sourceTree = "<group>";
@@ -107,6 +118,7 @@
 				487835A41B3B91E700BC911B /* Info.plist */,
 			);
 			name = "Supporting Files";
+			path = QuickMenuTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -189,6 +201,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				487835B01B3B9C0B00BC911B /* notes.txt in Resources */,
 				487835971B3B91E700BC911B /* Images.xcassets in Resources */,
 				4878359A1B3B91E700BC911B /* Main.storyboard in Resources */,
 			);
@@ -400,6 +413,7 @@
 				487835AB1B3B91E700BC911B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		487835AC1B3B91E700BC911B /* Build configuration list for PBXNativeTarget "QuickMenuTests" */ = {
 			isa = XCConfigurationList;
@@ -408,6 +422,7 @@
 				487835AE1B3B91E700BC911B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
