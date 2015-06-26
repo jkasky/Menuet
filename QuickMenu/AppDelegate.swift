@@ -54,7 +54,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   @IBAction
-  func showWindow(sender: NSMenuItem) {
+  func show(sender: NSMenuItem) {
     if (!application.active) {
       application.activateIgnoringOtherApps(true)
     }

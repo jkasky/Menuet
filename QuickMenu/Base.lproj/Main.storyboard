@@ -28,7 +28,7 @@
                                         <menuItem title="Show" keyEquivalent=" " id="NaG-hN-IfU">
                                             <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                             <connections>
-                                                <action selector="showWindow:" target="Voe-Tx-rLC" id="cab-Ye-vb6"/>
+                                                <action selector="show:" target="Voe-Tx-rLC" id="F6e-U1-XGV"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="kCx-OE-vgT"/>
