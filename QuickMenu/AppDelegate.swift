@@ -11,18 +11,29 @@ import Cocoa
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
-  
+
+  let application = NSApplication.sharedApplication()
+
   @IBOutlet
   var statusMenu: NSMenu?
-  
-  var statusItem: NSStatusItem?
 
-  func applicationDidFinishLaunching(aNotification: NSNotification) {
+  var statusItem: NSStatusItem?
+  var windowController: CommandWindowController?
+
+  func applicationDidFinishLaunching(notification: NSNotification) {
+    loadStoryboardResources()
     activateStatusMenu()
   }
 
-  func applicationWillTerminate(aNotification: NSNotification) {
+  func applicationWillTerminate(notification: NSNotification) {
     deactivateStatusMenu()
+  }
+
+  private func loadStoryboardResources() {
+    let storyboard = NSStoryboard(name: "Main", bundle: nil)
+    windowController = storyboard?
+      .instantiateControllerWithIdentifier("WindowController")
+      as? CommandWindowController
   }
 
   private func activateStatusMenu() {
@@ -42,5 +53,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     statusItem = nil
   }
 
+  @IBAction
+  func showWindow(sender: NSMenuItem) {
+    if (!application.active) {
+      application.activateIgnoringOtherApps(true)
+    }
+    windowController!.showWindow(sender)
+  }
 }
 

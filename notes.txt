@@ -4,3 +4,15 @@
 * Make app a menu bar icon.
 * Add preferences and make accessible through menu bar icon.
 * Add keybindng setting
+
+
+[NOTES]
+
+Use NSWorkspace notification center to watch of app launch/terminate/activate.
+
+Use accessibility UI to read menu and to programmatically interact with menu.
+
+Use AXUIElementCreateApplication to create top-level AXUIElement for app with
+given pid. Traverse the element to find menu.
+
+Use AXUIElementPerformAction to invoke menu items.
