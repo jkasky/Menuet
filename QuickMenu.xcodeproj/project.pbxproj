@@ -68,8 +68,8 @@
 		487835841B3B91E600BC911B = {
 			isa = PBXGroup;
 			children = (
-				4878358F1B3B91E700BC911B /* QuickMenu */,
-				487835A21B3B91E700BC911B /* QuickMenuTests */,
+				4878358F1B3B91E700BC911B /* Source */,
+				487835A21B3B91E700BC911B /* Tests */,
 				487835A31B3B91E700BC911B /* Supporting Files */,
 				4878358E1B3B91E700BC911B /* Products */,
 				486B29E81B3BC617002DAE0B /* Frameworks */,
@@ -86,7 +86,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		4878358F1B3B91E700BC911B /* QuickMenu */ = {
+		4878358F1B3B91E700BC911B /* Source */ = {
 			isa = PBXGroup;
 			children = (
 				487835921B3B91E700BC911B /* AppDelegate.swift */,
@@ -96,6 +96,7 @@
 				487835981B3B91E700BC911B /* Main.storyboard */,
 				487835901B3B91E700BC911B /* Supporting Files */,
 			);
+			name = Source;
 			path = QuickMenu;
 			sourceTree = "<group>";
 		};
@@ -107,11 +108,12 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		487835A21B3B91E700BC911B /* QuickMenuTests */ = {
+		487835A21B3B91E700BC911B /* Tests */ = {
 			isa = PBXGroup;
 			children = (
 				487835A51B3B91E700BC911B /* QuickMenuTests.swift */,
 			);
+			name = Tests;
 			path = QuickMenuTests;
 			sourceTree = "<group>";
 		};
