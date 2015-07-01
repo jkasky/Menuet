@@ -74,13 +74,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
    * Registers the global hot key to show the command window.
    */
   private func registerHotKey() {
-    let hotKeyHandler: DDHotKeyTask = { event in self.showCommandWindow() }
-    let hotKeyCenter = DDHotKeyCenter.sharedHotKeyCenter()
     let hotKeyMask: NSEventModifierFlags = .CommandKeyMask | .ShiftKeyMask
-    hotKey = hotKeyCenter.registerHotKeyWithKeyCode(
+    hotKey = DDHotKeyCenter.sharedHotKeyCenter().registerHotKeyWithKeyCode(
       UInt16(kVK_Space),
       modifierFlags: hotKeyMask.rawValue,
-      task: hotKeyHandler
+      task: { _ in self.showCommandWindow() }
     )
     // TODO: if the hot key could not be registered display warning icon.
   }
@@ -89,9 +87,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
    * Unregisters the global hot key to show the command window.
    */
   private func unregisterHotKey() {
-    let hotKeyCenter = DDHotKeyCenter.sharedHotKeyCenter()
     if (hotKey != nil) {
-      hotKeyCenter.unregisterHotKey(hotKey)
+      DDHotKeyCenter.sharedHotKeyCenter().unregisterHotKey(hotKey)
     }
   }
 
