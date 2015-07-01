@@ -8,12 +8,16 @@
 
 import Cocoa
 
+
 class ViewController: NSViewController {
+
+  @IBOutlet
+  weak var commandTextField: NSTextField!
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    NSLog("view did load")
-    // Do any additional setup after loading the view.
+    self.commandTextField.bezeled = false
+    self.commandTextField.bordered = false
   }
 
   override var representedObject: AnyObject? {

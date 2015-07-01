@@ -14,6 +14,9 @@
 		4878359A1B3B91E700BC911B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 487835981B3B91E700BC911B /* Main.storyboard */; };
 		487835A61B3B91E700BC911B /* QuickMenuTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487835A51B3B91E700BC911B /* QuickMenuTests.swift */; };
 		487835B01B3B9C0B00BC911B /* notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 487835AF1B3B9C0B00BC911B /* notes.txt */; };
+		48FA193A1B408A0A00D88405 /* DDHotKeyCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 48FA19351B408A0A00D88405 /* DDHotKeyCenter.m */; };
+		48FA193B1B408A0A00D88405 /* DDHotKeyTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 48FA19371B408A0A00D88405 /* DDHotKeyTextField.m */; };
+		48FA193C1B408A0A00D88405 /* DDHotKeyUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 48FA19391B408A0A00D88405 /* DDHotKeyUtilities.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -27,6 +30,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		486E4CE61B42570B005AD089 /* QuickMenu-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QuickMenu-Bridging-Header.h"; sourceTree = "<group>"; };
 		486EED8D1B3D41C70092FFF8 /* CommandWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandWindow.swift; sourceTree = "<group>"; };
 		4878358D1B3B91E700BC911B /* QuickMenu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuickMenu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		487835911B3B91E700BC911B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -38,6 +42,12 @@
 		487835A41B3B91E700BC911B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		487835A51B3B91E700BC911B /* QuickMenuTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickMenuTests.swift; sourceTree = "<group>"; };
 		487835AF1B3B9C0B00BC911B /* notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = notes.txt; sourceTree = "<group>"; };
+		48FA19341B408A0A00D88405 /* DDHotKeyCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDHotKeyCenter.h; sourceTree = "<group>"; };
+		48FA19351B408A0A00D88405 /* DDHotKeyCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDHotKeyCenter.m; sourceTree = "<group>"; };
+		48FA19361B408A0A00D88405 /* DDHotKeyTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDHotKeyTextField.h; sourceTree = "<group>"; };
+		48FA19371B408A0A00D88405 /* DDHotKeyTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDHotKeyTextField.m; sourceTree = "<group>"; };
+		48FA19381B408A0A00D88405 /* DDHotKeyUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDHotKeyUtilities.h; sourceTree = "<group>"; };
+		48FA19391B408A0A00D88405 /* DDHotKeyUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDHotKeyUtilities.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +99,13 @@
 		4878358F1B3B91E700BC911B /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				486E4CE61B42570B005AD089 /* QuickMenu-Bridging-Header.h */,
+				48FA19341B408A0A00D88405 /* DDHotKeyCenter.h */,
+				48FA19351B408A0A00D88405 /* DDHotKeyCenter.m */,
+				48FA19361B408A0A00D88405 /* DDHotKeyTextField.h */,
+				48FA19371B408A0A00D88405 /* DDHotKeyTextField.m */,
+				48FA19381B408A0A00D88405 /* DDHotKeyUtilities.h */,
+				48FA19391B408A0A00D88405 /* DDHotKeyUtilities.m */,
 				487835921B3B91E700BC911B /* AppDelegate.swift */,
 				486EED8D1B3D41C70092FFF8 /* CommandWindow.swift */,
 				487835941B3B91E700BC911B /* ViewController.swift */,
@@ -226,6 +243,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48FA193A1B408A0A00D88405 /* DDHotKeyCenter.m in Sources */,
+				48FA193B1B408A0A00D88405 /* DDHotKeyTextField.m in Sources */,
+				48FA193C1B408A0A00D88405 /* DDHotKeyUtilities.m in Sources */,
 				487835951B3B91E700BC911B /* ViewController.swift in Sources */,
 				487835931B3B91E700BC911B /* AppDelegate.swift in Sources */,
 				486EED8E1B3D41C70092FFF8 /* CommandWindow.swift in Sources */,
@@ -350,6 +370,7 @@
 				INFOPLIST_FILE = QuickMenu/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "QuickMenu/QuickMenu-Bridging-Header.h";
 			};
 			name = Debug;
 		};
@@ -361,6 +382,7 @@
 				INFOPLIST_FILE = QuickMenu/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "QuickMenu/QuickMenu-Bridging-Header.h";
 			};
 			name = Release;
 		};

@@ -62,7 +62,7 @@
                 <windowController storyboardIdentifier="WindowController" showSeguePresentationStyle="single" id="uix-sD-xkX" customClass="CommandWindowController" customModule="QuickMenu" sceneMemberID="viewController">
                     <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" hasShadow="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="NqR-2X-Jh6" customClass="CommandWindow" customModule="QuickMenu">
                         <windowPositionMask key="initialPositionMask" topStrut="YES"/>
-                        <rect key="contentRect" x="294" y="907" width="480" height="270"/>
+                        <rect key="contentRect" x="294" y="1110" width="480" height="67"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1177"/>
                     </window>
                     <connections>
@@ -71,30 +71,33 @@
                 </windowController>
                 <customObject id="bUe-5j-PKW" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-27" y="295"/>
+            <point key="canvasLocation" x="-27" y="220.5"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="bpa-FC-KXS">
             <objects>
                 <viewController id="Usg-wh-dU5" customClass="ViewController" customModule="QuickMenu" sceneMemberID="viewController">
                     <view key="view" id="3JB-8j-FPZ">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ClQ-jX-o0d">
-                                <rect key="frame" x="0.0" y="248" width="480" height="22"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="k1h-aM-ZMR">
-                                    <font key="font" metaFont="system"/>
+                            <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ClQ-jX-o0d">
+                                <rect key="frame" x="13" y="10" width="455" height="24"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" focusRingType="none" placeholderString="Quick Menu Command" usesSingleLineMode="YES" id="k1h-aM-ZMR">
+                                    <font key="font" metaFont="system" size="20"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
                                 </textFieldCell>
                             </textField>
                         </subviews>
                     </view>
+                    <connections>
+                        <outlet property="commandTextField" destination="ClQ-jX-o0d" id="52V-2C-ofI"/>
+                    </connections>
                 </viewController>
                 <customObject id="UCG-q6-gcb" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-27" y="694"/>
+            <point key="canvasLocation" x="-27" y="404"/>
         </scene>
     </scenes>
 </document>

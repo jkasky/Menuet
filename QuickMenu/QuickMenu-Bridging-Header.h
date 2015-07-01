@@ -9,6 +9,7 @@
 #ifndef QuickMenu_Bridging_Header_h
 #define QuickMenu_Bridging_Header_h
 
+#import <Cocoa/Cocoa.h>
 #import "DDHotKeyCenter.h"
 #import "DDHotKeyTextField.h"
 #import "DDHotKeyUtilities.h"
