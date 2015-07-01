@@ -33,6 +33,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     unregisterHotKey()
   }
 
+  /**
+   * Loads WindowController from Main storyboard.
+   *
+   * Instantiate the WindowController manually instead of relying on the
+   * initial segue. The initial segue cannot be undone easily, manually
+   * loading provides full control.
+   */
   private func loadStoryboardResources() {
     let storyboard = NSStoryboard(name: "Main", bundle: nil)
     windowController = storyboard?
@@ -40,6 +47,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       as? CommandWindowController
   }
 
+  /**
+   * Activates the status menu item in the menu bar.
+   */
   private func activateStatusMenu() {
     let statusBar = NSStatusBar.systemStatusBar()
 
@@ -50,13 +60,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     statusItem!.button!.title = "QM"
     statusItem!.menu = statusMenu
   }
-  
+
+  /**
+   * Removes the status menu item from the menu bar.
+   */
   private func deactivateStatusMenu() {
     let statusBar = NSStatusBar.systemStatusBar()
     statusBar.removeStatusItem(statusItem!)
     statusItem = nil
   }
 
+  /**
+   * Registers the global hot key to show the command window.
+   */
   private func registerHotKey() {
     let hotKeyHandler: DDHotKeyTask = { event in self.showCommandWindow() }
     let hotKeyCenter = DDHotKeyCenter.sharedHotKeyCenter()
@@ -66,8 +82,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       modifierFlags: hotKeyMask.rawValue,
       task: hotKeyHandler
     )
+    // TODO: if the hot key could not be registered display warning icon.
   }
 
+  /**
+   * Unregisters the global hot key to show the command window.
+   */
   private func unregisterHotKey() {
     let hotKeyCenter = DDHotKeyCenter.sharedHotKeyCenter()
     if (hotKey != nil) {
@@ -75,6 +95,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
   }
 
+  /**
+   * Activates the application and show the command window.
+   */
   private func showCommandWindow() {
     if (!application.active) {
       application.activateIgnoringOtherApps(true)
