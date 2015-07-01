@@ -104,7 +104,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   @IBAction
   func show(sender: NSMenuItem) {
-    self.showCommandWindow()
+    showCommandWindow()
   }
 }
 
