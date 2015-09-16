@@ -42,7 +42,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
    */
   private func loadStoryboardResources() {
     let storyboard = NSStoryboard(name: "Main", bundle: nil)
-    windowController = storyboard?
+    windowController = storyboard
       .instantiateControllerWithIdentifier("WindowController")
       as? CommandWindowController
   }
@@ -74,7 +74,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
    * Registers the global hot key to show the command window.
    */
   private func registerHotKey() {
-    let hotKeyMask: NSEventModifierFlags = .CommandKeyMask | .ShiftKeyMask
+    let hotKeyMask: NSEventModifierFlags = [.CommandKeyMask, .ShiftKeyMask]
     hotKey = DDHotKeyCenter.sharedHotKeyCenter().registerHotKeyWithKeyCode(
       UInt16(kVK_Space),
       modifierFlags: hotKeyMask.rawValue,
