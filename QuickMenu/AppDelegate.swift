@@ -13,7 +13,7 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-  let application = NSApplication.sharedApplication()
+  let application = NSApplication.shared()
 
   @IBOutlet
   var statusMenu: NSMenu?
@@ -22,28 +22,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   var statusItem: NSStatusItem?
   var windowController: CommandWindowController?
 
-  func applicationDidFinishLaunching(notification: NSNotification) {
+  func applicationDidFinishLaunching(_ notification: Notification) {
     loadStoryboardResources()
     activateStatusMenu()
     registerHotKey()
+    makeProcessTrusted()
   }
 
-  func applicationWillTerminate(notification: NSNotification) {
-    deactivateStatusMenu()
+  func applicationWillTerminate(_ notification: Notification) {
     unregisterHotKey()
+    deactivateStatusMenu()
   }
 
   /**
    * Loads WindowController from Main storyboard.
-   *
-   * Instantiate the WindowController manually instead of relying on the
-   * initial segue. The initial segue cannot be undone easily, manually
-   * loading provides full control.
    */
   private func loadStoryboardResources() {
     let storyboard = NSStoryboard(name: "Main", bundle: nil)
     windowController = storyboard
-      .instantiateControllerWithIdentifier("WindowController")
+      .instantiateController(withIdentifier: "WindowController")
       as? CommandWindowController
   }
 
@@ -51,10 +48,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
    * Activates the status menu item in the menu bar.
    */
   private func activateStatusMenu() {
-    let statusBar = NSStatusBar.systemStatusBar()
+    let statusBar = NSStatusBar.system()
 
     // Should be NSVariableStatusItemLength but produces a link error.
-    statusItem = statusBar.statusItemWithLength(-1.0)
+    statusItem = statusBar.statusItem(withLength: -1.0)
     
     // TODO: replace with icon
     statusItem!.button!.title = "QM"
@@ -65,7 +62,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
    * Removes the status menu item from the menu bar.
    */
   private func deactivateStatusMenu() {
-    let statusBar = NSStatusBar.systemStatusBar()
+    let statusBar = NSStatusBar.system()
     statusBar.removeStatusItem(statusItem!)
     statusItem = nil
   }
@@ -74,9 +71,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
    * Registers the global hot key to show the command window.
    */
   private func registerHotKey() {
-    let hotKeyMask: NSEventModifierFlags = [.CommandKeyMask, .ShiftKeyMask]
-    hotKey = DDHotKeyCenter.sharedHotKeyCenter().registerHotKeyWithKeyCode(
-      UInt16(kVK_Space),
+    let hotKeyMask: NSEventModifierFlags = [.command, .shift]
+    hotKey = DDHotKeyCenter.shared().registerHotKey(
+      withKeyCode: UInt16(kVK_Space),
       modifierFlags: hotKeyMask.rawValue,
       task: { _ in self.showCommandWindow() }
     )
@@ -88,7 +85,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
    */
   private func unregisterHotKey() {
     if (hotKey != nil) {
-      DDHotKeyCenter.sharedHotKeyCenter().unregisterHotKey(hotKey)
+      DDHotKeyCenter.shared().unregisterHotKey(hotKey)
+    }
+  }
+
+  /**
+   * Makes this process trusted for accessibility access.
+   */
+  private func makeProcessTrusted() {
+    let axClient = AX.Client()
+    if (!axClient.isProcessTrusted()) {
+      let trusted = axClient.makeProcessTrusted(withPrompt:true)
+      if !trusted {
+        NSLog("Process is not trusted.")
+      }
     }
   }
 
@@ -96,14 +106,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
    * Activates the application and show the command window.
    */
   private func showCommandWindow() {
-    if (!application.active) {
-      application.activateIgnoringOtherApps(true)
-    }
     windowController!.showWindow(self)
   }
 
+  /**
+   * Handles the show `menu` action.
+   */
   @IBAction
-  func show(sender: NSMenuItem) {
+  func show(_ sender: NSMenuItem) {
     showCommandWindow()
   }
 }

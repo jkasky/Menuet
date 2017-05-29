@@ -3,17 +3,20 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 47;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		486EED8E1B3D41C70092FFF8 /* CommandWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EED8D1B3D41C70092FFF8 /* CommandWindow.swift */; };
+		4875779C1B51E7B900339D78 /* AXApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4875779B1B51E7B900339D78 /* AXApplication.swift */; };
 		487835931B3B91E700BC911B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487835921B3B91E700BC911B /* AppDelegate.swift */; };
 		487835951B3B91E700BC911B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487835941B3B91E700BC911B /* ViewController.swift */; };
 		487835971B3B91E700BC911B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 487835961B3B91E700BC911B /* Images.xcassets */; };
 		4878359A1B3B91E700BC911B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 487835981B3B91E700BC911B /* Main.storyboard */; };
 		487835A61B3B91E700BC911B /* QuickMenuTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487835A51B3B91E700BC911B /* QuickMenuTests.swift */; };
 		487835B01B3B9C0B00BC911B /* notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 487835AF1B3B9C0B00BC911B /* notes.txt */; };
+		48C044D61D23B1DA00F49A94 /* AX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C044D51D23B1DA00F49A94 /* AX.swift */; };
+		48CECD311EA4A0BF007BD237 /* AXClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CECD301EA4A0BF007BD237 /* AXClient.swift */; };
 		48FA193A1B408A0A00D88405 /* DDHotKeyCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 48FA19351B408A0A00D88405 /* DDHotKeyCenter.m */; };
 		48FA193B1B408A0A00D88405 /* DDHotKeyTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 48FA19371B408A0A00D88405 /* DDHotKeyTextField.m */; };
 		48FA193C1B408A0A00D88405 /* DDHotKeyUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 48FA19391B408A0A00D88405 /* DDHotKeyUtilities.m */; };
@@ -32,6 +35,7 @@
 /* Begin PBXFileReference section */
 		486E4CE61B42570B005AD089 /* QuickMenu-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QuickMenu-Bridging-Header.h"; sourceTree = "<group>"; };
 		486EED8D1B3D41C70092FFF8 /* CommandWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandWindow.swift; sourceTree = "<group>"; };
+		4875779B1B51E7B900339D78 /* AXApplication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AXApplication.swift; sourceTree = "<group>"; };
 		4878358D1B3B91E700BC911B /* QuickMenu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuickMenu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		487835911B3B91E700BC911B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		487835921B3B91E700BC911B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -42,6 +46,8 @@
 		487835A41B3B91E700BC911B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		487835A51B3B91E700BC911B /* QuickMenuTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickMenuTests.swift; sourceTree = "<group>"; };
 		487835AF1B3B9C0B00BC911B /* notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = notes.txt; sourceTree = "<group>"; };
+		48C044D51D23B1DA00F49A94 /* AX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AX.swift; sourceTree = "<group>"; };
+		48CECD301EA4A0BF007BD237 /* AXClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AXClient.swift; sourceTree = "<group>"; };
 		48FA19341B408A0A00D88405 /* DDHotKeyCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDHotKeyCenter.h; sourceTree = "<group>"; };
 		48FA19351B408A0A00D88405 /* DDHotKeyCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDHotKeyCenter.m; sourceTree = "<group>"; };
 		48FA19361B408A0A00D88405 /* DDHotKeyTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDHotKeyTextField.h; sourceTree = "<group>"; };
@@ -106,6 +112,9 @@
 				48FA19371B408A0A00D88405 /* DDHotKeyTextField.m */,
 				48FA19381B408A0A00D88405 /* DDHotKeyUtilities.h */,
 				48FA19391B408A0A00D88405 /* DDHotKeyUtilities.m */,
+				48C044D51D23B1DA00F49A94 /* AX.swift */,
+				48CECD301EA4A0BF007BD237 /* AXClient.swift */,
+				4875779B1B51E7B900339D78 /* AXApplication.swift */,
 				487835921B3B91E700BC911B /* AppDelegate.swift */,
 				486EED8D1B3D41C70092FFF8 /* CommandWindow.swift */,
 				487835941B3B91E700BC911B /* ViewController.swift */,
@@ -187,20 +196,23 @@
 		487835851B3B91E600BC911B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = Codjax;
 				TargetAttributes = {
 					4878358C1B3B91E700BC911B = {
 						CreatedOnToolsVersion = 6.3.2;
+						LastSwiftMigration = 0800;
 					};
 					4878359E1B3B91E700BC911B = {
 						CreatedOnToolsVersion = 6.3.2;
+						LastSwiftMigration = 0800;
 						TestTargetID = 4878358C1B3B91E700BC911B;
 					};
 				};
 			};
 			buildConfigurationList = 487835881B3B91E600BC911B /* Build configuration list for PBXProject "QuickMenu" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 6.3";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -246,8 +258,11 @@
 				48FA193A1B408A0A00D88405 /* DDHotKeyCenter.m in Sources */,
 				48FA193B1B408A0A00D88405 /* DDHotKeyTextField.m in Sources */,
 				48FA193C1B408A0A00D88405 /* DDHotKeyUtilities.m in Sources */,
+				4875779C1B51E7B900339D78 /* AXApplication.swift in Sources */,
 				487835951B3B91E700BC911B /* ViewController.swift in Sources */,
 				487835931B3B91E700BC911B /* AppDelegate.swift in Sources */,
+				48CECD311EA4A0BF007BD237 /* AXClient.swift in Sources */,
+				48C044D61D23B1DA00F49A94 /* AX.swift in Sources */,
 				486EED8E1B3D41C70092FFF8 /* CommandWindow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -295,14 +310,17 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -318,11 +336,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -339,8 +358,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
@@ -356,9 +377,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -369,8 +391,10 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = QuickMenu/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.codjax.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "QuickMenu/QuickMenu-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -381,8 +405,11 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = QuickMenu/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.codjax.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "QuickMenu/QuickMenu-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -401,7 +428,9 @@
 				);
 				INFOPLIST_FILE = QuickMenuTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.codjax.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QuickMenu.app/Contents/MacOS/QuickMenu";
 			};
 			name = Debug;
@@ -417,7 +446,10 @@
 				);
 				INFOPLIST_FILE = QuickMenuTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.codjax.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QuickMenu.app/Contents/MacOS/QuickMenu";
 			};
 			name = Release;

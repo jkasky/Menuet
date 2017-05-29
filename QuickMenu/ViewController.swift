@@ -14,13 +14,29 @@ class ViewController: NSViewController {
   @IBOutlet
   weak var commandTextField: NSTextField!
 
+  var workspace: NSWorkspace!
+
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.commandTextField.bezeled = false
-    self.commandTextField.bordered = false
+    self.commandTextField.isBezeled = false
+    self.commandTextField.isBordered = false
+
+    workspace = NSWorkspace.shared()
   }
 
-  override var representedObject: AnyObject? {
+  override func viewWillAppear() {
+    let currentApp = workspace.frontmostApplication!
+    let client = AX.Client()
+    let axApp = client.createApplication(application:currentApp)
+    let title: String? = axApp.topElement.get(.Title)
+    guard title != nil else {
+      return
+    }
+    NSLog(title!)
+    NSLog("\(axApp.topElement.childCount)")
+  }
+
+  override var representedObject: Any? {
     didSet {
     // Update the view, if already loaded.
     }
