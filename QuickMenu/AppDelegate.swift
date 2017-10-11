@@ -13,7 +13,7 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-  let application = NSApplication.shared()
+  let application = NSApplication.shared
 
   @IBOutlet
   var statusMenu: NSMenu?
@@ -38,9 +38,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
    * Loads WindowController from Main storyboard.
    */
   private func loadStoryboardResources() {
-    let storyboard = NSStoryboard(name: "Main", bundle: nil)
+    let storyboard = NSStoryboard(name: NSStoryboard.Name(rawValue: "Main"), bundle: nil)
     windowController = storyboard
-      .instantiateController(withIdentifier: "WindowController")
+      .instantiateController(withIdentifier: NSStoryboard.SceneIdentifier(rawValue: "WindowController"))
       as? CommandWindowController
   }
 
@@ -48,7 +48,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
    * Activates the status menu item in the menu bar.
    */
   private func activateStatusMenu() {
-    let statusBar = NSStatusBar.system()
+    let statusBar = NSStatusBar.system
 
     // Should be NSVariableStatusItemLength but produces a link error.
     statusItem = statusBar.statusItem(withLength: -1.0)
@@ -62,7 +62,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
    * Removes the status menu item from the menu bar.
    */
   private func deactivateStatusMenu() {
-    let statusBar = NSStatusBar.system()
+    let statusBar = NSStatusBar.system
     statusBar.removeStatusItem(statusItem!)
     statusItem = nil
   }
@@ -71,7 +71,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
    * Registers the global hot key to show the command window.
    */
   private func registerHotKey() {
-    let hotKeyMask: NSEventModifierFlags = [.command, .shift]
+    let hotKeyMask: NSEvent.ModifierFlags = [NSEvent.ModifierFlags.command, NSEvent.ModifierFlags.shift]
     hotKey = DDHotKeyCenter.shared().registerHotKey(
       withKeyCode: UInt16(kVK_Space),
       modifierFlags: hotKeyMask.rawValue,
@@ -106,6 +106,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
    * Activates the application and show the command window.
    */
   private func showCommandWindow() {
+    let workspace = NSWorkspace.shared
+    let currentApp = workspace.frontmostApplication!
+    let client = AX.Client()
+    let axApp = client.createApplication(application:currentApp)
+    let walker = AXMenuWalker(application: axApp.topElement)
+    walker.walk(visitor: AXMenuLogger())
+
     windowController!.showWindow(self)
   }
 

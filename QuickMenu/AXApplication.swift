@@ -9,6 +9,66 @@
 import Foundation
 
 
+public struct MenuItemCommand {
+
+  public let character:String
+  public let modifiers:AXMenuItemModifiers
+  public let stringValue:String
+
+  init(character:String, modifiers:AXMenuItemModifiers) {
+    self.character = character
+    self.modifiers = modifiers
+    self.stringValue = MenuItemCommand.buildStringValue(character, modifiers)
+  }
+
+  static private func buildStringValue(
+      _ character:String, _ modifiers:AXMenuItemModifiers) -> String {
+
+    var value = ""
+
+    guard character != "" else {
+      return value
+    }
+
+    if modifiers.contains(.control) {
+      value.append(ModifierKeyChar.Control)
+    }
+    if modifiers.contains(.option) {
+      value.append(ModifierKeyChar.Option)
+    }
+    if modifiers.contains(.shift) {
+      value.append(ModifierKeyChar.Shift)
+    }
+    if !modifiers.contains(.noCommand) {
+      value.append(ModifierKeyChar.Command)
+    }
+    value.append(character)
+
+    return value
+  }
+}
+
+
+public struct MenuItem {
+
+  public let title:String
+  public let command:MenuItemCommand
+
+  init(title:String, command:MenuItemCommand, enabled:Bool) {
+    self.title = title
+    self.command = command
+  }
+}
+
+
+struct ModifierKeyChar {
+  static let Command = "\u{2318}"
+  static let Control = "\u{2303}"
+  static let Option = "\u{2325}"
+  static let Shift = "\u{21E7}"
+}
+
+
 extension AX {
   typealias Application = AXApplication
   typealias AttributeValue = AXAttributeValue
@@ -28,16 +88,84 @@ protocol AXElementProtocol {
 
   func get(_ attribute: AX.Attribute) -> String?
 
+  func get(_ attribute: AX.Attribute) -> Bool?
+
+  func get(_ attribute: AX.Attribute) -> Int?
+
+  func isA(_: AX.Role) -> Bool
+
   func perform(action: AX.Action)
 }
 
 
 protocol AXMenuVisitor {
 
-  func visitMenu()
+  func enterMenu(_: AX.Element)
 
-  func visitMenuItem()
+  func leaveMenu(_: AX.Element)
 
+  func visitMenuItem(_: AX.Element)
+
+}
+
+
+class AXMenuIndexer: AXMenuVisitor {
+
+  private var path:[String] = []
+
+  func enterMenu(_ menu: AX.Element) {
+    if let title:String = menu.get(.Title) {
+      path.append(title)
+    }
+  }
+
+  func leaveMenu(_: AX.Element) {
+    _ = path.popLast()
+  }
+
+  func visitMenuItem(_ item: AX.Element) {
+    if let title:String = item.get(.Title) {
+      let menuItem = MenuItem(
+        title: title,
+        command: MenuItemCommand(
+          character: item.get(.MenuItemCmdChar) ?? "",
+          modifiers: AXMenuItemModifiers(
+            rawValue: UInt32(item.get(.MenuItemCmdModifiers) ?? 0))),
+        enabled: item.get(.Enabled) ?? false)
+
+    }
+  }
+}
+
+
+class AXMenuLogger: AXMenuVisitor {
+
+  var indent:Int = 0
+
+  func enterMenu(_ menu: AX.Element) {
+    if let title:String = menu.get(.Title) {
+      NSLog(String(repeating: " ", count: indent) + "\(title)")
+      indent += 2
+    }
+  }
+
+  func leaveMenu(_ menu: AX.Element) {
+    indent -= 2
+  }
+
+  func visitMenuItem(_ item: AX.Element) {
+    if let title:String = item.get(.Title) {
+      let enabled:Bool = item.get(.Enabled) ?? false
+      let menuItemCmdChar = item.get(.MenuItemCmdChar) ?? ""
+      let menuItemCmdModifiers = item.get(.MenuItemCmdModifiers) ?? 0
+      let modifiers = AXMenuItemModifiers(rawValue: UInt32(menuItemCmdModifiers))
+      let commandItem = MenuItemCommand(
+        character:menuItemCmdChar,
+        modifiers:modifiers)
+      NSLog(String(repeating: " ", count: indent) +
+        "\(title), Command:\(commandItem.stringValue), Enabled:\(enabled)")
+    }
+  }
 }
 
 
@@ -52,12 +180,13 @@ class AXMenuWalker {
   func walk(visitor: AXMenuVisitor) {
     let menuBar:AX.Element = application.get(.MenuBar)!
     for menuBarItem in menuBar.findAll(.MenuBarItem) {
-      visitor.visitMenu()
       let menu:AX.Element? = menuBarItem.find(.Menu)
       guard menu != nil else {
         continue
       }
+      visitor.enterMenu(menuBarItem)
       walkMenu(menu: menu!, visitor: visitor)
+      visitor.leaveMenu(menuBarItem)
     }
   }
 
@@ -65,15 +194,17 @@ class AXMenuWalker {
     for item in menu.findAll(.MenuItem) {
       switch item.childCount {
       case 0:
-        visitor.visitMenuItem()
+        visitor.visitMenuItem(item)
       case 1:
         let menu = item.find(.Menu)
         guard menu != nil else {
           continue
         }
-        visitor.visitMenu()
+        visitor.enterMenu(item)
         walkMenu(menu: menu!, visitor: visitor)
+        visitor.leaveMenu(item)
       default:
+        NSLog("SKIP")
         continue
       }
     }
@@ -170,11 +301,14 @@ class AXElement: AXElementProtocol {
 
   init(element: AXUIElement) {
     self.element = element
+    self.cachedChildren = Array<AX.Element>()
   }
 
   deinit {
 
   }
+
+  private var cachedChildren:[AX.Element]
 
   var childCount: Int {
     get {
@@ -186,12 +320,31 @@ class AXElement: AXElementProtocol {
     }
   }
 
+  var children: [AX.Element] {
+    get {
+      if cachedChildren.isEmpty && childCount > 0 {
+        guard let value:AnyObject = get(.Children) else {
+          return []
+        }
+        let untyped = ((value as! CFArray) as NSArray) as [AnyObject]
+        untyped.forEach {
+          cachedChildren.append(AXElement(element: $0 as! AXUIElement))
+        }
+      }
+      return cachedChildren
+    }
+  }
+
   func find(_ role: AX.Role) -> AX.Element? {
-    return nil
+    return children.first {
+      return $0.isA(role)
+    }
   }
 
   func findAll(_ role: AX.Role) -> [AX.Element] {
-    return []
+    return children.filter {
+      return $0.isA(role)
+    }
   }
 
   private func get(_ attribute: AX.Attribute) -> AnyObject? {
@@ -214,8 +367,34 @@ class AXElement: AXElementProtocol {
   }
 
   func get(_ attribute: AX.Attribute) -> String? {
-    let value: AnyObject? = get(attribute)
-    return value as! CFString as String
+    if let value: AnyObject = get(attribute) {
+      return value as! CFString as String
+    }
+    return nil
+  }
+
+  func get(_ attribute: AX.Attribute) -> Bool? {
+    if let value: AnyObject = get(attribute) {
+      return value as! CFBoolean as! Bool
+    }
+    return nil
+  }
+
+  func get(_ attribute: AX.Attribute) -> Int? {
+    if let value: AnyObject = get(attribute) {
+      return value as! CFNumber as! Int
+    }
+    return nil
+  }
+
+  func isA(_ role: AX.Role) -> Bool {
+    guard let myRole:String = get(.Role) else {
+      return false
+    }
+    if myRole == role.rawValue {
+      return true
+    }
+    return false
   }
 
   func perform(action: AX.Action) {

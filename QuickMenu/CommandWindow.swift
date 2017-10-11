@@ -28,7 +28,7 @@ class CommandWindowController: NSWindowController {
 
   override func windowDidLoad() {
     self.window!.canHide = true
-    self.window!.collectionBehavior = .moveToActiveSpace
+    self.window!.collectionBehavior = NSWindow.CollectionBehavior.moveToActiveSpace
     self.window!.hasShadow = true
     self.window!.hidesOnDeactivate = true
     self.window!.isOpaque = true

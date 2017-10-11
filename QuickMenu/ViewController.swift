@@ -21,25 +21,11 @@ class ViewController: NSViewController {
     self.commandTextField.isBezeled = false
     self.commandTextField.isBordered = false
 
-    workspace = NSWorkspace.shared()
+    workspace = NSWorkspace.shared
   }
 
   override func viewWillAppear() {
-    let currentApp = workspace.frontmostApplication!
-    let client = AX.Client()
-    let axApp = client.createApplication(application:currentApp)
-    let title: String? = axApp.topElement.get(.Title)
-    guard title != nil else {
-      return
-    }
-    NSLog(title!)
-    NSLog("\(axApp.topElement.childCount)")
-  }
-
-  override var representedObject: Any? {
-    didSet {
-    // Update the view, if already loaded.
-    }
+    NSLog("will appear")
   }
 }
 

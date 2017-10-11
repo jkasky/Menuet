@@ -1,12 +1,15 @@
 [TODO]
 
-* Intercept global key event.
+* Add index of front most app menu.
+* Convert from DDHotKey to Magnet (Swift)
 * Make app a menu bar icon.
 * Add preferences and make accessible through menu bar icon.
 * Add keybindng setting
 
 
 [NOTES]
+
+<xcode.app path>/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/HIServices.framework
 
 Use NSWorkspace notification center to watch of app launch/terminate/activate.
 
