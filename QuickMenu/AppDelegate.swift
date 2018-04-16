@@ -14,11 +14,11 @@ import Cocoa
 class AppDelegate: NSObject, NSApplicationDelegate {
 
   let application = NSApplication.shared
+  let hotKeyCenter = HotKeyCenter.shared
 
   @IBOutlet
   var statusMenu: NSMenu?
 
-  var hotKey: DDHotKey?
   var statusItem: NSStatusItem?
   var windowController: CommandWindowController?
 
@@ -71,22 +71,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
    * Registers the global hot key to show the command window.
    */
   private func registerHotKey() {
-    let hotKeyMask: NSEvent.ModifierFlags = [NSEvent.ModifierFlags.command, NSEvent.ModifierFlags.shift]
-    hotKey = DDHotKeyCenter.shared().registerHotKey(
-      withKeyCode: UInt16(kVK_Space),
-      modifierFlags: hotKeyMask.rawValue,
-      task: { _ in self.showCommandWindow() }
-    )
-    // TODO: if the hot key could not be registered display warning icon.
+    let showCommandWindowHotKey = HotKey(kVK_Space, [.command, .shift]) {
+      _ in self.showCommandWindow()
+    }
+    hotKeyCenter.register(showCommandWindowHotKey)
   }
 
   /**
    * Unregisters the global hot key to show the command window.
    */
   private func unregisterHotKey() {
-    if (hotKey != nil) {
-      DDHotKeyCenter.shared().unregisterHotKey(hotKey)
-    }
+    hotKeyCenter.unregisterAll()
   }
 
   /**

@@ -14,6 +14,7 @@
 		4853E2221F37FED900D96A08 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487835941B3B91E700BC911B /* ViewController.swift */; };
 		4853E2231F37FF0100D96A08 /* CommandWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EED8D1B3D41C70092FFF8 /* CommandWindow.swift */; };
 		4853E2241F37FF0700D96A08 /* Trie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484D31CE1F1371AF000A1EBA /* Trie.swift */; };
+		486DA97320172785007B5C7C /* HotKeyCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486DA97220172785007B5C7C /* HotKeyCenter.swift */; };
 		486EED8E1B3D41C70092FFF8 /* CommandWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EED8D1B3D41C70092FFF8 /* CommandWindow.swift */; };
 		4875779C1B51E7B900339D78 /* AXApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4875779B1B51E7B900339D78 /* AXApplication.swift */; };
 		487835931B3B91E700BC911B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487835921B3B91E700BC911B /* AppDelegate.swift */; };
@@ -24,9 +25,6 @@
 		487835B01B3B9C0B00BC911B /* notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 487835AF1B3B9C0B00BC911B /* notes.txt */; };
 		48C044D61D23B1DA00F49A94 /* AX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C044D51D23B1DA00F49A94 /* AX.swift */; };
 		48CECD311EA4A0BF007BD237 /* AXClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CECD301EA4A0BF007BD237 /* AXClient.swift */; };
-		48FA193A1B408A0A00D88405 /* DDHotKeyCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 48FA19351B408A0A00D88405 /* DDHotKeyCenter.m */; };
-		48FA193B1B408A0A00D88405 /* DDHotKeyTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 48FA19371B408A0A00D88405 /* DDHotKeyTextField.m */; };
-		48FA193C1B408A0A00D88405 /* DDHotKeyUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 48FA19391B408A0A00D88405 /* DDHotKeyUtilities.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,7 +42,7 @@
 		4853E21A1F37FA6900D96A08 /* MenuItemCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuItemCommand.swift; sourceTree = "<group>"; };
 		4853E2251F37FFD400D96A08 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		4853E2271F38001F00D96A08 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		486E4CE61B42570B005AD089 /* QuickMenu-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QuickMenu-Bridging-Header.h"; sourceTree = "<group>"; };
+		486DA97220172785007B5C7C /* HotKeyCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotKeyCenter.swift; sourceTree = "<group>"; };
 		486EED8D1B3D41C70092FFF8 /* CommandWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandWindow.swift; sourceTree = "<group>"; };
 		4875779B1B51E7B900339D78 /* AXApplication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AXApplication.swift; sourceTree = "<group>"; };
 		4878358D1B3B91E700BC911B /* QuickMenu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuickMenu.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -59,12 +57,6 @@
 		487835AF1B3B9C0B00BC911B /* notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = notes.txt; sourceTree = "<group>"; };
 		48C044D51D23B1DA00F49A94 /* AX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AX.swift; sourceTree = "<group>"; };
 		48CECD301EA4A0BF007BD237 /* AXClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AXClient.swift; sourceTree = "<group>"; };
-		48FA19341B408A0A00D88405 /* DDHotKeyCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDHotKeyCenter.h; sourceTree = "<group>"; };
-		48FA19351B408A0A00D88405 /* DDHotKeyCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDHotKeyCenter.m; sourceTree = "<group>"; };
-		48FA19361B408A0A00D88405 /* DDHotKeyTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDHotKeyTextField.h; sourceTree = "<group>"; };
-		48FA19371B408A0A00D88405 /* DDHotKeyTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDHotKeyTextField.m; sourceTree = "<group>"; };
-		48FA19381B408A0A00D88405 /* DDHotKeyUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDHotKeyUtilities.h; sourceTree = "<group>"; };
-		48FA19391B408A0A00D88405 /* DDHotKeyUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDHotKeyUtilities.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,18 +110,12 @@
 		4878358F1B3B91E700BC911B /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				486E4CE61B42570B005AD089 /* QuickMenu-Bridging-Header.h */,
-				48FA19341B408A0A00D88405 /* DDHotKeyCenter.h */,
-				48FA19351B408A0A00D88405 /* DDHotKeyCenter.m */,
-				48FA19361B408A0A00D88405 /* DDHotKeyTextField.h */,
-				48FA19371B408A0A00D88405 /* DDHotKeyTextField.m */,
-				48FA19381B408A0A00D88405 /* DDHotKeyUtilities.h */,
-				48FA19391B408A0A00D88405 /* DDHotKeyUtilities.m */,
 				48C044D51D23B1DA00F49A94 /* AX.swift */,
 				48CECD301EA4A0BF007BD237 /* AXClient.swift */,
 				4875779B1B51E7B900339D78 /* AXApplication.swift */,
 				487835921B3B91E700BC911B /* AppDelegate.swift */,
 				486EED8D1B3D41C70092FFF8 /* CommandWindow.swift */,
+				486DA97220172785007B5C7C /* HotKeyCenter.swift */,
 				484D31CE1F1371AF000A1EBA /* Trie.swift */,
 				487835941B3B91E700BC911B /* ViewController.swift */,
 				487835961B3B91E700BC911B /* Images.xcassets */,
@@ -212,7 +198,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = Codjax;
 				TargetAttributes = {
 					4878358C1B3B91E700BC911B = {
@@ -270,9 +256,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				48FA193A1B408A0A00D88405 /* DDHotKeyCenter.m in Sources */,
-				48FA193B1B408A0A00D88405 /* DDHotKeyTextField.m in Sources */,
-				48FA193C1B408A0A00D88405 /* DDHotKeyUtilities.m in Sources */,
+				486DA97320172785007B5C7C /* HotKeyCenter.swift in Sources */,
 				4875779C1B51E7B900339D78 /* AXApplication.swift in Sources */,
 				487835951B3B91E700BC911B /* ViewController.swift in Sources */,
 				484D31CF1F1371AF000A1EBA /* Trie.swift in Sources */,
@@ -331,12 +315,14 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -385,12 +371,14 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -427,8 +415,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.codjax.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "QuickMenu/QuickMenu-Bridging-Header.h";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
@@ -442,9 +431,10 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.codjax.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "QuickMenu/QuickMenu-Bridging-Header.h";
+				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
@@ -466,7 +456,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.codjax.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QuickMenu.app/Contents/MacOS/QuickMenu";
 			};
@@ -485,8 +476,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.codjax.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QuickMenu.app/Contents/MacOS/QuickMenu";
 			};
