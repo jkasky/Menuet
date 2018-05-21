@@ -132,7 +132,6 @@ class AXMenuIndexer: AXMenuVisitor {
           modifiers: AXMenuItemModifiers(
             rawValue: UInt32(item.get(.MenuItemCmdModifiers) ?? 0))),
         enabled: item.get(.Enabled) ?? false)
-
     }
   }
 }
@@ -375,14 +374,14 @@ class AXElement: AXElementProtocol {
 
   func get(_ attribute: AX.Attribute) -> Bool? {
     if let value: AnyObject = get(attribute) {
-      return value as! CFBoolean as! Bool
+      return (value as! CFBoolean as! Bool)
     }
     return nil
   }
 
   func get(_ attribute: AX.Attribute) -> Int? {
     if let value: AnyObject = get(attribute) {
-      return value as! CFNumber as! Int
+      return (value as! CFNumber as! Int)
     }
     return nil
   }

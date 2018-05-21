@@ -11,15 +11,19 @@ import Cocoa
 import Foundation
 
 
-struct HotKey: Hashable {
-  var hashValue: Int {
-    // Modifier flags are set on 16th bit and higher so XOR with the UInt16 produces
-    // an Int that has the keyCode in 0-15 and the modifier in 16-31 bits. The hashCode
-    // on Int types returns the value.
+/**
+ * A structure that contains key code, modifiers, and task for a HotKey.
+ */
+public struct HotKey: Hashable {
+
+  public var hashValue: Int {
+    // Modifier flags are set on 16th bit and higher so XOR with the UInt16
+    // produces an Int that has the keyCode in 0-15 and the modifier in 16-31
+    // bits. The hashCode on Int types returns the value.
     return keyCode.hashValue ^ modifierFlags.rawValue.hashValue
   }
 
-  static func ==(left: HotKey, right: HotKey) -> Bool {
+  public static func ==(left: HotKey, right: HotKey) -> Bool {
     return (left.keyCode == right.keyCode &&
             left.modifierFlags == right.modifierFlags)
   }
@@ -28,9 +32,9 @@ struct HotKey: Hashable {
   public let modifierFlags: NSEvent.ModifierFlags
   public let task: (NSEvent) -> Void
 
-  init(_ keyCode: Int,
-       _ modifierFlags: NSEvent.ModifierFlags,
-       _ task: @escaping (NSEvent) -> Void) {
+  public init(_ keyCode: Int,
+              _ modifierFlags: NSEvent.ModifierFlags,
+              _ task: @escaping (NSEvent) -> Void) {
     self.keyCode = keyCode
     self.modifierFlags = modifierFlags
     self.task = task
@@ -38,17 +42,19 @@ struct HotKey: Hashable {
 }
 
 
-/** Global HotKey center for managing application level hot keys. */
-class HotKeyCenter {
+/**
+ * Global HotKey center for managing application level hot keys.
+ */
+public class HotKeyCenter {
 
   static let shared = HotKeyCenter()
 
-  fileprivate var registeredHotKeys: Dictionary<Int, HotKey>
+  fileprivate var registeredHotKeys: Dictionary<Int, RegisteredHotKey>
 
   private var eventHandler: EventHandlerRef?
 
   private init() {
-    registeredHotKeys = Dictionary<Int, HotKey>()
+    registeredHotKeys = Dictionary<Int, RegisteredHotKey>()
 
     var eventSpec = EventTypeSpec(
       eventClass: UInt32(kEventClassKeyboard),
@@ -82,11 +88,11 @@ class HotKeyCenter {
     }
 
     let hotKeyID = EventHotKeyID(
-      signature: "GHKC".fourCharCodedType,
+      signature: "GHKC".fourCharCodeType,
       id: UInt32(hotKey.hashValue))
     var eventHotKey: EventHotKeyRef? = nil
 
-    RegisterEventHotKey(
+    let status = RegisterEventHotKey(
       UInt32(hotKey.keyCode),
       UInt32(hotKey.modifierFlags.carbonValue),
       hotKeyID,
@@ -94,54 +100,119 @@ class HotKeyCenter {
       OptionBits(0),
       &eventHotKey)
 
-    registeredHotKeys[hotKey.hashValue] = hotKey
+    if (status == noErr && eventHotKey != nil) {
+      registeredHotKeys[hotKey.hashValue] = RegisteredHotKey(
+        hotKey: hotKey, registeredRef: eventHotKey!)
+    }
   }
 
   public func unregister(_ hotKey: HotKey) {
-    registeredHotKeys.removeValue(forKey: hotKey.hashValue)
+    let value = registeredHotKeys.removeValue(forKey: hotKey.hashValue)
+    guard value != nil else {
+      return
+    }
+    UnregisterEventHotKey(value?.registeredRef)
   }
 
   public func unregisterAll() {
-    for hotKey in registeredHotKeys.values {
-      unregister(hotKey)
+    for r in registeredHotKeys.values {
+      unregister(r.hotKey)
     }
+  }
+
+  fileprivate func lookup(_ value: EventHotKeyID) -> HotKey? {
+    return registeredHotKeys[Int(value.id)]?.hotKey
   }
 }
 
 
-private func globalHotKeyHandler(
+/**
+ * A structure that contains HotKey and registered Carbon reference.
+ */
+internal struct RegisteredHotKey: Hashable {
+  let hotKey: HotKey
+
+  // Reference to the Carbon event registered for the global hotkey.
+  let registeredRef: EventHotKeyRef
+}
+
+
+/**
+ * Dispatches event to registered HotKey handler.
+ */
+fileprivate func globalHotKeyHandler(
     nextHandler: EventHandlerCallRef?,
     anEvent: EventRef?,
     userData: UnsafeMutableRawPointer?) -> OSStatus {
 
   var hotKeyID = EventHotKeyID()
-  GetEventParameter(
+  let status = GetEventParameter(
     anEvent,
     EventParamName(kEventParamDirectObject),
     UInt32(typeEventHotKeyID),
     nil,
-    MemoryLayout.size(ofValue: hotKeyID),
+    MemoryLayout<EventHotKeyID>.size,
     nil,
     &hotKeyID)
 
-  let hotKey = HotKeyCenter.shared.registeredHotKeys[Int(hotKeyID.id)]
-  let event = NSEvent(eventRef: UnsafeMutablePointer(anEvent!))
-  hotKey?.task(event!)
+  guard status == noErr else {
+    return OSStatus(eventNotHandledErr)
+  }
 
-  NSLog("Received HotKey (%d, %d)", hotKeyID.signature, hotKeyID.id)
+  guard let hotKey = HotKeyCenter.shared.lookup(hotKeyID) else {
+    return OSStatus(eventNotHandledErr)
+  }
 
-  return OSStatus(eventNotHandledErr)
+  guard let anEvent = anEvent else {
+    return OSStatus(eventNotHandledErr)
+  }
+
+  guard let event = NSEvent(eventRef: UnsafeMutablePointer(anEvent)) else {
+    return OSStatus(eventNotHandledErr)
+  }
+
+  let keyEvent = NSEvent.keyEvent(
+    with: NSEvent.EventType.keyUp,
+    location: event.locationInWindow,
+    modifierFlags: event.modifierFlags,
+    timestamp: event.timestamp,
+    windowNumber: -1,
+    context:nil,
+    characters:"",
+    charactersIgnoringModifiers: "",
+    isARepeat: false,
+    keyCode: UInt16(hotKey.keyCode))!
+
+   hotKey.task(keyEvent)
+
+  return OSStatus(noErr)
 }
 
 
-fileprivate extension NSEvent.ModifierFlags {
+internal extension NSEvent.ModifierFlags {
+
+  /**
+   * The Cocoa modifier flag value as a Carbon event modifier value.
+   *
+   * See Events.h and CarbonEvents.h form the Carbon framework for all the
+   * carbon event modifier equivalents.
+   */
   var carbonValue: UInt32 {
     var flags: UInt32 = 0
+    if contains(.capsLock) {
+      flags |= UInt32(alphaLock)
+    }
     if contains(.command) {
       flags |= UInt32(cmdKey)
     }
     if contains(.control) {
       flags |= UInt32(controlKey)
+    }
+    if contains(.function) {
+      flags |= UInt32(kEventKeyModifierFnMask)
+    }
+    if contains(.numericPad) {
+      flags |= UInt32(kEventKeyModifierNumLockMask)
     }
     if contains(.option) {
       flags |= UInt32(optionKey)
@@ -154,8 +225,12 @@ fileprivate extension NSEvent.ModifierFlags {
 }
 
 
-fileprivate extension String {
-  var fourCharCodedType: UInt32 {
+internal extension String {
+
+  /**
+   * The String value as a four character code type.
+   */
+  var fourCharCodeType: UInt32 {
     return UTGetOSTypeFromString(self as CFString)
   }
 }
