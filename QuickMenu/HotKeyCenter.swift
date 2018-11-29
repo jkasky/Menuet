@@ -12,15 +12,31 @@ import Foundation
 
 
 /**
+ * Generates IDs from 1 to T.max for any unsigned integer type.
+ */
+struct IdGenerator<T: UnsignedInteger> {
+  
+  private var value: T = 1
+  
+  mutating func next() -> T {
+    defer {value += 1}
+    return value
+  }
+}
+
+
+/**
  * A structure that contains key code, modifiers, and task for a HotKey.
  */
 public struct HotKey: Hashable {
+  
+  private static var idGenerator = IdGenerator<UInt32>()
 
   public var hashValue: Int {
-    // Modifier flags are set on 16th bit and higher so XOR with the UInt16
-    // produces an Int that has the keyCode in 0-15 and the modifier in 16-31
-    // bits. The hashCode on Int types returns the value.
-    return keyCode.hashValue ^ modifierFlags.rawValue.hashValue
+    var hasher = Hasher()
+    hasher.combine(keyCode)
+    hasher.combine(modifierFlags.rawValue)
+    return hasher.finalize()
   }
 
   public static func ==(left: HotKey, right: HotKey) -> Bool {
@@ -28,6 +44,12 @@ public struct HotKey: Hashable {
             left.modifierFlags == right.modifierFlags)
   }
 
+  /**
+   * Application specific unique ID of HotKey.
+   *
+   * Only UInt32.max HotKey's can be registered per application.
+   */
+  public let id: UInt32
   public let keyCode: Int
   public let modifierFlags: NSEvent.ModifierFlags
   public let task: (NSEvent) -> Void
@@ -35,6 +57,7 @@ public struct HotKey: Hashable {
   public init(_ keyCode: Int,
               _ modifierFlags: NSEvent.ModifierFlags,
               _ task: @escaping (NSEvent) -> Void) {
+    self.id = HotKey.idGenerator.next()
     self.keyCode = keyCode
     self.modifierFlags = modifierFlags
     self.task = task
@@ -89,7 +112,7 @@ public class HotKeyCenter {
 
     let hotKeyID = EventHotKeyID(
       signature: "GHKC".fourCharCodeType,
-      id: UInt32(hotKey.hashValue))
+      id: hotKey.id)
     var eventHotKey: EventHotKeyRef? = nil
 
     let status = RegisterEventHotKey(
