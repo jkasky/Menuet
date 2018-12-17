@@ -9,66 +9,6 @@
 import Foundation
 
 
-public struct MenuItemCommand {
-
-  public let character:String
-  public let modifiers:AXMenuItemModifiers
-  public let stringValue:String
-
-  init(character:String, modifiers:AXMenuItemModifiers) {
-    self.character = character
-    self.modifiers = modifiers
-    self.stringValue = MenuItemCommand.buildStringValue(character, modifiers)
-  }
-
-  static private func buildStringValue(
-      _ character:String, _ modifiers:AXMenuItemModifiers) -> String {
-
-    var value = ""
-
-    guard character != "" else {
-      return value
-    }
-
-    if modifiers.contains(.control) {
-      value.append(ModifierKeyChar.Control)
-    }
-    if modifiers.contains(.option) {
-      value.append(ModifierKeyChar.Option)
-    }
-    if modifiers.contains(.shift) {
-      value.append(ModifierKeyChar.Shift)
-    }
-    if !modifiers.contains(.noCommand) {
-      value.append(ModifierKeyChar.Command)
-    }
-    value.append(character)
-
-    return value
-  }
-}
-
-
-public struct MenuItem {
-
-  public let title:String
-  public let command:MenuItemCommand
-
-  init(title:String, command:MenuItemCommand, enabled:Bool) {
-    self.title = title
-    self.command = command
-  }
-}
-
-
-struct ModifierKeyChar {
-  static let Command = "\u{2318}"
-  static let Control = "\u{2303}"
-  static let Option = "\u{2325}"
-  static let Shift = "\u{21E7}"
-}
-
-
 extension AX {
   typealias Application = AXApplication
   typealias AttributeValue = AXAttributeValue
@@ -109,34 +49,6 @@ protocol AXMenuVisitor {
 }
 
 
-class AXMenuIndexer: AXMenuVisitor {
-
-  private var path:[String] = []
-
-  func enterMenu(_ menu: AX.Element) {
-    if let title:String = menu.get(.Title) {
-      path.append(title)
-    }
-  }
-
-  func leaveMenu(_: AX.Element) {
-    _ = path.popLast()
-  }
-
-  func visitMenuItem(_ item: AX.Element) {
-    if let title:String = item.get(.Title) {
-      let menuItem = MenuItem(
-        title: title,
-        command: MenuItemCommand(
-          character: item.get(.MenuItemCmdChar) ?? "",
-          modifiers: AXMenuItemModifiers(
-            rawValue: UInt32(item.get(.MenuItemCmdModifiers) ?? 0))),
-        enabled: item.get(.Enabled) ?? false)
-    }
-  }
-}
-
-
 class AXMenuLogger: AXMenuVisitor {
 
   var indent:Int = 0
@@ -157,7 +69,7 @@ class AXMenuLogger: AXMenuVisitor {
       let enabled:Bool = item.get(.Enabled) ?? false
       let menuItemCmdChar = item.get(.MenuItemCmdChar) ?? ""
       let menuItemCmdModifiers = item.get(.MenuItemCmdModifiers) ?? 0
-      let modifiers = AXMenuItemModifiers(rawValue: UInt32(menuItemCmdModifiers))
+      let modifiers = Modifiers(rawValue: menuItemCmdModifiers)
       let commandItem = MenuItemCommand(
         character:menuItemCmdChar,
         modifiers:modifiers)
@@ -315,7 +227,7 @@ class AXElement: AXElementProtocol {
       guard value != nil else {
         return 0
       }
-      return CFArrayGetCount(value as! CFArray)
+      return CFArrayGetCount((value as! CFArray))
     }
   }
 

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11129.15" systemVersion="16A284a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11129.15"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Application-->
@@ -61,10 +62,15 @@
         <scene sceneID="Wp1-gf-SOK">
             <objects>
                 <windowController storyboardIdentifier="WindowController" showSeguePresentationStyle="single" id="uix-sD-xkX" customClass="CommandWindowController" customModule="QuickMenu" sceneMemberID="viewController">
-                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" hasShadow="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="NqR-2X-Jh6" customClass="CommandWindow" customModule="QuickMenu">
+                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" hasShadow="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="NqR-2X-Jh6" customClass="CommandWindow" customModule="QuickMenu">
+                        <windowStyleMask key="styleMask" nonactivatingPanel="YES"/>
+                        <windowCollectionBehavior key="collectionBehavior" moveToActiveSpace="YES"/>
                         <windowPositionMask key="initialPositionMask" topStrut="YES"/>
                         <rect key="contentRect" x="294" y="1110" width="480" height="67"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1177"/>
+                        <connections>
+                            <outlet property="delegate" destination="uix-sD-xkX" id="VQ2-gf-xUM"/>
+                        </connections>
                     </window>
                     <connections>
                         <segue destination="Usg-wh-dU5" kind="relationship" relationship="window.shadowedContentViewController" id="jah-aK-nGq"/>
@@ -80,18 +86,22 @@
                 <viewController id="Usg-wh-dU5" customClass="ViewController" customModule="QuickMenu" sceneMemberID="viewController">
                     <view key="view" id="3JB-8j-FPZ">
                         <rect key="frame" x="0.0" y="0.0" width="480" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ClQ-jX-o0d">
-                                <rect key="frame" x="13" y="10" width="455" height="24"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" focusRingType="none" placeholderString="Quick Menu Command" usesSingleLineMode="YES" id="k1h-aM-ZMR">
+                            <textField focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ClQ-jX-o0d">
+                                <rect key="frame" x="20" y="10" width="440" height="24"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" focusRingType="none" placeholderString="Quick Menu Command" drawsBackground="YES" usesSingleLineMode="YES" id="k1h-aM-ZMR">
                                     <font key="font" metaFont="system" size="20"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
                                 </textFieldCell>
                             </textField>
                         </subviews>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="ClQ-jX-o0d" secondAttribute="trailing" constant="20" symbolic="YES" id="8AU-GJ-eLl"/>
+                            <constraint firstItem="ClQ-jX-o0d" firstAttribute="centerY" secondItem="3JB-8j-FPZ" secondAttribute="centerY" id="lcD-bT-1l6"/>
+                            <constraint firstItem="ClQ-jX-o0d" firstAttribute="leading" secondItem="3JB-8j-FPZ" secondAttribute="leading" constant="20" symbolic="YES" id="tXm-aY-rjt"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="commandTextField" destination="ClQ-jX-o0d" id="52V-2C-ofI"/>
@@ -99,7 +109,7 @@
                 </viewController>
                 <customObject id="UCG-q6-gcb" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-27" y="404"/>
+            <point key="canvasLocation" x="-27" y="515"/>
         </scene>
     </scenes>
 </document>

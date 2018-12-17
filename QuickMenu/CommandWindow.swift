@@ -9,7 +9,7 @@
 import Cocoa
 
 
-class CommandWindow: NSWindow {
+class CommandWindow: NSPanel {
 
   // Override canBecome{Key,Main}Window to always return True. The default
   // behavior by NSWindow is to not allow windows without title bars to become
@@ -23,14 +23,25 @@ class CommandWindow: NSWindow {
   }
 }
 
-
-class CommandWindowController: NSWindowController {
+class CommandWindowController: NSWindowController, NSWindowDelegate {
 
   override func windowDidLoad() {
-    self.window!.canHide = true
-    self.window!.collectionBehavior = NSWindow.CollectionBehavior.moveToActiveSpace
-    self.window!.hasShadow = true
-    self.window!.hidesOnDeactivate = true
-    self.window!.isOpaque = true
+    window?.canHide = true
+    window?.collectionBehavior = .moveToActiveSpace
+    window?.hasShadow = true
+    window?.level = .floating
+    window?.isOpaque = true
+  }
+  
+  func windowDidResignMain(_ notification: Notification) {
+    hide()
+  }
+  
+  func show() {
+    showWindow(nil)
+  }
+  
+  func hide() {
+    window?.orderOut(nil)
   }
 }

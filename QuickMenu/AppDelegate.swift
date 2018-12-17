@@ -90,6 +90,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   private func makeProcessTrusted() {
     let axClient = AX.Client()
     if (!axClient.isProcessTrusted()) {
+      // TODO: the trusted state should be managed globally so the app can
+      // check the state before showing the command window and re-prompt if
+      // necessary.
       let trusted = axClient.makeProcessTrusted(withPrompt:true)
       if !trusted {
         NSLog("Process is not trusted.")
@@ -106,9 +109,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let client = AX.Client()
     let axApp = client.createApplication(application:currentApp)
     let walker = AXMenuWalker(application: axApp.topElement)
+    let index = MenuIndex()
     walker.walk(visitor: AXMenuLogger())
+    walker.walk(visitor: AXMenuIndexer(index: index))
 
-    windowController!.showWindow(self)
+    windowController!.show()
   }
 
   /**

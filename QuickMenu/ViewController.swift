@@ -25,7 +25,11 @@ class ViewController: NSViewController {
   }
 
   override func viewWillAppear() {
-    NSLog("will appear")
+    super.viewWillAppear()
+  }
+  
+  override func viewDidAppear() {
+    super.viewDidAppear()
   }
 }
 
