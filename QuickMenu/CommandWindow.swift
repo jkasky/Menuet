@@ -39,6 +39,7 @@ class CommandWindowController: NSWindowController, NSWindowDelegate {
   
   func show() {
     showWindow(nil)
+    window?.orderFrontRegardless()
   }
   
   func hide() {

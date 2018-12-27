@@ -15,15 +15,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   let application = NSApplication.shared
   let hotKeyCenter = HotKeyCenter.shared
+  let commandWindowNib = NSNib.Name("CommandWindow")
 
+  var commandWindow: CommandWindowController?
+  
   @IBOutlet
   var statusMenu: NSMenu?
 
   var statusItem: NSStatusItem?
-  var windowController: CommandWindowController?
 
   func applicationDidFinishLaunching(_ notification: Notification) {
-    loadStoryboardResources()
     activateStatusMenu()
     registerHotKey()
     makeProcessTrusted()
@@ -32,16 +33,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   func applicationWillTerminate(_ notification: Notification) {
     unregisterHotKey()
     deactivateStatusMenu()
-  }
-
-  /**
-   * Loads WindowController from Main storyboard.
-   */
-  private func loadStoryboardResources() {
-    let storyboard = NSStoryboard(name: NSStoryboard.Name(rawValue: "Main"), bundle: nil)
-    windowController = storyboard
-      .instantiateController(withIdentifier: NSStoryboard.SceneIdentifier(rawValue: "WindowController"))
-      as? CommandWindowController
   }
 
   /**
@@ -113,7 +104,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     walker.walk(visitor: AXMenuLogger())
     walker.walk(visitor: AXMenuIndexer(index: index))
 
-    windowController!.show()
+    if commandWindow == nil {
+      commandWindow = CommandWindowController(windowNibName: commandWindowNib)
+    }
+    commandWindow!.show()
   }
 
   /**

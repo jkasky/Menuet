@@ -9,7 +9,7 @@
 import Cocoa
 
 
-class ViewController: NSViewController {
+class CommandViewController: NSViewController {
 
   @IBOutlet
   weak var commandTextField: NSTextField!
