@@ -72,12 +72,12 @@ public class HotKeyCenter {
 
   static let shared = HotKeyCenter()
 
-  fileprivate var registeredHotKeys: Dictionary<Int, RegisteredHotKey>
+  fileprivate var registeredHotKeys: Dictionary<UInt32, RegisteredHotKey>
 
   private var eventHandler: EventHandlerRef?
 
   private init() {
-    registeredHotKeys = Dictionary<Int, RegisteredHotKey>()
+    registeredHotKeys = Dictionary<UInt32, RegisteredHotKey>()
 
     var eventSpec = EventTypeSpec(
       eventClass: UInt32(kEventClassKeyboard),
@@ -106,7 +106,7 @@ public class HotKeyCenter {
   }
 
   public func register(_ hotKey: HotKey) {
-    guard registeredHotKeys[hotKey.hashValue] == nil else {
+    guard registeredHotKeys[hotKey.id] == nil else {
       return
     }
 
@@ -124,13 +124,13 @@ public class HotKeyCenter {
       &eventHotKey)
 
     if (status == noErr && eventHotKey != nil) {
-      registeredHotKeys[hotKey.hashValue] = RegisteredHotKey(
+      registeredHotKeys[hotKey.id] = RegisteredHotKey(
         hotKey: hotKey, registeredRef: eventHotKey!)
     }
   }
 
   public func unregister(_ hotKey: HotKey) {
-    let value = registeredHotKeys.removeValue(forKey: hotKey.hashValue)
+    let value = registeredHotKeys.removeValue(forKey: hotKey.id)
     guard value != nil else {
       return
     }
@@ -144,7 +144,7 @@ public class HotKeyCenter {
   }
 
   fileprivate func lookup(_ value: EventHotKeyID) -> HotKey? {
-    return registeredHotKeys[Int(value.id)]?.hotKey
+    return registeredHotKeys[value.id]?.hotKey
   }
 }
 
