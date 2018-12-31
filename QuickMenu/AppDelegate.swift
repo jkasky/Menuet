@@ -25,6 +25,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   var statusItem: NSStatusItem?
 
   func applicationDidFinishLaunching(_ notification: Notification) {
+    initializeMenuResources()
     activateStatusMenu()
     registerHotKey()
     makeProcessTrusted()
