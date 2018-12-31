@@ -248,11 +248,15 @@ class AXMenuIndexer: AXMenuVisitor {
       } else {
         character = item.get(.MenuItemCmdChar)
       }
+      var modifiers: Modifiers?
+      if let commandModifiers: Int = item.get(.MenuItemCmdModifiers) {
+        modifiers = Modifiers(rawValue: commandModifiers)
+      }
       let menuItem = MenuItem(
         title: title,
         command: MenuItemCommand(
           character: character ?? "",
-          modifiers: Modifiers(rawValue: item.get(.MenuItemCmdModifiers) ?? 0)),
+          modifiers: modifiers ?? Modifiers.noCommand),
         enabled: item.get(.Enabled) ?? false)
       let menuItemPath = path.joined(separator: " > ")
       index.add(item: menuItem, path: menuItemPath)
