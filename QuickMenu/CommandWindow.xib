@@ -15,8 +15,8 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" hasShadow="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="SRh-oL-y79" customClass="CommandWindow" customModule="QuickMenu" customModuleProvider="target">
             <windowStyleMask key="styleMask" nonactivatingPanel="YES"/>
-            <rect key="contentRect" x="196" y="100" width="512" height="44"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="contentRect" x="196" y="600" width="512" height="44"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1177"/>
             <view key="contentView" wantsLayer="YES" id="E8x-le-K0e">
                 <rect key="frame" x="0.0" y="0.0" width="512" height="44"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -29,13 +29,16 @@
                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
                         </textFieldCell>
+                        <connections>
+                            <outlet property="delegate" destination="PpM-yM-nvb" id="e33-zV-hB9"/>
+                        </connections>
                     </textField>
                 </subviews>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="39b-Zs-lPL"/>
             </connections>
-            <point key="canvasLocation" x="144" y="37"/>
+            <point key="canvasLocation" x="-562" y="-581"/>
         </window>
         <viewController id="PpM-yM-nvb" customClass="CommandViewController" customModule="QuickMenu" customModuleProvider="target">
             <connections>

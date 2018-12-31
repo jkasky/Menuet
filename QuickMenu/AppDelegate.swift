@@ -96,15 +96,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
    * Activates the application and show the command window.
    */
   private func showCommandWindow() {
-    let workspace = NSWorkspace.shared
-    let currentApp = workspace.frontmostApplication!
-    let client = AX.Client()
-    let axApp = client.createApplication(application:currentApp)
-    let walker = AXMenuWalker(application: axApp.topElement)
-    let index = MenuIndex()
-    walker.walk(visitor: AXMenuLogger())
-    walker.walk(visitor: AXMenuIndexer(index: index))
-
     if commandWindow == nil {
       commandWindow = CommandWindowController(windowNibName: commandWindowNib)
     }

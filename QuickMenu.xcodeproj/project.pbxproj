@@ -11,14 +11,14 @@
 		4853E21B1F37FA6900D96A08 /* MenuItemCommandTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4853E21A1F37FA6900D96A08 /* MenuItemCommandTests.swift */; };
 		4853E21F1F37FC6E00D96A08 /* AX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C044D51D23B1DA00F49A94 /* AX.swift */; };
 		4853E2211F37FC6E00D96A08 /* AXApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4875779B1B51E7B900339D78 /* AXApplication.swift */; };
-		4853E2221F37FED900D96A08 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487835941B3B91E700BC911B /* ViewController.swift */; };
+		4853E2221F37FED900D96A08 /* CommandViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487835941B3B91E700BC911B /* CommandViewController.swift */; };
 		4853E2231F37FF0100D96A08 /* CommandWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EED8D1B3D41C70092FFF8 /* CommandWindow.swift */; };
 		4853E2241F37FF0700D96A08 /* Trie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484D31CE1F1371AF000A1EBA /* Trie.swift */; };
 		486DA97320172785007B5C7C /* HotKeyCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486DA97220172785007B5C7C /* HotKeyCenter.swift */; };
 		486EED8E1B3D41C70092FFF8 /* CommandWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EED8D1B3D41C70092FFF8 /* CommandWindow.swift */; };
 		4875779C1B51E7B900339D78 /* AXApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4875779B1B51E7B900339D78 /* AXApplication.swift */; };
 		487835931B3B91E700BC911B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487835921B3B91E700BC911B /* AppDelegate.swift */; };
-		487835951B3B91E700BC911B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487835941B3B91E700BC911B /* ViewController.swift */; };
+		487835951B3B91E700BC911B /* CommandViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487835941B3B91E700BC911B /* CommandViewController.swift */; };
 		487835971B3B91E700BC911B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 487835961B3B91E700BC911B /* Images.xcassets */; };
 		487835A61B3B91E700BC911B /* QuickMenuTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487835A51B3B91E700BC911B /* QuickMenuTests.swift */; };
 		487835B01B3B9C0B00BC911B /* notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 487835AF1B3B9C0B00BC911B /* notes.txt */; };
@@ -31,6 +31,7 @@
 		D19451EB21D626F8003607D2 /* IdGeneratorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19451EA21D626F8003607D2 /* IdGeneratorTest.swift */; };
 		D19451ED21D62A80003607D2 /* AXClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CECD301EA4A0BF007BD237 /* AXClient.swift */; };
 		D19451EE21D62AFB003607D2 /* HotKeyCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486DA97220172785007B5C7C /* HotKeyCenter.swift */; };
+		D19451F021D78A27003607D2 /* SearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19451EF21D78A27003607D2 /* SearchManager.swift */; };
 		D1DECD9C21D4AE980028ABAE /* Main.xib in Resources */ = {isa = PBXBuildFile; fileRef = D1DECD9B21D4AE980028ABAE /* Main.xib */; };
 /* End PBXBuildFile section */
 
@@ -55,7 +56,7 @@
 		4878358D1B3B91E700BC911B /* QuickMenu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuickMenu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		487835911B3B91E700BC911B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		487835921B3B91E700BC911B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		487835941B3B91E700BC911B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		487835941B3B91E700BC911B /* CommandViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandViewController.swift; sourceTree = "<group>"; };
 		487835961B3B91E700BC911B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		4878359F1B3B91E700BC911B /* QuickMenuTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QuickMenuTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		487835A41B3B91E700BC911B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -67,6 +68,7 @@
 		D17BF6CC21BD172200E70660 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 		D19451E821D55B2A003607D2 /* CommandWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CommandWindow.xib; sourceTree = "<group>"; };
 		D19451EA21D626F8003607D2 /* IdGeneratorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdGeneratorTest.swift; sourceTree = "<group>"; };
+		D19451EF21D78A27003607D2 /* SearchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchManager.swift; sourceTree = "<group>"; };
 		D1DECD9B21D4AE980028ABAE /* Main.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Main.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -126,10 +128,11 @@
 				4875779B1B51E7B900339D78 /* AXApplication.swift */,
 				487835921B3B91E700BC911B /* AppDelegate.swift */,
 				486EED8D1B3D41C70092FFF8 /* CommandWindow.swift */,
+				487835941B3B91E700BC911B /* CommandViewController.swift */,
+				D19451EF21D78A27003607D2 /* SearchManager.swift */,
 				486DA97220172785007B5C7C /* HotKeyCenter.swift */,
 				D17BF6CC21BD172200E70660 /* Menu.swift */,
 				484D31CE1F1371AF000A1EBA /* Trie.swift */,
-				487835941B3B91E700BC911B /* ViewController.swift */,
 				487835961B3B91E700BC911B /* Images.xcassets */,
 				487835901B3B91E700BC911B /* Supporting Files */,
 				D1DECD9B21D4AE980028ABAE /* Main.xib */,
@@ -279,8 +282,9 @@
 				486EED8E1B3D41C70092FFF8 /* CommandWindow.swift in Sources */,
 				486DA97320172785007B5C7C /* HotKeyCenter.swift in Sources */,
 				D17BF6CD21BD172200E70660 /* Menu.swift in Sources */,
+				D19451F021D78A27003607D2 /* SearchManager.swift in Sources */,
 				484D31CF1F1371AF000A1EBA /* Trie.swift in Sources */,
-				487835951B3B91E700BC911B /* ViewController.swift in Sources */,
+				487835951B3B91E700BC911B /* CommandViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -295,7 +299,7 @@
 				D19451EE21D62AFB003607D2 /* HotKeyCenter.swift in Sources */,
 				D17BF6CE21BD172200E70660 /* Menu.swift in Sources */,
 				4853E2241F37FF0700D96A08 /* Trie.swift in Sources */,
-				4853E2221F37FED900D96A08 /* ViewController.swift in Sources */,
+				4853E2221F37FED900D96A08 /* CommandViewController.swift in Sources */,
 				487835A61B3B91E700BC911B /* QuickMenuTests.swift in Sources */,
 				D19451EB21D626F8003607D2 /* IdGeneratorTest.swift in Sources */,
 				48D1E3322090740300E077F4 /* TrieTests.swift in Sources */,

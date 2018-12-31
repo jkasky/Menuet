@@ -9,27 +9,19 @@
 import Cocoa
 
 
-class CommandViewController: NSViewController {
+class CommandViewController: NSViewController, NSTextDelegate {
 
   @IBOutlet
   weak var commandTextField: NSTextField!
-
-  var workspace: NSWorkspace!
 
   override func viewDidLoad() {
     super.viewDidLoad()
     self.commandTextField.isBezeled = false
     self.commandTextField.isBordered = false
-
-    workspace = NSWorkspace.shared
   }
 
-  override func viewWillAppear() {
-    super.viewWillAppear()
-  }
-  
-  override func viewDidAppear() {
-    super.viewDidAppear()
+  override func controlTextDidChange(_ notification: Notification) {
+    SearchManager.shared.search(commandTextField.stringValue)
   }
 }
 
