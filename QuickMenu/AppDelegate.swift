@@ -15,9 +15,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   let application = NSApplication.shared
   let hotKeyCenter = HotKeyCenter.shared
-  let commandWindowNib = NSNib.Name("CommandWindow")
+  let menuSearchWindowNib = NSNib.Name("MenuSearchWindow")
 
-  var commandWindow: CommandWindowController?
+  var menuSearchWindowController: MenuSearchWindowController?
   
   @IBOutlet
   var statusMenu: NSMenu?
@@ -63,10 +63,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
    * Registers the global hot key to show the command window.
    */
   private func registerHotKey() {
-    let showCommandWindowHotKey = HotKey(kVK_Space, [.command, .shift]) {
-      _ in self.showCommandWindow()
+    let showMenuSearchWindowHotKey = HotKey(kVK_Space, [.command, .shift]) {
+      _ in self.showMenuSearchWindow()
     }
-    hotKeyCenter.register(showCommandWindowHotKey)
+    hotKeyCenter.register(showMenuSearchWindowHotKey)
   }
 
   /**
@@ -93,13 +93,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   /**
-   * Activates the application and show the command window.
+   * Activates the application and show the menu search window.
    */
-  private func showCommandWindow() {
-    if commandWindow == nil {
-      commandWindow = CommandWindowController(windowNibName: commandWindowNib)
+  private func showMenuSearchWindow() {
+    if menuSearchWindowController == nil {
+      menuSearchWindowController = MenuSearchWindowController(
+        windowNibName: menuSearchWindowNib)
     }
-    commandWindow!.show()
+    menuSearchWindowController!.show()
   }
 
   /**
@@ -107,7 +108,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
    */
   @IBAction
   func show(_ sender: NSMenuItem) {
-    showCommandWindow()
+    showMenuSearchWindow()
   }
 }
 

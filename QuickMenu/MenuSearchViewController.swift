@@ -9,19 +9,19 @@
 import Cocoa
 
 
-class CommandViewController: NSViewController, NSTextDelegate {
+class MenuSearchViewController: NSViewController, NSTextDelegate {
 
   @IBOutlet
-  weak var commandTextField: NSTextField!
+  weak var queryTextField: NSTextField!
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.commandTextField.isBezeled = false
-    self.commandTextField.isBordered = false
+    self.queryTextField.isBezeled = false
+    self.queryTextField.isBordered = false
   }
 
   override func controlTextDidChange(_ notification: Notification) {
-    SearchManager.shared.search(commandTextField.stringValue)
+    SearchManager.shared.search(queryTextField.stringValue)
   }
 }
 

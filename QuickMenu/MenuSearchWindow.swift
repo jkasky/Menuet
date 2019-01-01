@@ -9,7 +9,7 @@
 import Cocoa
 
 
-class CommandWindow: NSPanel {
+class MenuSearchWindow: NSPanel {
 
   // Override canBecome{Key,Main}Window to always return True. The default
   // behavior by NSWindow is to not allow windows without title bars to become
@@ -23,7 +23,7 @@ class CommandWindow: NSPanel {
   }
 }
 
-class CommandWindowController: NSWindowController, NSWindowDelegate {
+class MenuSearchWindowController: NSWindowController, NSWindowDelegate {
 
   override func windowDidLoad() {
     window?.canHide = true
