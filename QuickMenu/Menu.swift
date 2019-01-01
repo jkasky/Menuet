@@ -35,7 +35,7 @@ struct KeyGlyph {
   static let Help          = KeyGlyph(0x67, "\u{003F}")  //  ?⃝
   static let Home          = KeyGlyph(0x66, "\u{2196}")  //  ↖
   static let Left          = KeyGlyph(0x64, "\u{2190}")  //  ←
-  static let Option        = KeyGlyph(0x07, "\u{2325}")  //  ⌥q
+  static let Option        = KeyGlyph(0x07, "\u{2325}")  //  ⌥
   static let PageDown      = KeyGlyph(0x6B, "\u{21DF}")  //  ⇟
   static let PageUp        = KeyGlyph(0x62, "\u{21DE}")  //  ⇞
   static let Power         = KeyGlyph(0x6E, "\u{2758}")  //  ❘⃝
