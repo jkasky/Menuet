@@ -21,27 +21,15 @@
                 <rect key="frame" x="0.0" y="0.0" width="512" height="311"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="exb-0h-kdB">
-                        <rect key="frame" x="20" y="277" width="472" height="24"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" focusRingType="none" placeholderString="Menu Search" drawsBackground="YES" usesSingleLineMode="YES" id="FVo-cy-fHW">
-                            <font key="font" metaFont="system" size="20"/>
-                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
-                        </textFieldCell>
-                        <connections>
-                            <outlet property="delegate" destination="PpM-yM-nvb" id="e33-zV-hB9"/>
-                        </connections>
-                    </textField>
                     <scrollView fixedFrame="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vUn-e7-3VX">
-                        <rect key="frame" x="0.0" y="0.0" width="512" height="269"/>
+                        <rect key="frame" x="0.0" y="0.0" width="512" height="260"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <clipView key="contentView" ambiguous="YES" copiesOnScroll="NO" id="5gX-lR-fvD">
-                            <rect key="frame" x="0.0" y="0.0" width="512" height="269"/>
+                            <rect key="frame" x="0.0" y="0.0" width="512" height="260"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" id="8DA-Tt-Scc">
-                                    <rect key="frame" x="0.0" y="0.0" width="512" height="269"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="512" height="260"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" name="windowBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -78,6 +66,23 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mW6-as-pcq">
+                        <rect key="frame" x="9" y="262" width="42" height="42"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="4YX-jy-Uk3"/>
+                    </imageView>
+                    <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="exb-0h-kdB">
+                        <rect key="frame" x="59" y="274" width="433" height="18"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" focusRingType="none" alignment="left" placeholderString="Menu Search" drawsBackground="YES" usesSingleLineMode="YES" id="FVo-cy-fHW">
+                            <font key="font" size="20" name=".SFNSDisplay"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
+                        </textFieldCell>
+                        <connections>
+                            <outlet property="delegate" destination="PpM-yM-nvb" id="e33-zV-hB9"/>
+                        </connections>
+                    </textField>
                 </subviews>
             </view>
             <connections>
@@ -87,6 +92,7 @@
         </window>
         <viewController id="PpM-yM-nvb" customClass="MenuSearchViewController" customModule="QuickMenu" customModuleProvider="target">
             <connections>
+                <outlet property="appIconImageView" destination="mW6-as-pcq" id="kA9-Ct-fbh"/>
                 <outlet property="queryTextField" destination="exb-0h-kdB" id="hXZ-fn-HAg"/>
                 <outlet property="searchMenuResultsTableView" destination="8DA-Tt-Scc" id="uzF-rf-Uds"/>
                 <outlet property="view" destination="E8x-le-K0e" id="GoL-Cd-vtX"/>

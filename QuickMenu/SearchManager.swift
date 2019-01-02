@@ -17,9 +17,9 @@ class SearchManager {
   private var axClient: AX.Client
   private var workspace: NSWorkspace
   
-  private var currentApp: NSRunningApplication?
   private var currentIndex: MenuIndex
   
+  public var currentApp: NSRunningApplication?
   public var searchResults: [MenuItem]
   
   private init() {
