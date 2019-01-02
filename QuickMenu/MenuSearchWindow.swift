@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Codjax. All rights reserved.
 //
 
+import Carbon
 import Cocoa
 
 
@@ -20,6 +21,12 @@ class MenuSearchWindow: NSPanel {
 
   override var canBecomeMain: Bool {
     return true;
+  }
+  
+  override func keyUp(with event: NSEvent) {
+    if event.keyCode == kVK_Escape {
+      self.orderOut(nil)
+    }
   }
 }
 
