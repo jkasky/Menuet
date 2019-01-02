@@ -42,6 +42,10 @@ class SearchManager {
       currentIndex = MenuIndex()
       walker.walk(visitor: AXMenuIndexer(index: currentIndex))
     }
-    searchResults = currentIndex.find(query: query)
+    if query.count > 0 {
+      searchResults = currentIndex.find(query: query)
+    } else {
+      searchResults = []
+    }
   }
 }
