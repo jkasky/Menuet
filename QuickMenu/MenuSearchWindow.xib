@@ -15,14 +15,14 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" hasShadow="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="SRh-oL-y79" customClass="MenuSearchWindow" customModule="QuickMenu" customModuleProvider="target">
             <windowStyleMask key="styleMask" nonactivatingPanel="YES"/>
-            <rect key="contentRect" x="196" y="600" width="512" height="44"/>
+            <rect key="contentRect" x="196" y="600" width="512" height="311"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1177"/>
             <view key="contentView" wantsLayer="YES" id="E8x-le-K0e">
-                <rect key="frame" x="0.0" y="0.0" width="512" height="44"/>
+                <rect key="frame" x="0.0" y="0.0" width="512" height="311"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="exb-0h-kdB">
-                        <rect key="frame" x="20" y="10" width="472" height="24"/>
+                        <rect key="frame" x="20" y="277" width="472" height="24"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" focusRingType="none" placeholderString="Menu Search" drawsBackground="YES" usesSingleLineMode="YES" id="FVo-cy-fHW">
                             <font key="font" metaFont="system" size="20"/>
@@ -33,18 +33,70 @@
                             <outlet property="delegate" destination="PpM-yM-nvb" id="e33-zV-hB9"/>
                         </connections>
                     </textField>
+                    <scrollView fixedFrame="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vUn-e7-3VX">
+                        <rect key="frame" x="0.0" y="0.0" width="512" height="269"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <clipView key="contentView" ambiguous="YES" copiesOnScroll="NO" id="5gX-lR-fvD">
+                            <rect key="frame" x="0.0" y="0.0" width="512" height="269"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" id="8DA-Tt-Scc">
+                                    <rect key="frame" x="0.0" y="0.0" width="512" height="269"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <size key="intercellSpacing" width="3" height="2"/>
+                                    <color key="backgroundColor" name="windowBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                                    <tableColumns>
+                                        <tableColumn editable="NO" width="509" minWidth="40" maxWidth="1000" id="UeP-0M-nvb">
+                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                            </tableHeaderCell>
+                                            <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" title="Text Cell" id="dbq-3Q-CnH">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="windowFrameTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="windowBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                        </tableColumn>
+                                    </tableColumns>
+                                    <connections>
+                                        <outlet property="dataSource" destination="Nf5-y8-uKX" id="Gw8-5F-IPo"/>
+                                        <outlet property="delegate" destination="mwj-rk-ORJ" id="Zqq-fX-gD7"/>
+                                    </connections>
+                                </tableView>
+                            </subviews>
+                            <color key="backgroundColor" name="windowBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </clipView>
+                        <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="tHg-NC-rKk">
+                            <rect key="frame" x="1" y="119" width="223" height="15"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                        <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="bAR-tL-o5s">
+                            <rect key="frame" x="224" y="17" width="15" height="102"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                    </scrollView>
                 </subviews>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="39b-Zs-lPL"/>
             </connections>
-            <point key="canvasLocation" x="-562" y="-581"/>
+            <point key="canvasLocation" x="-562" y="-447.5"/>
         </window>
         <viewController id="PpM-yM-nvb" customClass="MenuSearchViewController" customModule="QuickMenu" customModuleProvider="target">
             <connections>
                 <outlet property="queryTextField" destination="exb-0h-kdB" id="hXZ-fn-HAg"/>
+                <outlet property="searchMenuResultsTableView" destination="8DA-Tt-Scc" id="uzF-rf-Uds"/>
                 <outlet property="view" destination="E8x-le-K0e" id="GoL-Cd-vtX"/>
             </connections>
         </viewController>
+        <viewController id="mwj-rk-ORJ" customClass="MenuSearchResultsViewController" customModule="QuickMenu" customModuleProvider="target">
+            <connections>
+                <outlet property="view" destination="8DA-Tt-Scc" id="gm7-LO-t2t"/>
+            </connections>
+        </viewController>
+        <customObject id="Nf5-y8-uKX" customClass="MenuSearchResultsDataSource" customModule="QuickMenu" customModuleProvider="target"/>
     </objects>
 </document>

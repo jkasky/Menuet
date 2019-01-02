@@ -13,6 +13,9 @@ class MenuSearchViewController: NSViewController, NSTextDelegate {
 
   @IBOutlet
   weak var queryTextField: NSTextField!
+  
+  @IBOutlet
+  weak var searchMenuResultsTableView: NSTableView!
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -22,6 +25,7 @@ class MenuSearchViewController: NSViewController, NSTextDelegate {
 
   override func controlTextDidChange(_ notification: Notification) {
     SearchManager.shared.search(queryTextField.stringValue)
+    searchMenuResultsTableView.reloadData()
   }
 }
 

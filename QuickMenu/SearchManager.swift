@@ -15,11 +15,12 @@ class SearchManager {
   static let shared = SearchManager()
   
   private var axClient: AX.Client
-  private var searchResults: [MenuItem]
   private var workspace: NSWorkspace
   
   private var currentApp: NSRunningApplication?
   private var currentIndex: MenuIndex
+  
+  public var searchResults: [MenuItem]
   
   private init() {
     axClient = AX.Client()
