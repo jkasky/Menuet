@@ -18,6 +18,7 @@ class SearchManager {
   private var workspace: NSWorkspace
   
   private var currentIndex: MenuIndex
+  private var selectedResult: Int
   
   public var currentApp: NSRunningApplication?
   public var searchResults: [MenuItem]
@@ -26,8 +27,20 @@ class SearchManager {
     axClient = AX.Client()
     workspace = NSWorkspace.shared
     searchResults = []
+    selectedResult = -1
     currentApp = nil
     currentIndex = MenuIndex()
+  }
+  
+  func selectResult(at index: Int) {
+    selectedResult = index
+  }
+  
+  func performSelected() {
+    guard selectedResult >= 0 else {
+      return
+    }
+    searchResults[selectedResult].command.perform()
   }
   
   func search(_ query: String) {
@@ -47,5 +60,10 @@ class SearchManager {
     } else {
       searchResults = []
     }
+  }
+  
+  func clear() {
+    searchResults.removeAll()
+    selectedResult = -1
   }
 }

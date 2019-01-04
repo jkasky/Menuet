@@ -23,10 +23,27 @@ class MenuSearchWindow: NSPanel {
     return true;
   }
   
-  override func keyUp(with event: NSEvent) {
-    if event.keyCode == kVK_Escape {
-      self.orderOut(nil)
-    }
+  override func keyDown(with event: NSEvent) {
+    interpretKeyEvents([event])
+  }
+  
+  override func cancelOperation(_ sender: Any?) {
+    // On `Escape` hide the window.
+    orderOut(nil)
+  }
+  
+  override func insertNewline(_ sender: Any?) {
+    // On `Enter` perform the selected menu item command.
+    SearchManager.shared.performSelected()
+    orderOut(nil)
+  }
+  
+  override func moveDown(_ sender: Any?) {
+    NSLog("move down")
+  }
+  
+  override func moveUp(_ sender: Any?) {
+    NSLog("move up")
   }
 }
 

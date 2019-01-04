@@ -33,6 +33,16 @@ class MenuSearchViewController: NSViewController, NSTextDelegate {
     let currentApp = NSWorkspace.shared.menuBarOwningApplication
     appIconImageView.image = currentApp?.icon
   }
+  
+  override func viewDidAppear() {
+    queryTextField.becomeFirstResponder()
+  }
+  
+  override func viewDidDisappear() {
+    searchManager?.clear()
+    queryTextField.stringValue = ""
+    searchMenuResultsTableView.reloadData()
+  }
 
   override func controlTextDidChange(_ notification: Notification) {
     searchManager?.search(queryTextField.stringValue)

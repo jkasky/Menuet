@@ -309,7 +309,7 @@ class AXElement: AXElementProtocol {
   }
 
   func perform(action: AX.Action) {
-
+    AXUIElementPerformAction(element, action.rawValue as NSString)
   }
 }
 

@@ -71,10 +71,10 @@
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="4YX-jy-Uk3"/>
                     </imageView>
-                    <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="exb-0h-kdB">
-                        <rect key="frame" x="59" y="274" width="433" height="18"/>
+                    <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exb-0h-kdB">
+                        <rect key="frame" x="59" y="268" width="433" height="30"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" focusRingType="none" alignment="left" placeholderString="Menu Search" drawsBackground="YES" usesSingleLineMode="YES" id="FVo-cy-fHW">
+                        <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" focusRingType="none" alignment="left" placeholderString="Menu Search" drawsBackground="YES" id="FVo-cy-fHW">
                             <font key="font" size="20" name=".SFNSDisplay"/>
                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
@@ -100,6 +100,7 @@
         </viewController>
         <viewController id="mwj-rk-ORJ" customClass="MenuSearchResultsViewController" customModule="QuickMenu" customModuleProvider="target">
             <connections>
+                <outlet property="tableView" destination="8DA-Tt-Scc" id="MHY-el-FHJ"/>
                 <outlet property="view" destination="8DA-Tt-Scc" id="gm7-LO-t2t"/>
             </connections>
         </viewController>

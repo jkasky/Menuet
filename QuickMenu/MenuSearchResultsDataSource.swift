@@ -26,6 +26,9 @@ class MenuSearchResultsDataSource: NSObject, NSTableViewDataSource {
   func tableView(_ tableView: NSTableView,
                  objectValueFor tableColumn: NSTableColumn?,
                  row: Int) -> Any? {
+    guard row < searchManager.searchResults.count else {
+      return nil
+    }
     return searchManager.searchResults[row].title
   }
 }

@@ -184,11 +184,14 @@ struct MenuItemCommand {
   let character: String
   let modifiers: Modifiers
   let stringValue: String
+  let perform: () -> Void
   
-  init(character: String, modifiers: Modifiers) {
+  init(character: String, modifiers: Modifiers,
+       perform: @escaping () -> Void = {}) {
     self.character = character
     self.modifiers = modifiers
     self.stringValue = modifiers.stringValue + character
+    self.perform = perform
   }
 }
 
@@ -252,11 +255,15 @@ class AXMenuIndexer: AXMenuVisitor {
       if let commandModifiers: Int = item.get(.MenuItemCmdModifiers) {
         modifiers = Modifiers(rawValue: commandModifiers)
       }
+      func perform() {
+        
+      }
       let menuItem = MenuItem(
         title: title,
         command: MenuItemCommand(
           character: character ?? "",
-          modifiers: modifiers ?? Modifiers.noCommand),
+          modifiers: modifiers ?? Modifiers.noCommand,
+          perform: { item.perform(action: AX.Action.Press) }),
         enabled: item.get(.Enabled) ?? false)
       let menuItemPath = path.joined(separator: " > ")
       index.add(item: menuItem, path: menuItemPath)
