@@ -15,7 +15,7 @@ class MenuSearchViewController: NSViewController, NSTextDelegate {
   weak var appIconImageView: NSImageView!
   
   @IBOutlet
-  weak var queryTextField: NSTextField!
+  weak var queryField: NSTextField!
   
   @IBOutlet
   weak var searchMenuResultsTableView: NSTableView!
@@ -24,8 +24,8 @@ class MenuSearchViewController: NSViewController, NSTextDelegate {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.queryTextField.isBezeled = false
-    self.queryTextField.isBordered = false
+    self.queryField.isBezeled = false
+    self.queryField.isBordered = false
     searchManager = SearchManager.shared
   }
   
@@ -35,17 +35,17 @@ class MenuSearchViewController: NSViewController, NSTextDelegate {
   }
   
   override func viewDidAppear() {
-    queryTextField.becomeFirstResponder()
+    queryField.becomeFirstResponder()
   }
   
   override func viewDidDisappear() {
     searchManager?.clear()
-    queryTextField.stringValue = ""
+    queryField.stringValue = ""
     searchMenuResultsTableView.reloadData()
   }
 
   override func controlTextDidChange(_ notification: Notification) {
-    searchManager?.search(queryTextField.stringValue)
+    searchManager?.search(queryField.stringValue)
     searchMenuResultsTableView.reloadData()
   }
 }

@@ -1,0 +1,23 @@
+//
+//  MenuSearchQueryTextView.swift
+//  QuickMenu
+//
+//  Created by Jesse Kasky on 2019-01-05.
+//  Copyright © 2019 Codjax. All rights reserved.
+//
+
+import Cocoa
+import Foundation
+
+
+class MenuSearchQueryTextFieldEditor: NSTextView {
+  
+  // Disable the normal text view handling of the up and down arrow keys that
+  // moves the cursor to the beginning or end of the text field. The moveUp
+  // and moveDown are handled by the window controller and allow navigation of
+  // the search results without losing the focus in the text field.
+
+  override func moveUp(_ sender: Any?) {}
+  
+  override func moveDown(_ sender: Any?) {}
+}

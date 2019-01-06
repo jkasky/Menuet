@@ -22,7 +22,7 @@ class SearchManager {
   
   public var currentApp: NSRunningApplication?
   public var searchResults: [MenuItem]
-  
+
   private init() {
     axClient = AX.Client()
     workspace = NSWorkspace.shared

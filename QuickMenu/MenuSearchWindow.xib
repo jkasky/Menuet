@@ -8,6 +8,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="MenuSearchWindowController" customModule="QuickMenu" customModuleProvider="target">
             <connections>
+                <outlet property="searchResultsTableView" destination="8DA-Tt-Scc" id="Se3-QC-QN0"/>
                 <outlet property="window" destination="SRh-oL-y79" id="jAC-Ea-EKY"/>
             </connections>
         </customObject>
@@ -21,14 +22,14 @@
                 <rect key="frame" x="0.0" y="0.0" width="512" height="311"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <scrollView fixedFrame="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vUn-e7-3VX">
+                    <scrollView fixedFrame="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="98" horizontalPageScroll="10" verticalLineScroll="98" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vUn-e7-3VX">
                         <rect key="frame" x="0.0" y="0.0" width="512" height="260"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <clipView key="contentView" ambiguous="YES" copiesOnScroll="NO" id="5gX-lR-fvD">
                             <rect key="frame" x="0.0" y="0.0" width="512" height="260"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" id="8DA-Tt-Scc">
+                                <tableView verticalHuggingPriority="750" tag="1" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" rowHeight="96" rowSizeStyle="automatic" viewBased="YES" id="8DA-Tt-Scc">
                                     <rect key="frame" x="0.0" y="0.0" width="512" height="260"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
@@ -41,7 +42,7 @@
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                             </tableHeaderCell>
-                                            <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" title="Text Cell" id="dbq-3Q-CnH">
+                                            <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" refusesFirstResponder="YES" title="Text Cell" id="dbq-3Q-CnH">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="windowFrameTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="windowBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -66,7 +67,7 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
-                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mW6-as-pcq">
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" tag="-1" translatesAutoresizingMaskIntoConstraints="NO" id="mW6-as-pcq">
                         <rect key="frame" x="9" y="262" width="42" height="42"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="4YX-jy-Uk3"/>
@@ -81,6 +82,7 @@
                         </textFieldCell>
                         <connections>
                             <outlet property="delegate" destination="PpM-yM-nvb" id="e33-zV-hB9"/>
+                            <outlet property="nextKeyView" destination="8DA-Tt-Scc" id="j7Z-2p-mVZ"/>
                         </connections>
                     </textField>
                 </subviews>
@@ -93,8 +95,8 @@
         <viewController id="PpM-yM-nvb" customClass="MenuSearchViewController" customModule="QuickMenu" customModuleProvider="target">
             <connections>
                 <outlet property="appIconImageView" destination="mW6-as-pcq" id="kA9-Ct-fbh"/>
-                <outlet property="queryTextField" destination="exb-0h-kdB" id="hXZ-fn-HAg"/>
-                <outlet property="searchMenuResultsTableView" destination="8DA-Tt-Scc" id="uzF-rf-Uds"/>
+                <outlet property="queryField" destination="exb-0h-kdB" id="hXZ-fn-HAg"/>
+                <outlet property="searchMenuResultsTableView" destination="8DA-Tt-Scc" id="rpb-AT-uOj"/>
                 <outlet property="view" destination="E8x-le-K0e" id="GoL-Cd-vtX"/>
             </connections>
         </viewController>
