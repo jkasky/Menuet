@@ -184,15 +184,33 @@ struct MenuItemCommand {
   let character: String
   let modifiers: Modifiers
   let stringValue: String
-  let perform: () -> Void
+  let delegate: MenuItemDelegate
   
   init(character: String, modifiers: Modifiers,
-       perform: @escaping () -> Void = {}) {
+       delegate: MenuItemDelegate) {
     self.character = character
     self.modifiers = modifiers
     self.stringValue = modifiers.stringValue + character
-    self.perform = perform
+    self.delegate = delegate
   }
+  
+  func perform() {
+    delegate.perform()
+  }
+}
+
+
+protocol MenuItemDelegate {
+  
+  /**
+   * Returns true if menu item is enabled.
+   */
+  var isEnabled: Bool { get }
+  
+  /**
+   * Performs the menu item command.
+   */
+  func perform()
 }
 
 
@@ -201,9 +219,16 @@ struct MenuItem {
   let title: String
   let command: MenuItemCommand
   
-  init(title: String, command: MenuItemCommand, enabled: Bool) {
+  var enabled: Bool {
+    return delegate.isEnabled
+  }
+  
+  private let delegate: MenuItemDelegate
+  
+  init(title: String, command: MenuItemCommand, delegate:MenuItemDelegate) {
     self.title = title
     self.command = command
+    self.delegate = delegate
   }
 }
 
@@ -217,7 +242,26 @@ class MenuIndex {
   }
   
   func find(query: String) -> [MenuItem] {
-    return trie.find(sequence: query)
+    let results = trie.find(sequence: query)
+    return results.filter { $0.enabled }
+  }
+}
+
+
+class AXMenuItemDelegate: MenuItemDelegate {
+  
+  private let element: AX.Element
+  
+  var isEnabled: Bool {
+    return element.get(.Enabled) ?? false
+  }
+  
+  init(_ element: AX.Element) {
+    self.element = element
+  }
+  
+  func perform() {
+    element.perform(action: AX.Action.Press)
   }
 }
 
@@ -255,16 +299,14 @@ class AXMenuIndexer: AXMenuVisitor {
       if let commandModifiers: Int = item.get(.MenuItemCmdModifiers) {
         modifiers = Modifiers(rawValue: commandModifiers)
       }
-      func perform() {
-        
-      }
+      let delegate = AXMenuItemDelegate(item)
       let menuItem = MenuItem(
         title: title,
         command: MenuItemCommand(
           character: character ?? "",
           modifiers: modifiers ?? Modifiers.noCommand,
-          perform: { item.perform(action: AX.Action.Press) }),
-        enabled: item.get(.Enabled) ?? false)
+          delegate: delegate),
+        delegate: delegate)
       let menuItemPath = path.joined(separator: " > ")
       index.add(item: menuItem, path: menuItemPath)
     }

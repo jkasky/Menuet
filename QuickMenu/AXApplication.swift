@@ -72,7 +72,8 @@ class AXMenuLogger: AXMenuVisitor {
       let modifiers = Modifiers(rawValue: menuItemCmdModifiers)
       let commandItem = MenuItemCommand(
         character:menuItemCmdChar,
-        modifiers:modifiers)
+        modifiers:modifiers,
+        delegate:AXMenuItemDelegate(item))
       NSLog(String(repeating: " ", count: indent) +
         "\(title), Command:\(commandItem.stringValue), Enabled:\(enabled)")
     }
@@ -115,7 +116,6 @@ class AXMenuWalker {
         walkMenu(menu: menu!, visitor: visitor)
         visitor.leaveMenu(item)
       default:
-        NSLog("SKIP")
         continue
       }
     }
