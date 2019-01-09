@@ -195,7 +195,7 @@ struct MenuItemCommand {
   }
   
   func perform() {
-    delegate.perform()
+    delegate.press()
   }
 }
 
@@ -208,9 +208,9 @@ protocol MenuItemDelegate {
   var isEnabled: Bool { get }
   
   /**
-   * Performs the menu item command.
+   * Performs the press action on the menu item.
    */
-  func perform()
+  func press()
 }
 
 
@@ -253,15 +253,15 @@ class AXMenuItemDelegate: MenuItemDelegate {
   private let element: AX.Element
   
   var isEnabled: Bool {
-    return element.get(.Enabled) ?? false
+    return (try? element.get(.Enabled)) ?? false
   }
   
   init(_ element: AX.Element) {
     self.element = element
   }
   
-  func perform() {
-    element.perform(action: AX.Action.Press)
+  func press() {
+    try? element.perform(action: AX.Action.Press)
   }
 }
 
@@ -276,7 +276,7 @@ class AXMenuIndexer: AXMenuVisitor {
   }
   
   func enterMenu(_ menu: AX.Element) {
-    if let title:String = menu.get(.Title) {
+    if let title: String = try? menu.get(.Title) {
       path.append(title)
     }
   }
@@ -286,17 +286,17 @@ class AXMenuIndexer: AXMenuVisitor {
   }
   
   func visitMenuItem(_ item: AX.Element) {
-    if let title:String = item.get(.Title) {
+    if let title: String = try? item.get(.Title) {
       path.append(title)
       defer { _ = path.popLast() }
       var character: String?
-      if let glyphCode: Int = item.get(.MenuItemCmdGlyph) {
+      if let glyphCode: Int = try? item.get(.MenuItemCmdGlyph) {
         character = KeyGlyph.forCode(glyphCode)?.characters
       } else {
-        character = item.get(.MenuItemCmdChar)
+        character = try? item.get(.MenuItemCmdChar)
       }
       var modifiers: Modifiers?
-      if let commandModifiers: Int = item.get(.MenuItemCmdModifiers) {
+      if let commandModifiers: Int = try? item.get(.MenuItemCmdModifiers) {
         modifiers = Modifiers(rawValue: commandModifiers)
       }
       let delegate = AXMenuItemDelegate(item)

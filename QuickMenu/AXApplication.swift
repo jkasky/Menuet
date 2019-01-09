@@ -20,21 +20,21 @@ protocol AXElementProtocol {
 
   var childCount: Int { get }
 
-  func find(_ role: AX.Role) -> AX.Element?
+  func find(_ role: AX.Role) throws -> AX.Element?
 
-  func findAll(_ role: AX.Role) -> [AX.Element]
+  func findAll(_ role: AX.Role) throws -> [AX.Element]
 
-  func get(_ attribute: AX.Attribute) -> AX.Element?
+  func get(_ attribute: AX.Attribute) throws -> AX.Element
 
-  func get(_ attribute: AX.Attribute) -> String?
+  func get(_ attribute: AX.Attribute) throws -> String
 
-  func get(_ attribute: AX.Attribute) -> Bool?
+  func get(_ attribute: AX.Attribute) throws -> Bool
 
-  func get(_ attribute: AX.Attribute) -> Int?
+  func get(_ attribute: AX.Attribute) throws -> Int
 
-  func isA(_: AX.Role) -> Bool
+  func isA(_: AX.Role) throws -> Bool
 
-  func perform(action: AX.Action)
+  func perform(action: AX.Action) throws
 }
 
 
@@ -54,7 +54,7 @@ class AXMenuLogger: AXMenuVisitor {
   var indent:Int = 0
 
   func enterMenu(_ menu: AX.Element) {
-    if let title:String = menu.get(.Title) {
+    if let title: String = try? menu.get(.Title) {
       NSLog(String(repeating: " ", count: indent) + "\(title)")
       indent += 2
     }
@@ -65,13 +65,13 @@ class AXMenuLogger: AXMenuVisitor {
   }
 
   func visitMenuItem(_ item: AX.Element) {
-    if let title:String = item.get(.Title) {
-      let enabled:Bool = item.get(.Enabled) ?? false
-      let menuItemCmdChar = item.get(.MenuItemCmdChar) ?? ""
-      let menuItemCmdModifiers = item.get(.MenuItemCmdModifiers) ?? 0
-      let modifiers = Modifiers(rawValue: menuItemCmdModifiers)
+    if let title: String = try? item.get(.Title) {
+      let enabled: Bool = (try? item.get(.Enabled)) ?? false
+      let commandChar: String = (try? item.get(.MenuItemCmdChar)) ?? ""
+      let commandModifiers: Int = (try? item.get(.MenuItemCmdModifiers)) ?? 0
+      let modifiers = Modifiers(rawValue: commandModifiers)
       let commandItem = MenuItemCommand(
-        character:menuItemCmdChar,
+        character:commandChar,
         modifiers:modifiers,
         delegate:AXMenuItemDelegate(item))
       NSLog(String(repeating: " ", count: indent) +
@@ -89,10 +89,10 @@ class AXMenuWalker {
     self.application = application
   }
 
-  func walk(visitor: AXMenuVisitor) {
-    let menuBar:AX.Element = application.get(.MenuBar)!
-    for menuBarItem in menuBar.findAll(.MenuBarItem) {
-      let menu:AX.Element? = menuBarItem.find(.Menu)
+  func walk(visitor: AXMenuVisitor) throws {
+    let menuBar: AX.Element = try application.get(.MenuBar)
+    for menuBarItem: AX.Element in try menuBar.findAll(.MenuBarItem) {
+      let menu: AX.Element? = try menuBarItem.find(.Menu)
       guard menu != nil else {
         continue
       }
@@ -103,17 +103,16 @@ class AXMenuWalker {
   }
 
   private func walkMenu(menu: AX.Element, visitor: AXMenuVisitor) {
-    for item in menu.findAll(.MenuItem) {
+    for item in (try? menu.findAll(.MenuItem)) ?? [] {
       switch item.childCount {
       case 0:
         visitor.visitMenuItem(item)
       case 1:
-        let menu = item.find(.Menu)
-        guard menu != nil else {
+        guard let menu: AX.Element = (try? item.find(.Menu))! else {
           continue
         }
         visitor.enterMenu(item)
-        walkMenu(menu: menu!, visitor: visitor)
+        walkMenu(menu: menu, visitor: visitor)
         visitor.leaveMenu(item)
       default:
         continue
@@ -223,7 +222,7 @@ class AXElement: AXElementProtocol {
 
   var childCount: Int {
     get {
-      let value:AnyObject? = get(.Children)
+      let value:AnyObject? = try? get(.Children)
       guard value != nil else {
         return 0
       }
@@ -234,7 +233,7 @@ class AXElement: AXElementProtocol {
   var children: [AX.Element] {
     get {
       if cachedChildren.isEmpty && childCount > 0 {
-        guard let value:AnyObject = get(.Children) else {
+        guard let value:AnyObject = try? get(.Children) else {
           return []
         }
         let untyped = ((value as! CFArray) as NSArray) as [AnyObject]
@@ -246,70 +245,93 @@ class AXElement: AXElementProtocol {
     }
   }
 
-  func find(_ role: AX.Role) -> AX.Element? {
-    return children.first {
-      return $0.isA(role)
+  func find(_ role: AX.Role) throws -> AX.Element? {
+    return try children.first {
+      return try $0.isA(role)
     }
   }
 
-  func findAll(_ role: AX.Role) -> [AX.Element] {
-    return children.filter {
-      return $0.isA(role)
+  func findAll(_ role: AX.Role) throws -> [AX.Element] {
+    return try children.filter {
+      return try $0.isA(role)
     }
   }
 
-  private func get(_ attribute: AX.Attribute) -> AnyObject? {
+  /**
+   * Returns the value of an accessibility attribute.
+   */
+  private func get(_ attribute: AX.Attribute) throws -> AnyObject {
     let name = attribute.rawValue as NSString
-    var error: AXError?
     var value: AnyObject?
-    error = AXUIElementCopyAttributeValue(element, name, &value)
+    let error = AXUIElementCopyAttributeValue(element, name, &value)
     guard error == .success else {
-      return nil
+      throw AX.APIError(code: error)
     }
-    return value
+    guard value != nil else {
+      throw AX.Error.attributeNotFound(attribute)
+    }
+    return value!
   }
 
-  func get(_ attribute: AX.Attribute) -> AX.Element? {
-    let value: AnyObject? = get(attribute)
-    guard value != nil else {
-      return nil
+  func get(_ attribute: AX.Attribute) throws -> AX.Element {
+    let value: AnyObject = try get(attribute)
+    let typeId = CFGetTypeID(value)
+    guard typeId == AXUIElementGetTypeID() else {
+      throw AX.Error.invalidType(CFCopyTypeIDDescription(typeId) as String)
     }
     return AXElement(element: value as! AXUIElement)
   }
 
-  func get(_ attribute: AX.Attribute) -> String? {
-    if let value: AnyObject = get(attribute) {
-      return value as! CFString as String
+  func get(_ attribute: AX.Attribute) throws -> String {
+    let value: AnyObject = try get(attribute)
+    let typeId = CFGetTypeID(value)
+    guard typeId == CFStringGetTypeID() else {
+      throw AX.Error.invalidType(CFCopyTypeIDDescription(typeId) as String)
     }
-    return nil
+    return value as! CFString as String
   }
 
-  func get(_ attribute: AX.Attribute) -> Bool? {
-    if let value: AnyObject = get(attribute) {
-      return (value as! CFBoolean as! Bool)
+  func get(_ attribute: AX.Attribute) throws -> Bool {
+    let value: AnyObject = try get(attribute)
+    let typeId = CFGetTypeID(value)
+    guard typeId == CFBooleanGetTypeID() else {
+      throw AX.Error.invalidType(CFCopyTypeIDDescription(typeId) as String)
     }
-    return nil
+    return (value as! CFBoolean) == kCFBooleanTrue ? true : false
   }
 
-  func get(_ attribute: AX.Attribute) -> Int? {
-    if let value: AnyObject = get(attribute) {
-      return (value as! CFNumber as! Int)
+  /**
+   Returns an attribute value as an integer.
+   
+   If the attribute value is not a whole number then it will be rounded
+   towards zero.
+  
+   - Parameters:
+     - attribute: the attribute to get
+   
+   - Throws:
+     - `AX.APIError`
+     - `AX.Error.invalidType`
+   */
+  func get(_ attribute: AX.Attribute) throws -> Int {
+    let value: AnyObject = try get(attribute)
+    let typeId = CFGetTypeID(value)
+    guard typeId == CFNumberGetTypeID() else {
+      throw AX.Error.invalidType(CFCopyTypeIDDescription(typeId) as String)
     }
-    return nil
+    let number = value as! CFNumber as NSNumber
+    return Int(truncating: number)
   }
 
-  func isA(_ role: AX.Role) -> Bool {
-    guard let myRole:String = get(.Role) else {
-      return false
-    }
-    if myRole == role.rawValue {
-      return true
-    }
-    return false
+  func isA(_ role: AX.Role) throws -> Bool {
+    return try get(.Role) as String == role.rawValue
   }
 
-  func perform(action: AX.Action) {
-    AXUIElementPerformAction(element, action.rawValue as NSString)
+  func perform(action: AX.Action) throws {
+    let error = AXUIElementPerformAction(element, action.rawValue as NSString)
+    guard error == .success else {
+      throw AX.APIError(code: error)
+    }
   }
 }
 

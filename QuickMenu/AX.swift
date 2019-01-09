@@ -13,6 +13,8 @@ import Foundation
 enum AX {
   typealias Action = AXActionEnum
   typealias Attribute = AXAttributeEnum
+  typealias APIError = AXAPIError
+  typealias Error = AXErrorEnum
   typealias Role = AXRoleEnum
 }
 
@@ -209,6 +211,28 @@ enum AXAttributeEnum: String, RawRepresentable {
   case Windows = "AXWindows"
   case YearField = "AXYearField"
   case ZoomButton = "AXZoomButton"
+}
+
+
+/**
+ * Error thrown when low-level accessibility API (Carbon) return errors.
+ */
+class AXAPIError: Error {
+  
+  let code: AXError
+  
+  init(code: AXError) {
+    self.code = code
+  }
+}
+
+
+/**
+ * Accessibility errors thrown by AX framework.
+ */
+enum AXErrorEnum: Error {
+  case attributeNotFound(AX.Attribute)
+  case invalidType(String)
 }
 
 

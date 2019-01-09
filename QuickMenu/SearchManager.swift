@@ -53,7 +53,7 @@ class SearchManager {
       let axApp = axClient.createApplication(application:menuBarApp!)
       let walker = AXMenuWalker(application: axApp.topElement)
       currentIndex = MenuIndex()
-      walker.walk(visitor: AXMenuIndexer(index: currentIndex))
+      try? walker.walk(visitor: AXMenuIndexer(index: currentIndex))
     }
     if query.count > 0 {
       searchResults = currentIndex.find(query: query)
