@@ -37,7 +37,7 @@ class SearchManager {
   }
   
   func performSelected() {
-    guard selectedResult >= 0 else {
+    guard selectedResult >= 0 && searchResults.count > 0 else {
       return
     }
     searchResults[selectedResult].command.perform()
