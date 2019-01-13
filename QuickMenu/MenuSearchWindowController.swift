@@ -56,7 +56,18 @@ class MenuSearchWindowController: NSWindowController, NSWindowDelegate {
   }
   
   override func keyUp(with event: NSEvent) {
-    interpretKeyEvents([event])
+    if let key = event.characters?.unicodeScalars.first {
+      switch Int(key.value) {
+      case NSDownArrowFunctionKey:
+        moveDown(nil)
+      case NSUpArrowFunctionKey:
+        moveUp(nil)
+      case NSCarriageReturnCharacter:
+        insertNewline(nil)
+      default:
+        break
+      }
+    }
   }
   
   override func cancelOperation(_ sender: Any?) {
