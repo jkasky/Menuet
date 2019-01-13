@@ -175,6 +175,8 @@ struct Modifiers: OptionSet {
   func joinWith(_ character: String) -> String {
     if self.rawValue > 0 {
       return self.stringValue + character
+    } else if self.rawValue == 0 && character.count > 0 {
+      return self.stringValue + character
     }
     return character
   }
