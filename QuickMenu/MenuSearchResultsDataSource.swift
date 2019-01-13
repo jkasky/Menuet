@@ -29,6 +29,15 @@ class MenuSearchResultsDataSource: NSObject, NSTableViewDataSource {
     guard row < searchManager.searchResults.count else {
       return nil
     }
-    return searchManager.searchResults[row].title
+    let item = searchManager.searchResults[row]
+    switch tableColumn?.identifier.rawValue {
+    case "menuItemTitle":
+      return item.title
+    case "menuItemCommand":
+      return item.command.stringValue
+    default:
+      break
+    }
+    return ""
   }
 }

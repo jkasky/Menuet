@@ -172,6 +172,13 @@ struct Modifiers: OptionSet {
     return value
   }
   
+  func joinWith(_ character: String) -> String {
+    if self.rawValue > 0 {
+      return self.stringValue + character
+    }
+    return character
+  }
+  
   static let shift = Modifiers(rawValue: 1)
   static let option = Modifiers(rawValue: 2)
   static let control = Modifiers(rawValue: 4)
@@ -190,7 +197,7 @@ struct MenuItemCommand {
        delegate: MenuItemDelegate) {
     self.character = character
     self.modifiers = modifiers
-    self.stringValue = modifiers.stringValue + character
+    self.stringValue = modifiers.joinWith(character)
     self.delegate = delegate
   }
   

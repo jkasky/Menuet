@@ -16,38 +16,51 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" hasShadow="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="SRh-oL-y79" customClass="MenuSearchWindow" customModule="QuickMenu" customModuleProvider="target">
             <windowStyleMask key="styleMask" nonactivatingPanel="YES"/>
-            <rect key="contentRect" x="196" y="600" width="512" height="311"/>
+            <rect key="contentRect" x="196" y="600" width="456" height="311"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1177"/>
             <view key="contentView" wantsLayer="YES" id="E8x-le-K0e">
-                <rect key="frame" x="0.0" y="0.0" width="512" height="311"/>
+                <rect key="frame" x="0.0" y="0.0" width="456" height="311"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <scrollView fixedFrame="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vUn-e7-3VX">
-                        <rect key="frame" x="0.0" y="0.0" width="512" height="260"/>
+                        <rect key="frame" x="0.0" y="0.0" width="456" height="260"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <clipView key="contentView" ambiguous="YES" copiesOnScroll="NO" id="5gX-lR-fvD">
-                            <rect key="frame" x="0.0" y="0.0" width="512" height="260"/>
+                            <rect key="frame" x="0.0" y="0.0" width="456" height="260"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <tableView verticalHuggingPriority="750" tag="1" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="8DA-Tt-Scc">
-                                    <rect key="frame" x="0.0" y="0.0" width="512" height="260"/>
+                                <tableView focusRingType="none" verticalHuggingPriority="750" tag="1" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="8DA-Tt-Scc">
+                                    <rect key="frame" x="0.0" y="0.0" width="457" height="260"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" name="windowBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                     <tableColumns>
-                                        <tableColumn editable="NO" width="509" minWidth="40" maxWidth="1000" id="UeP-0M-nvb">
-                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
+                                        <tableColumn identifier="menuItemTitle" editable="NO" width="340" minWidth="40" maxWidth="1000" id="UeP-0M-nvb">
+                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                             </tableHeaderCell>
-                                            <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" refusesFirstResponder="YES" title="Text Cell" id="dbq-3Q-CnH">
+                                            <textFieldCell key="dataCell" lineBreakMode="truncatingTail" refusesFirstResponder="YES" alignment="left" title="Text Cell" id="dbq-3Q-CnH">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="windowFrameTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="windowBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
-                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES"/>
+                                        </tableColumn>
+                                        <tableColumn identifier="menuItemCommand" editable="NO" width="111" minWidth="10" maxWidth="3.4028234663852886e+38" id="qXJ-Sa-zru">
+                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </tableHeaderCell>
+                                            <textFieldCell key="dataCell" lineBreakMode="truncatingTail" refusesFirstResponder="YES" alignment="right" title="Text Cell" id="5B2-MK-5ce">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES"/>
                                         </tableColumn>
                                     </tableColumns>
                                     <connections>
@@ -73,7 +86,7 @@
                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="4YX-jy-Uk3"/>
                     </imageView>
                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exb-0h-kdB">
-                        <rect key="frame" x="59" y="268" width="433" height="30"/>
+                        <rect key="frame" x="59" y="268" width="377" height="30"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" focusRingType="none" alignment="left" placeholderString="Menu Search" drawsBackground="YES" id="FVo-cy-fHW">
                             <font key="font" size="20" name=".SFNSDisplay"/>
@@ -82,7 +95,6 @@
                         </textFieldCell>
                         <connections>
                             <outlet property="delegate" destination="PpM-yM-nvb" id="e33-zV-hB9"/>
-                            <outlet property="nextKeyView" destination="8DA-Tt-Scc" id="j7Z-2p-mVZ"/>
                         </connections>
                     </textField>
                 </subviews>
@@ -90,7 +102,7 @@
             <connections>
                 <outlet property="delegate" destination="-2" id="39b-Zs-lPL"/>
             </connections>
-            <point key="canvasLocation" x="-562" y="-447.5"/>
+            <point key="canvasLocation" x="-603" y="-447.5"/>
         </window>
         <viewController id="PpM-yM-nvb" customClass="MenuSearchViewController" customModule="QuickMenu" customModuleProvider="target">
             <connections>
