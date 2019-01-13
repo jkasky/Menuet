@@ -44,6 +44,7 @@ class MenuSearchWindowController: NSWindowController, NSWindowDelegate {
   
   func show() {
     showWindow(nil)
+    window?.center()
     window?.orderFrontRegardless()
   }
   

@@ -22,14 +22,14 @@
                 <rect key="frame" x="0.0" y="0.0" width="512" height="311"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <scrollView fixedFrame="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="98" horizontalPageScroll="10" verticalLineScroll="98" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vUn-e7-3VX">
+                    <scrollView fixedFrame="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vUn-e7-3VX">
                         <rect key="frame" x="0.0" y="0.0" width="512" height="260"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <clipView key="contentView" ambiguous="YES" copiesOnScroll="NO" id="5gX-lR-fvD">
                             <rect key="frame" x="0.0" y="0.0" width="512" height="260"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <tableView verticalHuggingPriority="750" tag="1" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" rowHeight="96" rowSizeStyle="automatic" viewBased="YES" id="8DA-Tt-Scc">
+                                <tableView verticalHuggingPriority="750" tag="1" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="8DA-Tt-Scc">
                                     <rect key="frame" x="0.0" y="0.0" width="512" height="260"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
@@ -59,7 +59,7 @@
                             <color key="backgroundColor" name="windowBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </clipView>
                         <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="tHg-NC-rKk">
-                            <rect key="frame" x="1" y="119" width="223" height="15"/>
+                            <rect key="frame" x="-100" y="-100" width="223" height="15"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="bAR-tL-o5s">
@@ -107,5 +107,10 @@
             </connections>
         </viewController>
         <customObject id="Nf5-y8-uKX" customClass="MenuSearchResultsDataSource" customModule="QuickMenu" customModuleProvider="target"/>
+        <stackView distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" id="uwu-OD-3at">
+            <rect key="frame" x="0.0" y="0.0" width="406" height="57"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <point key="canvasLocation" x="-562" y="-169"/>
+        </stackView>
     </objects>
 </document>
