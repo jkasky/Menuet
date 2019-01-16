@@ -35,6 +35,10 @@ class MenuSearchWindowController: NSWindowController, NSWindowDelegate {
   }
   
   func show() {
+    if var frame = window?.frame {
+      frame.size.height = 50
+      window?.setFrame(frame, display: false, animate: false)
+    }
     showWindow(nil)
     window?.center()
     window?.orderFrontRegardless()

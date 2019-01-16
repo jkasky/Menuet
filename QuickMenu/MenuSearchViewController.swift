@@ -20,7 +20,7 @@ class MenuSearchViewController: NSViewController, NSTextDelegate {
   @IBOutlet
   weak var searchMenuResultsTableView: NSTableView!
   
-  var searchManager: SearchManager?
+  var searchManager: SearchManager!
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -39,14 +39,25 @@ class MenuSearchViewController: NSViewController, NSTextDelegate {
   }
   
   override func viewDidDisappear() {
-    searchManager?.clear()
+    searchManager.clear()
     queryField.stringValue = ""
     searchMenuResultsTableView.reloadData()
   }
 
   override func controlTextDidChange(_ notification: Notification) {
-    searchManager?.search(queryField.stringValue)
+    searchManager.search(queryField.stringValue)
     searchMenuResultsTableView.reloadData()
+    if var rect = view.window?.frame {
+      if searchManager.searchResults.isEmpty && rect.size.height >= 50 {
+        rect.origin.y += 250
+        rect.size.height = 50
+        view.window?.setFrame(rect, display: false, animate: true)
+      } else if !searchManager.searchResults.isEmpty && rect.size.height < 300 {
+        rect.origin.y -= 250
+        rect.size.height = 300
+        view.window?.setFrame(rect, display: false, animate: true)
+      }
+    }
   }
 }
 
