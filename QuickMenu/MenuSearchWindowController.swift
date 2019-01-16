@@ -17,14 +17,6 @@ class MenuSearchWindowController: NSWindowController, NSWindowDelegate {
   
   var menuSearchQueryFieldEditor: MenuSearchQueryTextFieldEditor?
   
-  override func windowDidLoad() {
-    window?.canHide = true
-    window?.collectionBehavior = .moveToActiveSpace
-    window?.hasShadow = true
-    window?.level = .floating
-    window?.isOpaque = true
-  }
-  
   func windowDidResignMain(_ notification: Notification) {
     hide()
   }

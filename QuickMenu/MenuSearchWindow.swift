@@ -21,4 +21,43 @@ class MenuSearchWindow: NSPanel {
   override var canBecomeMain: Bool {
     return true;
   }
+  
+  // Override the content view property to configure it immediately after
+  // it is set.
+  override var contentView: NSView? {
+    get {
+      return super.contentView
+    }
+    set {
+      super.contentView = newValue
+      setupContentView()
+    }
+  }
+  
+  override init(contentRect: NSRect, styleMask style: NSWindow.StyleMask,
+                backing backingStoreType: NSWindow.BackingStoreType,
+                defer flag: Bool) {
+    super.init(contentRect: contentRect, styleMask: style,
+               backing: backingStoreType, defer: flag)
+    canHide = true
+    collectionBehavior = .moveToActiveSpace
+    hasShadow = true
+    level = .floating
+    
+    // Use clear translucent background so the content view can be used to
+    // render a panel with rounded corners similar to the spotlight search
+    // panel.
+    backgroundColor = NSColor.clear
+    isOpaque = false
+  }
+  
+  private func setupContentView() {
+    // Draw the content view with rounded corners and the default window
+    // background color.
+    if let view = contentView {
+      view.wantsLayer = true
+      view.layer?.cornerRadius = 10.0
+      view.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
+    }
+  }
 }
