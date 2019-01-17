@@ -1,6 +1,6 @@
 //
 //  SearchManager.swift
-//  QuickMenu
+//  MenuFinder
 //
 //  Created by Jesse Kasky on 2018-12-29.
 //  Copyright © 2018 Codjax. All rights reserved.

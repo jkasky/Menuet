@@ -1,6 +1,6 @@
 //
 //  TrieTest.swift
-//  QuickMenuTests
+//  MenuFinderTests
 //
 //  Created by Jesse Kasky on 4/25/18.
 //  Copyright © 2018 Codjax. All rights reserved.

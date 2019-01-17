@@ -1,6 +1,6 @@
 //
 //  Menu.swift
-//  QuickMenu
+//  MenuFinder
 //
 //  Created by Jesse Kasky on 2018-12-09.
 //  Copyright © 2018 Codjax. All rights reserved.
@@ -193,10 +193,10 @@ struct MenuItemCommand {
   let character: String
   let modifiers: Modifiers
   let stringValue: String
-  let delegate: MenuItemDelegate
+  let delegate: MenuItemDelegate?
   
   init(character: String, modifiers: Modifiers,
-       delegate: MenuItemDelegate) {
+       delegate: MenuItemDelegate? = nil) {
     self.character = character
     self.modifiers = modifiers
     self.stringValue = modifiers.joinWith(character)
@@ -204,7 +204,7 @@ struct MenuItemCommand {
   }
   
   func perform() {
-    delegate.press()
+    delegate?.press()
   }
 }
 

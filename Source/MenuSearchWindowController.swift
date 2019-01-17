@@ -1,6 +1,6 @@
 //
 //  MenuSearchWindowController.swift
-//  QuickMenu
+//  MenuFinder
 //
 //  Created by Jesse Kasky on 2019-01-05.
 //  Copyright © 2019 Codjax. All rights reserved.
@@ -18,6 +18,7 @@ class MenuSearchWindowController: NSWindowController, NSWindowDelegate {
   var menuSearchQueryFieldEditor: MenuSearchQueryTextFieldEditor?
   
   func windowDidResignMain(_ notification: Notification) {
+    // comment
     hide()
   }
   

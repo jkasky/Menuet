@@ -1,6 +1,6 @@
 //
 //  HotKeyCenter.swift
-//  QuickMenu
+//  MenuFinder
 //
 //  Created by Jesse Kasky on 1/23/18.
 //  Copyright © 2018 Codjax. All rights reserved.

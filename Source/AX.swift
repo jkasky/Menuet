@@ -1,6 +1,6 @@
 //
 //  AX.swift
-//  QuickMenu
+//  MenuFinder
 //
 //  Created by Jesse Kasky on 6/29/16.
 //  Copyright © 2016 Codjax. All rights reserved.

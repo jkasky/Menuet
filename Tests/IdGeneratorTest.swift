@@ -1,6 +1,6 @@
 //
 //  IdGeneratorTest.swift
-//  QuickMenuTests
+//  MenuFinderTests
 //
 //  Created by Jesse Kasky on 2018-12-28.
 //  Copyright © 2018 Codjax. All rights reserved.

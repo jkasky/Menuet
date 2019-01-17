@@ -1,6 +1,6 @@
 //
 //  Trie.swift
-//  QuickMenu
+//  MenuFinder
 //
 //  Created by Jesse Kasky on 7/10/17.
 //  Copyright © 2017 Codjax. All rights reserved.
