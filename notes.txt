@@ -1,8 +1,8 @@
 [TODO]
 
-* Add index of front most app menu.
-* Convert from DDHotKey to Magnet (Swift)
-* Make app a menu bar icon.
+x Add index of front most app menu.
+x Convert from DDHotKey to Magnet (Swift)
+x Make app a menu bar icon.
 * Add preferences and make accessible through menu bar icon.
 * Add keybindng setting
 

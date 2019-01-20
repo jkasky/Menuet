@@ -42,11 +42,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   private func activateStatusMenu() {
     let statusBar = NSStatusBar.system
 
-    // Should be NSVariableStatusItemLength but produces a link error.
-    statusItem = statusBar.statusItem(withLength: -1.0)
+    statusItem = statusBar.statusItem(withLength: NSStatusItem.squareLength)
     
     // TODO: replace with icon
-    statusItem!.button!.title = "QM"
+    //statusItem!.button!.title = "QM"
+    let icon = NSImage(named: NSImage.Name("StatusBarIcon"))
+    icon?.isTemplate = true
+    statusItem!.button!.image = icon
+    statusItem!.button!.imageScaling = .scaleProportionallyUpOrDown
     statusItem!.menu = statusMenu
   }
 
