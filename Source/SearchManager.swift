@@ -22,6 +22,7 @@ class SearchManager {
   
   public var currentApp: NSRunningApplication?
   public var searchResults: [MenuItem]
+  public var activeItem: MenuItem?
 
   private init() {
     axClient = AX.Client()
@@ -30,17 +31,18 @@ class SearchManager {
     selectedResult = -1
     currentApp = nil
     currentIndex = MenuIndex()
+    activeItem = nil
   }
   
   func selectResult(at index: Int) {
     selectedResult = index
   }
   
-  func performSelected() {
+  func activateSelected() {
     guard selectedResult >= 0 && searchResults.count > 0 else {
       return
     }
-    searchResults[selectedResult].command.perform()
+    activeItem = searchResults[selectedResult]
   }
   
   func search(_ query: String) {
@@ -65,5 +67,6 @@ class SearchManager {
   func clear() {
     searchResults.removeAll()
     selectedResult = -1
+    activeItem = nil
   }
 }

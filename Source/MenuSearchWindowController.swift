@@ -18,8 +18,10 @@ class MenuSearchWindowController: NSWindowController, NSWindowDelegate {
   var menuSearchQueryFieldEditor: MenuSearchQueryTextFieldEditor?
   
   func windowDidResignMain(_ notification: Notification) {
-    // comment
     hide()
+    if let item = SearchManager.shared.activeItem {
+      item.command.perform()
+    }
   }
   
   func windowWillReturnFieldEditor(_ sender: NSWindow, to client: Any?) -> Any? {
@@ -69,13 +71,15 @@ class MenuSearchWindowController: NSWindowController, NSWindowDelegate {
   }
   
   override func cancelOperation(_ sender: Any?) {
-    // On `Escape` @objc hide the window.
+    // On `Escape` hide the window.
     hide()
   }
   
   override func insertNewline(_ sender: Any?) {
-    // On `Enter` perform the selected menu item command.
-    SearchManager.shared.performSelected()
+    // On `Enter` activate the selected menu item and hide the window. Once
+    // the window resigns main the menu item will be performed. App owning the
+    // menu bar may need to be main for the perform to take affect.
+    SearchManager.shared.activateSelected()
     hide()
   }
   

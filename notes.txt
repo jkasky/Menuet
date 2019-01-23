@@ -5,6 +5,10 @@ x Convert from DDHotKey to Magnet (Swift)
 x Make app a menu bar icon.
 * Add preferences and make accessible through menu bar icon.
 * Add keybindng setting
+* Fix: panel jumping when search fails
+x Fix: some apps don't respond to menu press - invoke after panel resigns
+* Change results table to view based table
+* Add group rows
 
 
 [NOTES]
