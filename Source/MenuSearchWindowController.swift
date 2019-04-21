@@ -24,6 +24,25 @@ class MenuSearchWindowController: NSWindowController, NSWindowDelegate {
     }
   }
   
+  override func windowWillLoad() {
+    SearchEvent.ResultsChanged.observe(self, #selector(searchResultsDidChange))
+  }
+
+  @objc func searchResultsDidChange() {
+    let searchManager = SearchManager.shared
+    if var rect = window?.frame {
+      if searchManager.searchResults.isEmpty && rect.size.height > 50 {
+        rect.origin.y += 250
+        rect.size.height = 50
+        window?.setFrame(rect, display: false, animate: true)
+      } else if !searchManager.searchResults.isEmpty && rect.size.height < 300 {
+        rect.origin.y -= 250
+        rect.size.height = 300
+        window?.setFrame(rect, display: false, animate: true)
+      }
+    }
+  }
+
   func windowWillReturnFieldEditor(_ sender: NSWindow, to client: Any?) -> Any? {
     if client is NSTextField {
       if menuSearchQueryFieldEditor == nil {
