@@ -31,12 +31,10 @@ struct IdGenerator<T: UnsignedInteger> {
 public struct HotKey: Hashable {
   
   private static var idGenerator = IdGenerator<UInt32>()
-
-  public var hashValue: Int {
-    var hasher = Hasher()
+  
+  public func hash(into hasher: inout Hasher) {
     hasher.combine(keyCode)
     hasher.combine(modifierFlags.rawValue)
-    return hasher.finalize()
   }
 
   public static func ==(left: HotKey, right: HotKey) -> Bool {

@@ -9,7 +9,7 @@
 import Cocoa
 
 
-class MenuSearchViewController: NSViewController, NSTextDelegate {
+class MenuSearchViewController: NSViewController, NSControlTextEditingDelegate {
 
   @IBOutlet
   weak var appIconImageView: NSImageView!
@@ -44,7 +44,7 @@ class MenuSearchViewController: NSViewController, NSTextDelegate {
     searchMenuResultsTableView.reloadData()
   }
 
-  override func controlTextDidChange(_ notification: Notification) {
+  func controlTextDidChange(_ notification: Notification) {
     searchManager.search(queryField.stringValue)
     searchMenuResultsTableView.reloadData()
   }

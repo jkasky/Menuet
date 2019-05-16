@@ -108,12 +108,11 @@ class AXMenuWalker {
       case 0:
         visitor.visitMenuItem(item)
       case 1:
-        guard let menu: AX.Element = (try? item.find(.Menu))! else {
-          continue
+        if let menu = try? item.find(.Menu) as AX.Element? {
+          visitor.enterMenu(item)
+          walkMenu(menu: menu, visitor: visitor)
+          visitor.leaveMenu(item)
         }
-        visitor.enterMenu(item)
-        walkMenu(menu: menu, visitor: visitor)
-        visitor.leaveMenu(item)
       default:
         continue
       }

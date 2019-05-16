@@ -77,11 +77,11 @@ class MenuSearchWindowController: NSWindowController, NSWindowDelegate {
   override func keyUp(with event: NSEvent) {
     if let key = event.characters?.unicodeScalars.first {
       switch Int(key.value) {
-      case NSDownArrowFunctionKey:
+      case NSEvent.SpecialKey.downArrow.rawValue:
         moveDown(nil)
-      case NSUpArrowFunctionKey:
+      case NSEvent.SpecialKey.upArrow.rawValue:
         moveUp(nil)
-      case NSCarriageReturnCharacter:
+      case NSEvent.SpecialKey.carriageReturn.rawValue:
         insertNewline(nil)
       default:
         break

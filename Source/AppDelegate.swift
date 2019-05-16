@@ -15,7 +15,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   let application = NSApplication.shared
   let hotKeyCenter = HotKeyCenter.shared
-  let menuSearchWindowNib = NSNib.Name("MenuSearchWindow")
+  let menuSearchWindowNib = "MenuSearchWindow"
 
   var menuSearchWindowController: MenuSearchWindowController?
   
@@ -46,7 +46,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     // TODO: replace with icon
     //statusItem!.button!.title = "QM"
-    let icon = NSImage(named: NSImage.Name("StatusBarIcon"))
+    let icon = NSImage(named: "StatusBarIcon")
     icon?.isTemplate = true
     statusItem!.button!.image = icon
     statusItem!.button!.imageScaling = .scaleProportionallyUpOrDown
