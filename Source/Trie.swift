@@ -115,6 +115,9 @@ public class Trie<V> {
       }
       if sequence.count > 1 {
         let suffix = sequence.suffix(sequence.count - 1)
+        if node.children.count == 0 {
+          return []
+        }
         for child in node.children {
           matches += find(String(suffix), child)
         }

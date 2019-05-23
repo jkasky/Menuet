@@ -109,4 +109,23 @@ class TrieTest: XCTestCase {
     XCTAssertEqual(trie.find(sequence:"fw"), [0])
     XCTAssertEqual(trie.find(sequence:"fdt"), [2])
   }
+  
+  func testDoesNotMatchWhenNoNodesRemainingAndTrailingCharacterNotFound() {
+    let trie = Trie<Int>()
+    trie.insert(label: "one", value: 0)
+    trie.insert(label: "one", value: 1)
+    trie.insert(label: "phone", value: 2)
+    
+    let matches = trie.find(sequence:"neX")
+    XCTAssertEqual(matches, [])
+  }
+
+  
+  func testDoesNotMatchWhenMoreNodesRemainingAndTrailingCharacterNotFound() {
+    let trie = Trie<Int>()
+    trie.insert(label: "few pair", value: 0)
+    trie.insert(label: "new pair", value: 1)
+    
+    XCTAssertEqual(trie.find(sequence:"ewX"), [])
+  }
 }
