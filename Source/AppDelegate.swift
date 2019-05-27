@@ -88,12 +88,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       // TODO: the trusted state should be managed globally so the app can
       // check the state before showing the command window and re-prompt if
       // necessary.
-      #if TESTING
       let trusted = axClient.makeProcessTrusted(withPrompt:true)
       if !trusted {
         NSLog("Process is not trusted.")
       }
-      #endif
     }
   }
 
