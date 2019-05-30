@@ -27,6 +27,7 @@
 		48D1E3322090740300E077F4 /* TrieTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D1E3312090740300E077F4 /* TrieTests.swift */; };
 		D145E7C021E0C28600E11E3D /* MenuSearchWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D145E7BF21E0C28600E11E3D /* MenuSearchWindowController.swift */; };
 		D145E7C621E21A9C00E11E3D /* MenuSearchQueryTextFieldEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D145E7C521E21A9C00E11E3D /* MenuSearchQueryTextFieldEditor.swift */; };
+		D16D16D5229CAC1D00321FDA /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = D16D16D4229CAC1D00321FDA /* main.swift */; };
 		D17BF6CD21BD172200E70660 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17BF6CC21BD172200E70660 /* Menu.swift */; };
 		D17BF6CE21BD172200E70660 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17BF6CC21BD172200E70660 /* Menu.swift */; };
 		D19451E921D55B2A003607D2 /* MenuSearchWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = D19451E821D55B2A003607D2 /* MenuSearchWindow.xib */; };
@@ -72,6 +73,7 @@
 		48D1E3312090740300E077F4 /* TrieTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrieTests.swift; sourceTree = "<group>"; };
 		D145E7BF21E0C28600E11E3D /* MenuSearchWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuSearchWindowController.swift; sourceTree = "<group>"; };
 		D145E7C521E21A9C00E11E3D /* MenuSearchQueryTextFieldEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuSearchQueryTextFieldEditor.swift; sourceTree = "<group>"; };
+		D16D16D4229CAC1D00321FDA /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		D17BF6CC21BD172200E70660 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 		D19451E821D55B2A003607D2 /* MenuSearchWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuSearchWindow.xib; sourceTree = "<group>"; };
 		D19451EA21D626F8003607D2 /* IdGeneratorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdGeneratorTest.swift; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 				48CECD301EA4A0BF007BD237 /* AXClient.swift */,
 				4875779B1B51E7B900339D78 /* AXApplication.swift */,
 				487835921B3B91E700BC911B /* AppDelegate.swift */,
+				D16D16D4229CAC1D00321FDA /* main.swift */,
 				486EED8D1B3D41C70092FFF8 /* MenuSearchWindow.swift */,
 				D145E7BF21E0C28600E11E3D /* MenuSearchWindowController.swift */,
 				487835941B3B91E700BC911B /* MenuSearchViewController.swift */,
@@ -297,6 +300,7 @@
 				486DA97320172785007B5C7C /* HotKeyCenter.swift in Sources */,
 				D145E7C021E0C28600E11E3D /* MenuSearchWindowController.swift in Sources */,
 				D17BF6CD21BD172200E70660 /* Menu.swift in Sources */,
+				D16D16D5229CAC1D00321FDA /* main.swift in Sources */,
 				D19451F021D78A27003607D2 /* SearchManager.swift in Sources */,
 				484D31CF1F1371AF000A1EBA /* Trie.swift in Sources */,
 				487835951B3B91E700BC911B /* MenuSearchViewController.swift in Sources */,
@@ -386,8 +390,9 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -435,7 +440,8 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
-				SWIFT_VERSION = 4.2;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -448,6 +454,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.codjax.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
 				SWIFT_VERSION = 5.0;
@@ -463,6 +470,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.codjax.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
@@ -485,8 +493,11 @@
 				);
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MF_MAKE_PROCESS_TRUSTED = NO;
+				"MF_MAKE_PROCESS_TRUSTED[arch=*]" = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.codjax.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MenuFinder.app/Contents/MacOS/MenuFinder";
@@ -504,8 +515,11 @@
 				);
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MF_MAKE_PROCESS_TRUSTED = NO;
+				"MF_MAKE_PROCESS_TRUSTED[arch=*]" = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.codjax.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;

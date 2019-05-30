@@ -10,7 +10,6 @@ import Carbon
 import Cocoa
 
 
-@NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
   let application = NSApplication.shared
