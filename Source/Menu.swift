@@ -227,6 +227,7 @@ struct MenuItem {
   
   let title: String
   let command: MenuItemCommand
+  let path: [String]
   
   var enabled: Bool {
     return delegate.isEnabled
@@ -234,9 +235,11 @@ struct MenuItem {
   
   private let delegate: MenuItemDelegate
   
-  init(title: String, command: MenuItemCommand, delegate:MenuItemDelegate) {
+  init(title: String, command: MenuItemCommand, path: [String],
+       delegate:MenuItemDelegate) {
     self.title = title
     self.command = command
+    self.path = path
     self.delegate = delegate
   }
 }
@@ -315,9 +318,9 @@ class AXMenuIndexer: AXMenuVisitor {
           character: character ?? "",
           modifiers: modifiers ?? Modifiers.noCommand,
           delegate: delegate),
+        path: path,
         delegate: delegate)
-      let menuItemPath = path.joined(separator: " > ")
-      index.add(item: menuItem, path: menuItemPath)
+      index.add(item: menuItem, path: path.joined(separator: " > "))
     }
   }
 }

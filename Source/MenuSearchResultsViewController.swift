@@ -15,7 +15,7 @@ class MenuSearchResultsViewController: NSViewController, NSTableViewDelegate {
   @IBOutlet
   weak var tableView: NSTableView!
   
-  var searchManager: SearchManager?
+  var searchManager: SearchManager!
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -29,12 +29,43 @@ class MenuSearchResultsViewController: NSViewController, NSTableViewDelegate {
     searchManager = SearchManager.shared
   }
   
+  func tableView(_ tableView: NSTableView,
+                 viewFor tableColumn: NSTableColumn?,
+                 row: Int) -> NSView? {
+    guard row < searchManager.searchResults.count else {
+      return nil
+    }
+
+    let item = searchManager.searchResults[row]
+
+    let resultView = tableView.makeView(
+      withIdentifier: tableColumn!.identifier,
+      owner: self
+    ) as! SearchResultTableCellView
+
+    resultView.itemField.stringValue = item.title
+    resultView.hotKeyField.stringValue = item.command.stringValue
+    let parentIndex = item.path.endIndex - 2;
+    let parentPath = item.path[0...parentIndex]
+    resultView.pathField.stringValue = parentPath.joined(separator: " > ")
+
+    return resultView;
+  }
+
   func tableViewSelectionDidChange(_ notification: Notification) {
     guard tableView.selectedRow >= 0 else {
       return
     }
-    searchManager?.selectResult(at: tableView.selectedRow)
+    searchManager.selectResult(at: tableView.selectedRow)
   }
+}
+
+
+class SearchResultTableCellView: NSTableCellView {
+
+  @IBOutlet weak var itemField: NSTextField!
+  @IBOutlet weak var pathField: NSTextField!
+  @IBOutlet weak var hotKeyField: NSTextField!
 }
 
 
