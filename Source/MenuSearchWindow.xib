@@ -68,21 +68,12 @@
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <textField identifier="item" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HtY-3J-XO0" userLabel="Item Field">
-                                                            <rect key="frame" x="0.0" y="17" width="378" height="17"/>
+                                                            <rect key="frame" x="33" y="17" width="345" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="item" id="LXe-ob-cD8">
                                                                 <font key="font" metaFont="system"/>
                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                            </textFieldCell>
-                                                        </textField>
-                                                        <textField identifier="path" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gFK-aI-C1N">
-                                                            <rect key="frame" x="0.0" y="-2" width="432" height="17"/>
-                                                            <autoresizingMask key="autoresizingMask"/>
-                                                            <textFieldCell key="cell" lineBreakMode="clipping" title="path" id="a6P-la-HwG">
-                                                                <font key="font" metaFont="system" size="11"/>
-                                                                <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
-                                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                             </textFieldCell>
                                                         </textField>
                                                         <textField identifier="hotkey" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4E7-FO-Ges" userLabel="Key Field">
@@ -94,11 +85,30 @@
                                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                             </textFieldCell>
                                                         </textField>
+                                                        <textField identifier="path" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gFK-aI-C1N">
+                                                            <rect key="frame" x="33" y="-2" width="399" height="17"/>
+                                                            <autoresizingMask key="autoresizingMask"/>
+                                                            <textFieldCell key="cell" lineBreakMode="clipping" title="path" id="a6P-la-HwG">
+                                                                <font key="font" metaFont="system" size="11"/>
+                                                                <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                            </textFieldCell>
+                                                        </textField>
+                                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hh2-Tr-VUy" userLabel="Quick Field">
+                                                            <rect key="frame" x="1" y="5" width="27" height="23"/>
+                                                            <autoresizingMask key="autoresizingMask"/>
+                                                            <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="#1" id="gU5-Zx-HsO">
+                                                                <font key="font" metaFont="system" size="15"/>
+                                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                            </textFieldCell>
+                                                        </textField>
                                                     </subviews>
                                                     <connections>
                                                         <outlet property="hotKeyField" destination="4E7-FO-Ges" id="1ge-8q-xYz"/>
                                                         <outlet property="itemField" destination="HtY-3J-XO0" id="BNK-mL-4xS"/>
                                                         <outlet property="pathField" destination="gFK-aI-C1N" id="nCd-cz-feI"/>
+                                                        <outlet property="quickField" destination="hh2-Tr-VUy" id="Fxn-t7-Ygr"/>
                                                     </connections>
                                                 </tableCellView>
                                             </prototypeCellViews>

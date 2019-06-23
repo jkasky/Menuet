@@ -20,4 +20,16 @@ class MenuSearchQueryTextFieldEditor: NSTextView {
   override func moveUp(_ sender: Any?) {}
   
   override func moveDown(_ sender: Any?) {}
+
+  override func performKeyEquivalent(with event: NSEvent) -> Bool {
+    let searchManager = SearchManager.shared
+    if let quickIndex = Int(event.charactersIgnoringModifiers!) {
+      if quickIndex > 0 && quickIndex < 8 {
+        searchManager.searchResults[quickIndex - 1].command.perform();
+        NSApp.mainWindow?.orderOut(nil)
+        return true
+      }
+    }
+    return super.performKeyEquivalent(with:event)
+  }
 }

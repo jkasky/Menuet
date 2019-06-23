@@ -46,8 +46,18 @@ class MenuSearchResultsViewController: NSViewController, NSTableViewDelegate {
     resultView.itemField.stringValue = item.title
     resultView.hotKeyField.stringValue = item.command.stringValue
     let parentIndex = item.path.endIndex - 2;
-    let parentPath = item.path[0...parentIndex]
+    var parentPath = item.path[0...parentIndex]
+    if parentPath[0] == "Apple" {
+      parentPath[0] = KeyGlyph.Apple.characters
+    }
     resultView.pathField.stringValue = parentPath.joined(separator: " > ")
+
+    if row < 7 {
+      resultView.quickField.stringValue = "\(KeyGlyph.Command.characters)" +
+                                          "\(row + 1)"
+    } else {
+      resultView.quickField.stringValue = ""
+    }
 
     return resultView;
   }
@@ -66,6 +76,7 @@ class SearchResultTableCellView: NSTableCellView {
   @IBOutlet weak var itemField: NSTextField!
   @IBOutlet weak var pathField: NSTextField!
   @IBOutlet weak var hotKeyField: NSTextField!
+  @IBOutlet weak var quickField: NSTextField!
 }
 
 
@@ -83,7 +94,7 @@ extension NSTableView {
     }
     scrollRowToVisible(selectedRow)
   }
-  
+
   func selectPreviousRow(_ sender: Any?) {
     if selectedRow > 0 {
       selectRowIndexes(
