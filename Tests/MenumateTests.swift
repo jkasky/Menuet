@@ -9,7 +9,7 @@
 import Cocoa
 import XCTest
 
-class MenuFinderTests: XCTestCase {
+class MenumateTests: XCTestCase {
     
     override func setUp() {
         super.setUp()

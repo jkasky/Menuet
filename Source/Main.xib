@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -12,18 +12,18 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customObject id="tFb-fM-tZT" customClass="AppDelegate" customModule="MenuFinder" customModuleProvider="target">
+        <customObject id="tFb-fM-tZT" customClass="AppDelegate" customModule="Menumate" customModuleProvider="target">
             <connections>
                 <outlet property="statusMenu" destination="2xz-4Y-D56" id="MZY-lh-lKy"/>
             </connections>
         </customObject>
         <menu title="Main Menu" systemMenu="main" id="AYu-sK-qS6">
             <items>
-                <menuItem title="MenuFinder" id="DJh-2x-2tZ">
+                <menuItem title="Menumate" id="DJh-2x-2tZ">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="MenuFinder" systemMenu="apple" id="2xz-4Y-D56">
+                    <menu key="submenu" title="Menumate" systemMenu="apple" id="2xz-4Y-D56">
                         <items>
-                            <menuItem title="About Menu Finder" id="xcU-Ot-5ki">
+                            <menuItem title="About Menumate" id="xcU-Ot-5ki">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="orderFrontStandardAboutPanel:" target="-1" id="qdT-Ud-7Qf"/>
@@ -41,7 +41,7 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="bbn-c4-dbw"/>
-                            <menuItem title="Quit Menu Finder" id="zWJ-Bg-6Bn">
+                            <menuItem title="Quit Menumate" id="zWJ-Bg-6Bn">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="terminate:" target="-1" id="N3B-jI-yet"/>

@@ -102,6 +102,10 @@ class MenuSearchWindowController: NSWindowController, NSWindowDelegate {
     hide()
   }
   
+  override func insertTab(_ sender: Any?) {
+    searchResultsTableView.selectNextRow(nil)
+  }
+  
   override func moveDown(_ sender: Any?) {
     // On `Arrow Down` select the next row in the search results.
     searchResultsTableView.selectNextRow(nil)
