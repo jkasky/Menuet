@@ -249,6 +249,10 @@ class MenuIndex {
   
   private var trie = Trie<MenuItem>()
   
+  var size: Int {
+    return trie.count
+  }
+  
   func add(item: MenuItem, path: String) {
     trie.insert(label: path, value: item)
   }
