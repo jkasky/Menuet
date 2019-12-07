@@ -22,6 +22,7 @@ class MenuSearchWindowController: NSWindowController, NSWindowDelegate {
     if let item = SearchManager.shared.activeItem {
       item.command.perform()
     }
+    SearchManager.shared.reset()
   }
   
   override func windowWillLoad() {

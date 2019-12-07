@@ -82,14 +82,35 @@ class SearchManager {
     if query.count > 0 {
       searchResults = currentIndex.find(query: query)
     } else {
-      searchResults = []
+      clear()
     }
     NotificationCenter.default.post(SearchEvent.ResultsChanged.notification())
   }
   
+  /**
+   * Clears the search results, selected result, and any active item.
+   */
   func clear() {
-    searchResults.removeAll()
+    searchResults = []
     selectedResult = -1
     activeItem = nil
+  }
+
+  /**
+   * Resets the search manager to a completely fresh state - no results, index.
+   *
+   * Calling reset removes the current index and all menu entries in it. A
+   * subsequent search will require a new index even if the app has not changed.
+   * Performing an action on a menu item must occur before the index is removed.
+   * Generally, the search manager should be reset before each new search so
+   * that if the menu state changes or the frontmost app is switched then the
+   * new index will have the most current state.
+   */
+  func reset() {
+    clear()
+    currentApp = nil
+    if currentIndex.size > 0 {
+      currentIndex = MenuIndex()
+    }
   }
 }

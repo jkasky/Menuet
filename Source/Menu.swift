@@ -188,7 +188,7 @@ struct Modifiers: OptionSet {
 }
 
 
-struct MenuItemCommand {
+class MenuItemCommand {
   
   let character: String
   let modifiers: Modifiers
@@ -223,7 +223,7 @@ protocol MenuItemDelegate {
 }
 
 
-struct MenuItem {
+class MenuItem {
   
   let title: String
   let command: MenuItemCommand
