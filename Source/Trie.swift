@@ -38,11 +38,17 @@ fileprivate class TrieNode<V> {
 public class Trie<V> {
 
   private let root: TrieNode<V>
+  private var nodeCount: Int
 
   init() {
     root = TrieNode<V>(character: "\u{0}")
+    nodeCount = 0
   }
 
+  var count: Int {
+    return nodeCount;
+  }
+  
   /**
    * Inserts a new value into the trie with a given label.
    */
@@ -76,6 +82,7 @@ public class Trie<V> {
       }
     }
     node.value = value
+    nodeCount += 1
   }
 
   /**
