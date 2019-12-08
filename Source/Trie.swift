@@ -26,6 +26,25 @@ fileprivate class TrieNode<V> {
     self.value = value
     self.children = []
   }
+  
+  func countLeafs() -> Int {
+    if children.count == 0 {
+      return 1
+    }
+    var count = 0
+    for child in children {
+      count += child.countLeafs()
+    }
+    return count
+  }
+  
+  func countNodes() -> Int {
+    var count = children.count
+    for child in children {
+      count += child.countNodes()
+    }
+    return count
+  }
 }
 
 
@@ -46,7 +65,7 @@ public class Trie<V> {
   }
 
   var count: Int {
-    return nodeCount;
+    return root.countLeafs();
   }
   
   /**

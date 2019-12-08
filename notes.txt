@@ -1,14 +1,10 @@
 [TODO]
 
-x Add index of front most app menu.
-x Convert from DDHotKey to Magnet (Swift)
-x Make app a menu bar icon.
+* Fix issue with Slack/Electron apps
+* Fix issue with PyCharm index getting corrupted
 * Add preferences and make accessible through menu bar icon.
 * Add keybindng setting
-* Fix: panel jumping when search fails
-x Fix: some apps don't respond to menu press - invoke after panel resigns
 * Change results table to view based table
-* Add group rows
 
 
 [NOTES]
@@ -43,11 +39,12 @@ Feature ideas:
  - touch bar integration to show top 5 or map results to
    numbers
  - adapt search to rank items used more ofter towards the top
- - show shortcut characters
  - alfred plugin, checkout requests in
    https://www.alfredforum.com/topic/1993-menu-search/?hl=menu and the source
    in https://github.com/ctwise/alfred-workflows. Try to solve for some of the
    wants to make QM more attractive. Shortcut cheatsheat, favorites, etc.
+
+x show shortcut characters
 
 Possible Names:
 
@@ -55,10 +52,10 @@ Possible Names:
  - Keynu
  - Quick Menu
  - Menu Commander
+ - Menumate
  - Flash Menu
  - Zippy
  - Speedy
- -
 
 [URLS]
 

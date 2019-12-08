@@ -41,10 +41,16 @@ class SearchManager {
   
   private var currentIndex: MenuIndex
   private var selectedResult: Int
+  private var searchResults: [MenuItem]
   
   public var currentApp: NSRunningApplication?
-  public var searchResults: [MenuItem]
   public var activeItem: MenuItem?
+  
+  public var totalResults: Int {
+    get {
+      return searchResults.count
+    }
+  }
 
   private init() {
     axClient = AX.Client()
@@ -54,6 +60,14 @@ class SearchManager {
     currentApp = nil
     currentIndex = MenuIndex()
     activeItem = nil
+  }
+  
+  func hasResults() -> Bool {
+    return searchResults.count > 0
+  }
+  
+  func getResult(at index: Int) -> MenuItem {
+    return searchResults[index]
   }
   
   func selectResult(at index: Int) {
@@ -91,7 +105,7 @@ class SearchManager {
    * Clears the search results, selected result, and any active item.
    */
   func clear() {
-    searchResults = []
+    searchResults.removeAll()
     selectedResult = -1
     activeItem = nil
   }

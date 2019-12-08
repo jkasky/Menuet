@@ -20,16 +20,16 @@ class MenuSearchResultsDataSource: NSObject, NSTableViewDataSource {
   }
   
   func numberOfRows(in tableView: NSTableView) -> Int {
-    return searchManager.searchResults.count
+    return searchManager.totalResults
   }
   
   func tableView(_ tableView: NSTableView,
                  objectValueFor tableColumn: NSTableColumn?,
                  row: Int) -> Any? {
-    guard row < searchManager.searchResults.count else {
+    guard row < searchManager.totalResults else {
       return nil
     }
-    let item = searchManager.searchResults[row]
+    let item = searchManager.getResult(at: row)
     switch tableColumn?.identifier.rawValue {
     case "menuItemTitle":
       return item.title

@@ -32,11 +32,11 @@ class MenuSearchResultsViewController: NSViewController, NSTableViewDelegate {
   func tableView(_ tableView: NSTableView,
                  viewFor tableColumn: NSTableColumn?,
                  row: Int) -> NSView? {
-    guard row < searchManager.searchResults.count else {
+    guard row < searchManager.totalResults else {
       return nil
     }
 
-    let item = searchManager.searchResults[row]
+    let item = searchManager.getResult(at: row)
 
     let resultView = tableView.makeView(
       withIdentifier: tableColumn!.identifier,

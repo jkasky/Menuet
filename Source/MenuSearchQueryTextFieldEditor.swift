@@ -33,7 +33,8 @@ class MenuSearchQueryTextFieldEditor: NSTextView {
     let searchManager = SearchManager.shared
     if let quickIndex = Int(event.charactersIgnoringModifiers!) {
       if quickIndex > 0 && quickIndex < 8 {
-        searchManager.searchResults[quickIndex - 1].command.perform();
+        let row = quickIndex - 1
+        searchManager.getResult(at: row).command.perform();
         NSApp.mainWindow?.orderOut(nil)
         return true
       }

@@ -223,14 +223,15 @@ protocol MenuItemDelegate {
 }
 
 
-class MenuItem {
+class MenuItem: CustomDebugStringConvertible {
   
   let title: String
   let command: MenuItemCommand
   let path: [String]
-  
-  var enabled: Bool {
-    return delegate.isEnabled
+  let enabled: Bool
+
+  var debugDescription: String {
+    return "MenuItem<path:\(path.joined(separator: "/"))>"
   }
   
   private let delegate: MenuItemDelegate
@@ -240,6 +241,7 @@ class MenuItem {
     self.title = title
     self.command = command
     self.path = path
+    self.enabled = delegate.isEnabled
     self.delegate = delegate
   }
 }

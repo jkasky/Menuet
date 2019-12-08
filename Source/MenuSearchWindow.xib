@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="15505" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15505"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="MenuSearchWindowController" customModule="MenuFinder" customModuleProvider="target">
+        <customObject id="-2" userLabel="File's Owner" customClass="MenuSearchWindowController" customModule="Menumate" customModuleProvider="target">
             <connections>
                 <outlet property="searchResultsTableView" destination="8DA-Tt-Scc" id="Se3-QC-QN0"/>
                 <outlet property="window" destination="SRh-oL-y79" id="jAC-Ea-EKY"/>
@@ -14,7 +14,7 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="SRh-oL-y79" customClass="MenuSearchWindow" customModule="MenuFinder" customModuleProvider="target">
+        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="SRh-oL-y79" customClass="MenuSearchWindow" customModule="Menumate" customModuleProvider="target">
             <windowStyleMask key="styleMask" nonactivatingPanel="YES"/>
             <rect key="contentRect" x="196" y="0.0" width="450" height="300"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1177"/>
@@ -29,7 +29,7 @@
                     <textField focusRingType="none" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exb-0h-kdB">
                         <rect key="frame" x="58" y="257" width="387" height="36"/>
                         <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" focusRingType="none" alignment="left" placeholderString="Menu Search" drawsBackground="YES" id="FVo-cy-fHW">
-                            <font key="font" size="20" name=".SFNSDisplay"/>
+                            <font key="font" metaFont="system" size="20"/>
                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
                         </textFieldCell>
@@ -45,14 +45,14 @@
                             <subviews>
                                 <tableView focusRingType="none" verticalHuggingPriority="750" tag="1" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" rowHeight="34" rowSizeStyle="automatic" viewBased="YES" id="8DA-Tt-Scc">
                                     <rect key="frame" x="0.0" y="0.0" width="450" height="250"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <size key="intercellSpacing" width="18" height="2"/>
                                     <color key="backgroundColor" name="windowBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                     <tableColumns>
                                         <tableColumn identifier="result" width="432" minWidth="10" maxWidth="3.4028234663852886e+38" id="JgM-QT-aU1">
                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
-                                                <font key="font" metaFont="smallSystem"/>
+                                                <font key="font" metaFont="label" size="11"/>
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </tableHeaderCell>
@@ -63,7 +63,7 @@
                                             </textFieldCell>
                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                             <prototypeCellViews>
-                                                <tableCellView identifier="result" id="4fs-Jf-vhp" userLabel="result" customClass="SearchResultTableCellView" customModule="MenuFinder" customModuleProvider="target">
+                                                <tableCellView identifier="result" id="4fs-Jf-vhp" userLabel="result" customClass="SearchResultTableCellView" customModule="Menumate" customModuleProvider="target">
                                                     <rect key="frame" x="9" y="1" width="432" height="34"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
@@ -89,7 +89,7 @@
                                                             <rect key="frame" x="33" y="-2" width="399" height="17"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="path" id="a6P-la-HwG">
-                                                                <font key="font" metaFont="system" size="11"/>
+                                                                <font key="font" metaFont="label" size="11"/>
                                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                             </textFieldCell>
@@ -152,7 +152,7 @@
             </connections>
             <point key="canvasLocation" x="-603" y="-748"/>
         </window>
-        <viewController id="PpM-yM-nvb" customClass="MenuSearchViewController" customModule="MenuFinder" customModuleProvider="target">
+        <viewController id="PpM-yM-nvb" customClass="MenuSearchViewController" customModule="Menumate" customModuleProvider="target">
             <connections>
                 <outlet property="appIconImageView" destination="mW6-as-pcq" id="kA9-Ct-fbh"/>
                 <outlet property="queryField" destination="exb-0h-kdB" id="EuV-rB-QlM"/>
@@ -160,12 +160,12 @@
                 <outlet property="view" destination="E8x-le-K0e" id="GoL-Cd-vtX"/>
             </connections>
         </viewController>
-        <viewController id="mwj-rk-ORJ" customClass="MenuSearchResultsViewController" customModule="MenuFinder" customModuleProvider="target">
+        <viewController id="mwj-rk-ORJ" customClass="MenuSearchResultsViewController" customModule="Menumate" customModuleProvider="target">
             <connections>
                 <outlet property="tableView" destination="8DA-Tt-Scc" id="MHY-el-FHJ"/>
                 <outlet property="view" destination="8DA-Tt-Scc" id="gm7-LO-t2t"/>
             </connections>
         </viewController>
-        <customObject id="Nf5-y8-uKX" customClass="MenuSearchResultsDataSource" customModule="MenuFinder" customModuleProvider="target"/>
+        <customObject id="Nf5-y8-uKX" customClass="MenuSearchResultsDataSource" customModule="Menumate" customModuleProvider="target"/>
     </objects>
 </document>
