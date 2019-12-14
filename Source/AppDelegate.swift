@@ -24,6 +24,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   var statusItem: NSStatusItem?
 
   func applicationDidFinishLaunching(_ notification: Notification) {
+    #if DEBUG
+    UserDefaults.standard.set(
+      true,
+      forKey: "NSConstraintBasedLayoutVisualizeMutuallyExclusiveConstraints")
+    #endif
     initializeMenuResources()
     activateStatusMenu()
     registerHotKey()
