@@ -45,11 +45,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
    */
   private func activateStatusMenu() {
     let statusBar = NSStatusBar.system
-
     statusItem = statusBar.statusItem(withLength: NSStatusItem.squareLength)
-    
-    // TODO: replace with icon
-    //statusItem!.button!.title = "QM"
     let icon = NSImage(named: "StatusBarIcon")
     icon?.isTemplate = true
     statusItem!.button!.image = icon
