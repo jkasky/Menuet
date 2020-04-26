@@ -9,6 +9,25 @@
 import Cocoa
 
 
+class MenuSearchContentView: NSView {
+  
+  override init(frame frameRect: NSRect) {
+    super.init(frame: frameRect)
+    wantsLayer = true
+  }
+  
+  required init?(coder: NSCoder) {
+    super.init(coder: coder)
+  }
+  
+  override func updateLayer() {
+    layer?.cornerRadius = 10.0
+    layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
+    super.updateLayer()
+  }
+}
+
+
 class MenuSearchWindow: NSPanel {
 
   // Override canBecome{Key,Main}Window to always return True. The default
@@ -20,18 +39,6 @@ class MenuSearchWindow: NSPanel {
 
   override var canBecomeMain: Bool {
     return true;
-  }
-  
-  // Override the content view property to configure it immediately after
-  // it is set.
-  override var contentView: NSView? {
-    get {
-      return super.contentView
-    }
-    set {
-      super.contentView = newValue
-      setupContentView()
-    }
   }
   
   override init(contentRect: NSRect, styleMask style: NSWindow.StyleMask,
@@ -49,15 +56,5 @@ class MenuSearchWindow: NSPanel {
     // panel.
     backgroundColor = NSColor.clear
     isOpaque = false
-  }
-  
-  private func setupContentView() {
-    // Draw the content view with rounded corners and the default window
-    // background color.
-    if let view = contentView {
-      view.wantsLayer = true
-      view.layer?.cornerRadius = 10.0
-      view.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
-    }
   }
 }
