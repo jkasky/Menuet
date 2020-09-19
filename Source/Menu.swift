@@ -14,8 +14,13 @@ import Foundation
  */
 struct KeyGlyph {
     
-  // Modifiers & Special Keys
+  // Modifier Keys
   static let Alt           = KeyGlyph(0x8B, "\u{2387}")  //  ⎇
+  static let Control       = KeyGlyph(0x06, "\u{2303}")  //  ⌃
+  static let Option        = KeyGlyph(0x07, "\u{2325}")  //  ⌥
+  static let Shift         = KeyGlyph(0x05, "\u{21E7}")  //  ⇧
+
+  // Special Keys & Glyphs
   static let Apple         = KeyGlyph(0x14, "\u{F8FF}")  //  
   static let AppleOutlined = KeyGlyph(0x6C, "\u{F8FF}")  //  
   static let Blank         = KeyGlyph(0x61, "\u{2423}")  //  ␣
@@ -23,7 +28,6 @@ struct KeyGlyph {
   static let Clear         = KeyGlyph(0x1C, "\u{2327}")  //  ⌧
   static let Command       = KeyGlyph(0x11, "\u{2318}")  //  ⌘
   static let ContextMenu   = KeyGlyph(0x6D, "\u{F803}")  //  
-  static let Control       = KeyGlyph(0x06, "\u{2303}")  //  ⌃
   static let ControlISO    = KeyGlyph(0x8A, "\u{2388}")  //  ⎈
   static let Delete        = KeyGlyph(0x17, "\u{232B}")  //  ⌫
   static let DeleteRTL     = KeyGlyph(0x0A, "\u{2326}")  //  ⌦
@@ -35,14 +39,12 @@ struct KeyGlyph {
   static let Help          = KeyGlyph(0x67, "\u{003F}")  //  ?⃝
   static let Home          = KeyGlyph(0x66, "\u{2196}")  //  ↖
   static let Left          = KeyGlyph(0x64, "\u{2190}")  //  ←
-  static let Option        = KeyGlyph(0x07, "\u{2325}")  //  ⌥
   static let PageDown      = KeyGlyph(0x6B, "\u{21DF}")  //  ⇟
   static let PageUp        = KeyGlyph(0x62, "\u{21DE}")  //  ⇞
   static let Power         = KeyGlyph(0x6E, "\u{2758}")  //  ❘⃝
   static let Return        = KeyGlyph(0x0B, "\u{21A9}")  //  ↩
   static let ReturnRTL     = KeyGlyph(0x0C, "\u{21AA}")  //  ↪
   static let Right         = KeyGlyph(0x65, "\u{2192}")  //  →
-  static let Shift         = KeyGlyph(0x05, "\u{21E7}")  //  ⇧
   static let Space         = KeyGlyph(0x09, "\u{2423}")  //  ␣
   static let Tab           = KeyGlyph(0x02, "\u{21E5}")  //  ⇥
   static let TabRTL        = KeyGlyph(0x03, "\u{21E4}")  //  ⇤
