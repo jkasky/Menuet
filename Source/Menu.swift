@@ -111,6 +111,7 @@ func initializeMenuResources() {
     .ControlISO,
     .Delete,
     .DeleteRTL,
+    .Down,
     .Eject,
     .End,
     .Enter,
