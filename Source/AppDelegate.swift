@@ -8,36 +8,66 @@
 
 import Carbon
 import Cocoa
+import Combine
 
 
 class AppDelegate: NSObject, NSApplicationDelegate {
 
   let application = NSApplication.shared
   let hotKeyCenter = HotKeyCenter.shared
-  let menuSearchWindowNib = "MenuSearchWindow"
 
   var menuSearchWindowController: MenuSearchWindowController?
+  var showMenuSearchWindowHotKey: HotKey?
+  var preferencesWindowController: PreferencesWindowController?
   
   @IBOutlet
   var statusMenu: NSMenu?
+  
+  @IBOutlet
+  var searchMenuItem: NSMenuItem?
 
   var statusItem: NSStatusItem?
-
+  
+  var subscribers = Set<AnyCancellable>()
+  
   func applicationDidFinishLaunching(_ notification: Notification) {
-    #if DEBUG
-    UserDefaults.standard.set(
-      true,
-      forKey: "NSConstraintBasedLayoutVisualizeMutuallyExclusiveConstraints")
-    #endif
     initializeMenuResources()
+    initializeDefaults()
     activateStatusMenu()
-    registerHotKey()
     makeProcessTrusted()
   }
 
   func applicationWillTerminate(_ notification: Notification) {
-    unregisterHotKey()
+    subscribers.forEach { $0.cancel() }
+    unregisterHotKeys()
     deactivateStatusMenu()
+  }
+  
+  private func initializeDefaults() {
+    let defaults = UserDefaults.standard
+    
+    #if DEBUG
+    defaults.set(
+      true,
+      forKey: "NSConstraintBasedLayoutVisualizeMutuallyExclusiveConstraints")
+    #else
+    defaults.removeObject(
+      forKey: "NSConstraintBasedLayoutVisualizeMutuallyExclusiveConstraints")
+    #endif
+    
+    if defaults.searchMenuShortcutValue == nil {
+      defaults.searchMenuShortcutValue = ShortCut(
+        characters: " ",
+        keyCode: UInt16(kVK_Space),
+        modifierFlags: [.command, .shift])
+    }
+    
+    // Watch for changes to search menu shortcut, re-register on changes.
+    // This KVO is triggered immediately and will setup the initial hot key.
+    defaults
+      .publisher(for: \.searchMenuShortcut)
+      .sink { _ in self.registerSearchMenuHotKey() }
+      .store(in: &subscribers)
   }
 
   /**
@@ -63,19 +93,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   /**
-   * Registers the global hot key to show the command window.
+   * Registers global hot key to show the search window.
    */
-  private func registerHotKey() {
-    let showMenuSearchWindowHotKey = HotKey(kVK_Space, [.command, .shift]) {
+  private func registerSearchMenuHotKey() {
+    guard let searchMenuShorcut = UserDefaults.standard.searchMenuShortcutValue else { return }
+    showMenuSearchWindowHotKey.map { hotKeyCenter.unregister($0) }
+    showMenuSearchWindowHotKey = HotKey(Int(searchMenuShorcut.keyCode), searchMenuShorcut.modifierFlags) {
       _ in self.showMenuSearchWindow()
     }
-    hotKeyCenter.register(showMenuSearchWindowHotKey)
+    showMenuSearchWindowHotKey.map {
+      hotKeyCenter.register($0)
+      if let item = searchMenuItem {
+        item.keyEquivalent = searchMenuShorcut.characters
+        item.keyEquivalentModifierMask = searchMenuShorcut.modifierFlags
+      }
+    }
   }
 
   /**
-   * Unregisters the global hot key to show the command window.
+   * Unregisters all global hot keys.
    */
-  private func unregisterHotKey() {
+  private func unregisterHotKeys() {
     hotKeyCenter.unregisterAll()
   }
 
@@ -100,8 +138,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
    */
   private func showMenuSearchWindow() {
     if menuSearchWindowController == nil {
-      menuSearchWindowController = MenuSearchWindowController(
-        windowNibName: menuSearchWindowNib)
+      menuSearchWindowController = MenuSearchWindowController(window: nil)
     }
     menuSearchWindowController!.show()
   }
@@ -112,6 +149,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   @IBAction
   func show(_ sender: NSMenuItem) {
     showMenuSearchWindow()
+  }
+  
+  /**
+   * Handles the `preferences` action.
+   */
+  @IBAction
+  func preferences(_ sender: NSMenuItem) {
+    if preferencesWindowController == nil {
+      preferencesWindowController = PreferencesWindowController(window: nil)
+    }
+    preferencesWindowController?.show()
   }
 }
 

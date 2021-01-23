@@ -17,6 +17,12 @@ class MenuSearchWindowController: NSWindowController, NSWindowDelegate {
   
   var menuSearchQueryFieldEditor: MenuSearchQueryTextFieldEditor?
   
+  override var windowNibName: NSNib.Name? {
+    get {
+      return "MenuSearchWindow"
+    }
+  }
+  
   func windowDidResignMain(_ notification: Notification) {
     hide()
     if let item = SearchManager.shared.activeItem {

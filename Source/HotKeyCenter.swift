@@ -73,6 +73,8 @@ public class HotKeyCenter {
   fileprivate var registeredHotKeys: Dictionary<UInt32, RegisteredHotKey>
 
   private var eventHandler: EventHandlerRef?
+  
+  private var previousHotKeyMode: UnsafeMutableRawPointer?
 
   private init() {
     registeredHotKeys = Dictionary<UInt32, RegisteredHotKey>()
@@ -128,17 +130,24 @@ public class HotKeyCenter {
   }
 
   public func unregister(_ hotKey: HotKey) {
-    let value = registeredHotKeys.removeValue(forKey: hotKey.id)
-    guard value != nil else {
+    guard let value = registeredHotKeys.removeValue(forKey: hotKey.id) else {
       return
     }
-    UnregisterEventHotKey(value?.registeredRef)
+    UnregisterEventHotKey(value.registeredRef)
   }
 
   public func unregisterAll() {
     for r in registeredHotKeys.values {
       unregister(r.hotKey)
     }
+  }
+  
+  public func disableAllHotKeys() {
+    previousHotKeyMode = PushSymbolicHotKeyMode(OptionBits(kHIHotKeyModeAllDisabled));
+  }
+  
+  public func enableAllHotKeys() {
+    PopSymbolicHotKeyMode(previousHotKeyMode)
   }
 
   fileprivate func lookup(_ value: EventHotKeyID) -> HotKey? {
