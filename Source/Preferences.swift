@@ -9,12 +9,7 @@
 import Cocoa
 import Carbon
 import Foundation
-
-struct ShortCut {
-  public let characters: String
-  public let keyCode: UInt16
-  public let modifierFlags: NSEvent.ModifierFlags
-}
+import ShortcutRecorder
 
 extension UserDefaults  {
   
@@ -23,14 +18,12 @@ extension UserDefaults  {
     set {}
   }
   
-  var searchMenuShortcutValue: ShortCut? {
+  var searchMenuShortcutValue: Shortcut? {
     get {
-      let data = dictionary(forKey: "searchMenuShortcut")
-      guard data != nil else { return nil }
-      return ShortCut(
-        characters: data!["charactersIgnoringModifiers"] as! String,
-        keyCode: data!["keyCode"] as! UInt16,
-        modifierFlags: NSEvent.ModifierFlags(rawValue: data!["modifierFlags"] as! UInt))
+      if let data = dictionary(forKey: "searchMenuShortcut") {
+        return Shortcut.init(dictionary: data)
+      }
+      return nil
     }
     set {
       var characters: String  {
@@ -52,7 +45,7 @@ extension UserDefaults  {
             (unsafeLayoutData: UnsafeRawBufferPointer) -> OSStatus in
           return UCKeyTranslate(
             unsafeLayoutData.bindMemory(to: UCKeyboardLayout.self).baseAddress,
-            newValue!.keyCode,
+            newValue!.keyCode.rawValue,
             UInt16(kUCKeyActionDisplay),
             modifierKeyState,
             UInt32(LMGetKbdType()),
@@ -73,7 +66,7 @@ extension UserDefaults  {
       let data: [String: Any] = [
         "characters": "\(characters)",
         "charactersIgnoringModifiers": characters,
-        "keyCode": newValue!.keyCode,
+        "keyCode": newValue!.keyCode.rawValue,
         "modifierFlags": newValue!.modifierFlags.rawValue
       ]
       set(data, forKey: "searchMenuShortcut")

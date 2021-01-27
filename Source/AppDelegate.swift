@@ -9,6 +9,7 @@
 import Carbon
 import Cocoa
 import Combine
+import ShortcutRecorder
 
 
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -56,10 +57,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     #endif
     
     if defaults.searchMenuShortcutValue == nil {
-      defaults.searchMenuShortcutValue = ShortCut(
+      defaults.searchMenuShortcutValue = Shortcut(
+        code: KeyCode.space,
+        modifierFlags: [.command, .shift],
         characters: " ",
-        keyCode: UInt16(kVK_Space),
-        modifierFlags: [.command, .shift])
+        charactersIgnoringModifiers: " ")
     }
     
     // Watch for changes to search menu shortcut, re-register on changes.
@@ -98,13 +100,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   private func registerSearchMenuHotKey() {
     guard let searchMenuShorcut = UserDefaults.standard.searchMenuShortcutValue else { return }
     showMenuSearchWindowHotKey.map { hotKeyCenter.unregister($0) }
-    showMenuSearchWindowHotKey = HotKey(Int(searchMenuShorcut.keyCode), searchMenuShorcut.modifierFlags) {
+    showMenuSearchWindowHotKey = HotKey(Int(searchMenuShorcut.keyCode.rawValue), searchMenuShorcut.modifierFlags) {
       _ in self.showMenuSearchWindow()
     }
     showMenuSearchWindowHotKey.map {
       hotKeyCenter.register($0)
       if let item = searchMenuItem {
-        item.keyEquivalent = searchMenuShorcut.characters
+        item.keyEquivalent = searchMenuShorcut.characters ?? ""
         item.keyEquivalentModifierMask = searchMenuShorcut.modifierFlags
       }
     }
