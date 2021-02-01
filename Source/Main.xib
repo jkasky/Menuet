@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -14,6 +14,7 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="tFb-fM-tZT" customClass="AppDelegate" customModule="Menumate" customModuleProvider="target">
             <connections>
+                <outlet property="searchMenuItem" destination="CjN-kH-AVk" id="7m7-NQ-ANc"/>
                 <outlet property="statusMenu" destination="2xz-4Y-D56" id="MZY-lh-lKy"/>
             </connections>
         </customObject>
@@ -23,21 +24,17 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Menumate" systemMenu="apple" id="2xz-4Y-D56">
                         <items>
-                            <menuItem title="About Menumate" id="xcU-Ot-5ki">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="orderFrontStandardAboutPanel:" target="-1" id="qdT-Ud-7Qf"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="h9B-Rk-TzP"/>
-                            <menuItem title="Preferences…" id="5Ln-Yn-Suh">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="ln9-PM-bNX"/>
                             <menuItem title="Search..." keyEquivalent=" " id="CjN-kH-AVk">
                                 <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                 <connections>
                                     <action selector="show:" target="-1" id="b6I-X7-arU"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="ln9-PM-bNX"/>
+                            <menuItem title="Preferences…" id="5Ln-Yn-Suh">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="preferences:" target="tFb-fM-tZT" id="tdc-bK-vD1"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="bbn-c4-dbw"/>
@@ -51,6 +48,7 @@
                     </menu>
                 </menuItem>
             </items>
+            <point key="canvasLocation" x="139" y="190"/>
         </menu>
     </objects>
 </document>
