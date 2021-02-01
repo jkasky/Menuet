@@ -96,6 +96,12 @@ class AXMenuWalker {
       guard menu != nil else {
         continue
       }
+      if !UserDefaults.standard.searchAppleMenu {
+        let title: String? = try menuBarItem.get(.Title)
+        guard title != "Apple" else {
+          continue
+        }
+      }
       visitor.enterMenu(menuBarItem)
       walkMenu(menu: menu!, visitor: visitor)
       visitor.leaveMenu(menuBarItem)

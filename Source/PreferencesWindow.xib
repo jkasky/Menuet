@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17506" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17506"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -21,18 +21,18 @@
                 <rect key="frame" x="0.0" y="0.0" width="480" height="327"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <tabView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m23-dW-yFa">
-                        <rect key="frame" x="13" y="2" width="454" height="325"/>
+                    <tabView fixedFrame="YES" type="noTabsBezelBorder" translatesAutoresizingMaskIntoConstraints="NO" id="m23-dW-yFa">
+                        <rect key="frame" x="13" y="11" width="454" height="306"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <font key="font" metaFont="system"/>
                         <tabViewItems>
                             <tabViewItem label="General" identifier="" id="qSX-UV-rlC">
-                                <view key="view" translatesAutoresizingMaskIntoConstraints="NO" id="Uly-d4-shm">
-                                    <rect key="frame" x="10" y="33" width="434" height="279"/>
+                                <view key="view" id="Uly-d4-shm">
+                                    <rect key="frame" x="10" y="7" width="434" height="286"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <stackView distribution="fill" orientation="vertical" alignment="trailing" spacing="9" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Eje-Tg-5KU">
-                                            <rect key="frame" x="17" y="176" width="271" height="100"/>
+                                            <rect key="frame" x="17" y="183" width="271" height="100"/>
                                             <subviews>
                                                 <stackView distribution="fill" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tP1-yZ-bYg">
                                                     <rect key="frame" x="14" y="84" width="257" height="16"/>
@@ -50,6 +50,13 @@
                                                             <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="uTD-oT-m7b">
                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                 <font key="font" metaFont="system"/>
+                                                                <connections>
+                                                                    <binding destination="dRT-HR-c3U" name="value" keyPath="values.searchAppleMenu" id="Ndk-x3-XZT">
+                                                                        <dictionary key="options">
+                                                                            <integer key="NSNullPlaceholder" value="1"/>
+                                                                        </dictionary>
+                                                                    </binding>
+                                                                </connections>
                                                             </buttonCell>
                                                         </button>
                                                     </subviews>
@@ -78,6 +85,13 @@
                                                             <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="2v4-4Q-3Mg">
                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                 <font key="font" metaFont="system"/>
+                                                                <connections>
+                                                                    <binding destination="dRT-HR-c3U" name="value" keyPath="values.showDisabledItems" id="29c-8y-d9Y">
+                                                                        <dictionary key="options">
+                                                                            <integer key="NSNullPlaceholder" value="0"/>
+                                                                        </dictionary>
+                                                                    </binding>
+                                                                </connections>
                                                             </buttonCell>
                                                         </button>
                                                     </subviews>
@@ -140,12 +154,6 @@
                                             </customSpacing>
                                         </stackView>
                                     </subviews>
-                                </view>
-                            </tabViewItem>
-                            <tabViewItem label="About" identifier="" id="xfO-xM-DDJ">
-                                <view key="view" id="1wo-8G-DbH">
-                                    <rect key="frame" x="10" y="33" width="434" height="279"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 </view>
                             </tabViewItem>
                         </tabViewItems>
