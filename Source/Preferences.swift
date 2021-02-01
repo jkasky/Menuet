@@ -81,4 +81,13 @@ extension UserDefaults  {
       set(data, forKey: "searchMenuShortcut")
     }
   }
+  
+  var showDisabledItems: Bool {
+    get {
+      return bool(forKey: "showDisabledItems")
+    }
+    set {
+      setValue(newValue, forKey: "showDisabledItems")
+    }
+  }
 }
