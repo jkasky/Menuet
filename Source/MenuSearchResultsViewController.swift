@@ -43,18 +43,24 @@ class MenuSearchResultsViewController: NSViewController, NSTableViewDelegate {
       owner: self
     ) as! SearchResultTableCellView
 
+    let textColor: NSColor = item.enabled ? .textColor : .disabledControlTextColor
+
     resultView.itemField.stringValue = item.title
+    resultView.itemField.textColor = textColor
     resultView.hotKeyField.stringValue = item.command.stringValue
+    resultView.hotKeyField.textColor = textColor
     let parentIndex = item.path.endIndex - 2;
     var parentPath = item.path[0...parentIndex]
     if parentPath[0] == "Apple" {
       parentPath[0] = KeyGlyph.Apple.characters
     }
     resultView.pathField.stringValue = parentPath.joined(separator: " > ")
+    resultView.pathField.textColor = textColor
 
     if row < 7 {
       resultView.quickField.stringValue = "\(KeyGlyph.Command.characters)" +
                                           "\(row + 1)"
+      resultView.quickField.textColor = textColor
     } else {
       resultView.quickField.stringValue = ""
     }

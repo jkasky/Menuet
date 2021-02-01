@@ -264,6 +264,9 @@ class MenuIndex {
   
   func find(query: String) -> [MenuItem] {
     let results = trie.find(sequence: query)
+    if UserDefaults.standard.showDisabledItems {
+      return results.filter { $0.title != "" }
+    }
     return results.filter { $0.enabled }
   }
 }

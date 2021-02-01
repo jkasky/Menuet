@@ -24,24 +24,17 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Menumate" systemMenu="apple" id="2xz-4Y-D56">
                         <items>
-                            <menuItem title="About Menumate" id="xcU-Ot-5ki">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="orderFrontStandardAboutPanel:" target="-1" id="qdT-Ud-7Qf"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="h9B-Rk-TzP"/>
-                            <menuItem title="Preferences…" id="5Ln-Yn-Suh">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="preferences:" target="tFb-fM-tZT" id="tdc-bK-vD1"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="ln9-PM-bNX"/>
                             <menuItem title="Search..." keyEquivalent=" " id="CjN-kH-AVk">
                                 <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                 <connections>
                                     <action selector="show:" target="-1" id="b6I-X7-arU"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="ln9-PM-bNX"/>
+                            <menuItem title="Preferences…" id="5Ln-Yn-Suh">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="preferences:" target="tFb-fM-tZT" id="tdc-bK-vD1"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="bbn-c4-dbw"/>
