@@ -18,6 +18,15 @@ extension UserDefaults  {
     set {}
   }
   
+  var searchAppleMenu: Bool {
+    get {
+      return bool(forKey: "searchAppleMenu")
+    }
+    set {
+      setValue(newValue, forKey: "searchAppleMenu")
+    }
+  }
+
   var searchMenuShortcutValue: Shortcut? {
     get {
       if let data = dictionary(forKey: "searchMenuShortcut") {
