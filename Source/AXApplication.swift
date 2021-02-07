@@ -20,6 +20,10 @@ protocol AXElementProtocol {
 
   var childCount: Int { get }
 
+  var title: String { get }
+
+  func childAt(_ index: UInt) -> AX.Element?
+
   func find(_ role: AX.Role) throws -> AX.Element?
 
   func findAll(_ role: AX.Role) throws -> [AX.Element]
@@ -32,7 +36,7 @@ protocol AXElementProtocol {
 
   func get(_ attribute: AX.Attribute) throws -> Int
 
-  func isA(_: AX.Role) throws -> Bool
+  func isA(_: AX.Role) -> Bool
 
   func perform(action: AX.Action) throws
 }
@@ -73,7 +77,7 @@ class AXMenuLogger: AXMenuVisitor {
       let commandItem = MenuItemCommand(
         character:commandChar,
         modifiers:modifiers,
-        delegate:AXMenuItemDelegate(item))
+        delegate:AXMenuItemDelegate(item, path: []))
       NSLog(String(repeating: " ", count: indent) +
         "\(title), Command:\(commandItem.stringValue), Enabled:\(enabled)")
     }
@@ -96,12 +100,6 @@ class AXMenuWalker {
       guard menu != nil else {
         continue
       }
-      if !UserDefaults.standard.searchAppleMenu {
-        let title: String? = try menuBarItem.get(.Title)
-        guard title != "Apple" else {
-          continue
-        }
-      }
       visitor.enterMenu(menuBarItem)
       walkMenu(menu: menu!, visitor: visitor)
       visitor.leaveMenu(menuBarItem)
@@ -111,8 +109,7 @@ class AXMenuWalker {
   private func walkMenu(menu: AX.Element, visitor: AXMenuVisitor) {
     for item in (try? menu.findAll(.MenuItem)) ?? [] {
       switch item.childCount {
-      case 0:
-        visitor.visitMenuItem(item)
+      // Single child element with role of Menu for sub-menus
       case 1:
         if let menu = try? item.find(.Menu) as AX.Element? {
           visitor.enterMenu(item)
@@ -120,7 +117,7 @@ class AXMenuWalker {
           visitor.leaveMenu(item)
         }
       default:
-        continue
+        visitor.visitMenuItem(item)
       }
     }
   }
@@ -154,73 +151,9 @@ class AXElement: AXElementProtocol {
 
   private let element: AXUIElement
 
-//  private func _copyNames(
-//    copyFunc: (AXUIElement, UnsafeMutablePointer<CFArray?>) -> AXError,
-//    element: AXUIElement
-//    ) -> [NSString] {
-//    var error: AXError?
-//    var names: CFArray?
-//    error = copyFunc(element, &names)
-//    guard error == .success && names != nil else {
-//      return []
-//    }
-//    if let names = names as? [NSString] {
-//      return names
-//    }
-//    return []
-//  }
-//
-//  var actionNames: [AX.ActionName] {
-//    get {
-//      let names = _copyNames(
-//        copyFunc: AXUIElementCopyActionNames, element: element)
-//      return names.flatMap {
-//        (n: NSString) -> AX.ActionName? in
-//        let value = n as String
-//        if let a = AX.ActionName(rawValue: value) {
-//          return a
-//        } else {
-//          NSLog("Unknown action \(value)")
-//          return nil
-//        }
-//      }
-//    }
-//  }
-//
-//  var attributeNames: [AX.AttributeName] {
-//    get {
-//      let names = _copyNames(
-//        copyFunc: AXUIElementCopyAttributeNames, element: element)
-//      return names.flatMap {
-//        (n: NSString) -> AX.AttributeName? in
-//        let value = n as String
-//        if let a = AX.AttributeName(rawValue: value) {
-//          return a
-//        } else {
-//          NSLog("Unknown attribute \(value)")
-//          return nil
-//        }
-//      }
-//    }
-//  }
-//
-//  var attributes: [AXAttribute] {
-//    get {
-//      var values = Array<AXAttribute>()
-//      for name in attributeNames {
-//        values.append(AXAttribute(element: element, name: name.rawValue))
-//      }
-//      return values
-//    }
-//  }
-
   init(element: AXUIElement) {
     self.element = element
     self.cachedChildren = Array<AX.Element>()
-  }
-
-  deinit {
-
   }
 
   private var cachedChildren:[AX.Element]
@@ -250,15 +183,28 @@ class AXElement: AXElementProtocol {
     }
   }
 
+  var title: String {
+    get {
+      guard let value: String = try? get(.Title) else {
+        return ""
+      }
+      return value
+    }
+  }
+
+  func childAt(_ index: UInt) -> AX.Element? {
+    return children[Int(index)]
+  }
+
   func find(_ role: AX.Role) throws -> AX.Element? {
-    return try children.first {
-      return try $0.isA(role)
+    return children.first {
+      return $0.isA(role)
     }
   }
 
   func findAll(_ role: AX.Role) throws -> [AX.Element] {
-    return try children.filter {
-      return try $0.isA(role)
+    return children.filter {
+      return $0.isA(role)
     }
   }
 
@@ -328,8 +274,12 @@ class AXElement: AXElementProtocol {
     return Int(truncating: number)
   }
 
-  func isA(_ role: AX.Role) throws -> Bool {
-    return try get(.Role) as String == role.rawValue
+  func isA(_ role: AX.Role) -> Bool {
+    do {
+      return try get(.Role) as String == role.rawValue
+    } catch {
+      return false
+    }
   }
 
   func perform(action: AX.Action) throws {

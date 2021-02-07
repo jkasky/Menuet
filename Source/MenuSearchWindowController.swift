@@ -24,11 +24,13 @@ class MenuSearchWindowController: NSWindowController, NSWindowDelegate {
   }
   
   func windowDidResignMain(_ notification: Notification) {
-    hide()
     if let item = SearchManager.shared.activeItem {
       item.command.perform()
     }
     SearchManager.shared.reset()
+
+    // Always hide the window, may have been resigned because of focus change.
+    hide()
   }
   
   override func windowWillLoad() {

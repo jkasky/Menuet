@@ -6,6 +6,7 @@
 //  Copyright © 2018 Codjax. All rights reserved.
 //
 
+import AppKit
 import Foundation
 
 
@@ -275,64 +276,107 @@ class MenuIndex {
 class AXMenuItemDelegate: MenuItemDelegate {
   
   private let element: AX.Element
+  private let indexPath: [UInt]
   
   var isEnabled: Bool {
     return (try? element.get(.Enabled)) ?? false
   }
   
-  init(_ element: AX.Element) {
+  init(_ element: AX.Element, path: [UInt]) {
     self.element = element
+    self.indexPath = path
   }
   
   func press() {
-    try? element.perform(action: AX.Action.Press)
+    do {
+      try element.perform(action: .Press)
+      return
+    } catch {
+      // Fallback to index path, cached element no longer valid.
+      // TODO: this could use some cleanup
+      let menuBarApp = NSWorkspace.shared.menuBarOwningApplication!
+      let e = AXClient().createApplication(application: menuBarApp).topElement
+      var element: AX.Element? = try? e.get(.MenuBar)
+      for i in indexPath {
+        if element!.isA(.MenuBar) {
+          element = element!.childAt(i)
+          continue
+        }
+        if element!.isA(.MenuBarItem) {
+          element = element!.childAt(0)!.childAt(i)
+          continue
+        }
+        if element!.isA(.MenuItem) {
+          element = element!.childAt(0)!.childAt(i)
+          continue
+        }
+      }
+      try? element!.perform(action: AX.Action.Press)
+    }
   }
 }
 
 
 class AXMenuIndexer: AXMenuVisitor {
+
+  private let indexAppleMenu: Bool
   
   private var path: [String] = []
+  private var indexPath: [UInt] = []
   private var index: MenuIndex
   
   init(index: MenuIndex) {
     self.index = index
+    self.indexAppleMenu = UserDefaults.standard.searchAppleMenu
   }
   
   func enterMenu(_ menu: AX.Element) {
     if let title: String = try? menu.get(.Title) {
       path.append(title)
+      indexPath.append(0)
     }
   }
   
   func leaveMenu(_: AX.Element) {
     _ = path.popLast()
+    _ = indexPath.popLast()
+    if !indexPath.isEmpty {
+      indexPath[indexPath.endIndex.advanced(by: -1)] += 1
+    }
   }
   
   func visitMenuItem(_ item: AX.Element) {
-    if let title: String = try? item.get(.Title) {
-      path.append(title)
-      defer { _ = path.popLast() }
-      var character: String?
-      if let glyphCode: Int = try? item.get(.MenuItemCmdGlyph) {
-        character = KeyGlyph.forCode(glyphCode)?.characters
-      } else {
-        character = try? item.get(.MenuItemCmdChar)
-      }
-      var modifiers: Modifiers?
-      if let commandModifiers: Int = try? item.get(.MenuItemCmdModifiers) {
-        modifiers = Modifiers(rawValue: commandModifiers)
-      }
-      let delegate = AXMenuItemDelegate(item)
-      let menuItem = MenuItem(
-        title: title,
-        command: MenuItemCommand(
-          character: character ?? "",
-          modifiers: modifiers ?? Modifiers.noCommand,
-          delegate: delegate),
-        path: path,
-        delegate: delegate)
-      index.add(item: menuItem, path: path.joined(separator: " > "))
+    let title = item.title
+    path.append(title)
+    if indexPath.count < path.count {
+      indexPath.append(0)
     }
+    defer {
+      _ = path.popLast()
+      indexPath[indexPath.endIndex.advanced(by: -1)] += 1
+    }
+    if !indexAppleMenu && path[0] == "Apple" {
+      return
+    }
+    var character: String?
+    if let glyphCode: Int = try? item.get(.MenuItemCmdGlyph) {
+      character = KeyGlyph.forCode(glyphCode)?.characters
+    } else {
+      character = try? item.get(.MenuItemCmdChar)
+    }
+    var modifiers: Modifiers?
+    if let commandModifiers: Int = try? item.get(.MenuItemCmdModifiers) {
+      modifiers = Modifiers(rawValue: commandModifiers)
+    }
+    let delegate = AXMenuItemDelegate(item, path: indexPath)
+    let menuItem = MenuItem(
+      title: title,
+      command: MenuItemCommand(
+        character: character ?? "",
+        modifiers: modifiers ?? Modifiers.noCommand,
+        delegate: delegate),
+      path: path,
+      delegate: delegate)
+    index.add(item: menuItem, path: path.joined(separator: " > "))
   }
 }
