@@ -21,13 +21,9 @@ class MenuSearchQueryTextFieldEditor: NSTextView {
   
   override func moveDown(_ sender: Any?) {}
   
-  override func insertTab(_ sender: Any?) {
-    NSLog("tab")
-  }
+  override func insertTab(_ sender: Any?) {}
   
-  override func insertBacktab(_ sender: Any?) {
-    NSLog("backtab")
-  }
+  override func insertBacktab(_ sender: Any?) {}
 
   override func performKeyEquivalent(with event: NSEvent) -> Bool {
     let searchManager = SearchManager.shared
