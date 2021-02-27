@@ -288,30 +288,16 @@ class AXMenuItemDelegate: MenuItemDelegate {
   }
   
   func press() {
+    try? element.setMessagingTimeout(1.0)
     do {
       try element.perform(action: .Press)
       return
     } catch {
-      // Fallback to index path, cached element no longer valid.
-      // TODO: this could use some cleanup
-      let menuBarApp = NSWorkspace.shared.menuBarOwningApplication!
-      let e = AXClient().createApplication(application: menuBarApp).topElement
-      var element: AX.Element? = try? e.get(.MenuBar)
-      for i in indexPath {
-        if element!.isA(.MenuBar) {
-          element = element!.childAt(i)
-          continue
-        }
-        if element!.isA(.MenuBarItem) {
-          element = element!.childAt(0)!.childAt(i)
-          continue
-        }
-        if element!.isA(.MenuItem) {
-          element = element!.childAt(0)!.childAt(i)
-          continue
-        }
+      let path = AXMenuItemPath(application: element.application, path: indexPath)
+      guard let element = path.get() else {
+        return
       }
-      try? element!.perform(action: AX.Action.Press)
+      try? element.perform(action: AX.Action.Press)
     }
   }
 }

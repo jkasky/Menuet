@@ -123,7 +123,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
    * Makes this process trusted for accessibility access.
    */
   private func makeProcessTrusted() {
-    let axClient = AX.Client()
+    let axClient = AXClient()
     if (!axClient.isProcessTrusted()) {
       // TODO: the trusted state should be managed globally so the app can
       // check the state before showing the command window and re-prompt if

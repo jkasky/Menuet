@@ -53,7 +53,7 @@ class SearchManager {
   }
 
   private init() {
-    axClient = AX.Client()
+    axClient = AXClient()
     workspace = NSWorkspace.shared
     searchResults = []
     selectedResult = -1
