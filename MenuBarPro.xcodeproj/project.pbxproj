@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -24,7 +24,6 @@
 		487835951B3B91E700BC911B /* MenuSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487835941B3B91E700BC911B /* MenuSearchViewController.swift */; };
 		487835971B3B91E700BC911B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 487835961B3B91E700BC911B /* Images.xcassets */; };
 		487835A61B3B91E700BC911B /* MenumateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487835A51B3B91E700BC911B /* MenumateTests.swift */; };
-		487835B01B3B9C0B00BC911B /* notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 487835AF1B3B9C0B00BC911B /* notes.txt */; };
 		48AE1CA1270829F500EF0234 /* AXElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F9819225D2716800920957 /* AXElement.swift */; };
 		48AE1CA227082A2300EF0234 /* AXMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F9819625D2733300920957 /* AXMenu.swift */; };
 		48C044D61D23B1DA00F49A94 /* AX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C044D51D23B1DA00F49A94 /* AX.swift */; };
@@ -69,7 +68,7 @@
 		486DA97220172785007B5C7C /* HotKeyCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotKeyCenter.swift; sourceTree = "<group>"; };
 		486EED8D1B3D41C70092FFF8 /* MenuSearchWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuSearchWindow.swift; sourceTree = "<group>"; };
 		4875779B1B51E7B900339D78 /* AXApplication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AXApplication.swift; sourceTree = "<group>"; };
-		4878358D1B3B91E700BC911B /* MenuBarPro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MenuBarPro.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4878358D1B3B91E700BC911B /* MenuBar Pro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MenuBar Pro.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		487835911B3B91E700BC911B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		487835921B3B91E700BC911B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		487835941B3B91E700BC911B /* MenuSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuSearchViewController.swift; sourceTree = "<group>"; };
@@ -82,6 +81,7 @@
 		48C044D51D23B1DA00F49A94 /* AX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AX.swift; sourceTree = "<group>"; };
 		48CECD301EA4A0BF007BD237 /* AXClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AXClient.swift; sourceTree = "<group>"; };
 		48D1E3312090740300E077F4 /* TrieTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrieTests.swift; sourceTree = "<group>"; };
+		48E24E402711547D0087D9F8 /* increment_build.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = increment_build.sh; sourceTree = "<group>"; };
 		48F9817E25C69C8D00920957 /* MenuBarPro.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MenuBarPro.entitlements; sourceTree = "<group>"; };
 		48F9817F25C69C8D00920957 /* MenuBarProDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MenuBarProDebug.entitlements; sourceTree = "<group>"; };
 		48F9819225D2716800920957 /* AXElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AXElement.swift; sourceTree = "<group>"; };
@@ -132,6 +132,7 @@
 		487835841B3B91E600BC911B = {
 			isa = PBXGroup;
 			children = (
+				48E24E3F271154470087D9F8 /* Scripts */,
 				48F9817D25C69C8D00920957 /* Entitlements */,
 				4878358F1B3B91E700BC911B /* Source */,
 				487835A21B3B91E700BC911B /* Tests */,
@@ -144,7 +145,7 @@
 		4878358E1B3B91E700BC911B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4878358D1B3B91E700BC911B /* MenuBarPro.app */,
+				4878358D1B3B91E700BC911B /* MenuBar Pro.app */,
 				4878359F1B3B91E700BC911B /* MenuBarProTests.xctest */,
 			);
 			name = Products;
@@ -209,6 +210,14 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		48E24E3F271154470087D9F8 /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				48E24E402711547D0087D9F8 /* increment_build.sh */,
+			);
+			path = Scripts;
+			sourceTree = "<group>";
+		};
 		48F9817D25C69C8D00920957 /* Entitlements */ = {
 			isa = PBXGroup;
 			children = (
@@ -221,24 +230,25 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4878358C1B3B91E700BC911B /* MenuBarPro */ = {
+		4878358C1B3B91E700BC911B /* MenuBar Pro */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 487835A91B3B91E700BC911B /* Build configuration list for PBXNativeTarget "MenuBarPro" */;
+			buildConfigurationList = 487835A91B3B91E700BC911B /* Build configuration list for PBXNativeTarget "MenuBar Pro" */;
 			buildPhases = (
 				487835891B3B91E700BC911B /* Sources */,
 				4878358A1B3B91E700BC911B /* Frameworks */,
 				4878358B1B3B91E700BC911B /* Resources */,
+				48E24E3E271151030087D9F8 /* Increment Build Number */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = MenuBarPro;
+			name = "MenuBar Pro";
 			packageProductDependencies = (
 				484575F4254E91A1004CA196 /* ShortcutRecorder */,
 			);
 			productName = MenuFinder;
-			productReference = 4878358D1B3B91E700BC911B /* MenuBarPro.app */;
+			productReference = 4878358D1B3B91E700BC911B /* MenuBar Pro.app */;
 			productType = "com.apple.product-type.application";
 		};
 		4878359E1B3B91E700BC911B /* MenuBarProTests */ = {
@@ -298,7 +308,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4878358C1B3B91E700BC911B /* MenuBarPro */,
+				4878358C1B3B91E700BC911B /* MenuBar Pro */,
 				4878359E1B3B91E700BC911B /* MenuBarProTests */,
 			);
 		};
@@ -311,7 +321,6 @@
 			files = (
 				D19451E921D55B2A003607D2 /* MenuSearchWindow.xib in Resources */,
 				D1D218F423A7772700A0240B /* PreferencesWindow.xib in Resources */,
-				487835B01B3B9C0B00BC911B /* notes.txt in Resources */,
 				487835971B3B91E700BC911B /* Images.xcassets in Resources */,
 				D1DECD9C21D4AE980028ABAE /* Main.xib in Resources */,
 			);
@@ -325,6 +334,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		48E24E3E271151030087D9F8 /* Increment Build Number */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 8;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Increment Build Number";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "${PROJECT_DIR}/Scripts/increment_build.sh \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		487835891B3B91E700BC911B /* Sources */ = {
@@ -381,7 +412,7 @@
 /* Begin PBXTargetDependency section */
 		48AE1CA02708296400EF0234 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 4878358C1B3B91E700BC911B /* MenuBarPro */;
+			target = 4878358C1B3B91E700BC911B /* MenuBar Pro */;
 			targetProxy = 48AE1C9F2708296400EF0234 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -439,7 +470,8 @@
 				MACOSX_DEPLOYMENT_TARGET = 11.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = co.kasky.menumate;
+				PRODUCT_BUNDLE_IDENTIFIER = app.menubarpro;
+				PRODUCT_NAME = "MenuBar Pro";
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -491,7 +523,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 11.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = co.kasky.menumate;
+				PRODUCT_BUNDLE_IDENTIFIER = app.menubarpro;
+				PRODUCT_NAME = "MenuBar Pro";
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_VERSION = 5.0;
@@ -514,7 +547,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = app.menubarpro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -543,7 +576,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = app.menubarpro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -640,7 +673,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		487835A91B3B91E700BC911B /* Build configuration list for PBXNativeTarget "MenuBarPro" */ = {
+		487835A91B3B91E700BC911B /* Build configuration list for PBXNativeTarget "MenuBar Pro" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				487835AA1B3B91E700BC911B /* Debug */,
