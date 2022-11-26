@@ -27,6 +27,15 @@ extension UserDefaults  {
     }
   }
 
+  var searchCaseSensitive: Bool {
+    get {
+      return bool(forKey: "searchCaseSensitive")
+    }
+    set {
+      setValue(newValue, forKey: "searchCaseSensitive")
+    }
+  }
+
   var searchMenuShortcutValue: Shortcut? {
     get {
       if let data = dictionary(forKey: "searchMenuShortcut") {
