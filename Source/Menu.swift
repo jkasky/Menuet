@@ -264,7 +264,11 @@ class MenuIndex {
   }
   
   func find(query: String) -> [MenuItem] {
-    let results = trie.find(sequence: query)
+    let matcher: (Character, Character) -> Bool
+      = UserDefaults.standard.searchCaseSensitive
+      ? { $0 == $1 }
+      : { $0.lowercased() == $1.lowercased() }
+    let results = trie.find(sequence: query, match: matcher)
     if UserDefaults.standard.showDisabledItems {
       return results.filter { $0.title != "" }
     }

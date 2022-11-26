@@ -109,6 +109,20 @@ class TrieTest: XCTestCase {
     XCTAssertEqual(trie.find(sequence:"fw"), [0])
     XCTAssertEqual(trie.find(sequence:"fdt"), [2])
   }
+
+  func testFindWithCaseInsensitiveMatch() {
+    let trie = Trie<Int>()
+    trie.insert(label: "File > new", value: 0)
+    trie.insert(label: "help < SEARCH", value: 1)
+
+    let caseInsensitiveMatch: (Character, Character) -> Bool = {
+      $0.lowercased() == $1.lowercased()
+    }
+
+    XCTAssertEqual(trie.find(sequence:"fn", match: caseInsensitiveMatch), [0])
+    XCTAssertEqual(trie.find(sequence:"hs", match: caseInsensitiveMatch), [1])
+    XCTAssertEqual(trie.find(sequence:"e", match: caseInsensitiveMatch), [0, 1])
+  }
   
   func testDoesNotMatchWhenNoNodesRemainingAndTrailingCharacterNotFound() {
     let trie = Trie<Int>()

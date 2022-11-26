@@ -112,10 +112,14 @@ public class Trie<V> {
    * returned in ascending alphabetical order
    */
   func find(sequence: String) -> [V] {
-    return find(sequence, root).map { $0.value! }
+    return find(sequence, root, { $0 == $1 }).map { $0.value! }
   }
 
-  private func find(_ sequence: String, _ node: TrieNode<V>) -> [TrieNode<V>] {
+  func find(sequence: String, match: (Character, Character) -> Bool) -> [V] {
+    return find(sequence, root, match).map { $0.value! }
+  }
+
+  private func find(_ sequence: String, _ node: TrieNode<V>, _ match: (Character, Character) -> Bool) -> [TrieNode<V>] {
     var matches: [TrieNode<V>] = []
 
     // When there is no more sequence return all leafs. This indicates that
@@ -127,7 +131,7 @@ public class Trie<V> {
           matches.append(child)
         }
         if child.children.count > 0 {
-          matches += find(sequence, child)
+          matches += find(sequence, child, match)
         }
       }
       return matches
@@ -135,7 +139,7 @@ public class Trie<V> {
 
     // When the first character of the sequence matches the current node we have
     // a partial match.
-    if sequence[sequence.startIndex] == node.character {
+    if match(sequence[sequence.startIndex], node.character) {
       if node.isLeaf {
         matches.append(node)
       }
@@ -145,14 +149,14 @@ public class Trie<V> {
           return []
         }
         for child in node.children {
-          matches += find(String(suffix), child)
+          matches += find(String(suffix), child, match)
         }
       } else {
-        matches += find("", node)
+        matches += find("", node, match)
       }
     } else {
       for child in node.children {
-        matches += find(sequence, child)
+        matches += find(sequence, child, match)
       }
     }
     return matches
