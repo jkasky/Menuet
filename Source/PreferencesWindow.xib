@@ -31,123 +31,22 @@
                                     <rect key="frame" x="10" y="7" width="434" height="286"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <stackView distribution="fill" orientation="vertical" alignment="trailing" spacing="9" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Eje-Tg-5KU">
-                                            <rect key="frame" x="17" y="158" width="378" height="125"/>
+                                        <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="9" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Eje-Tg-5KU">
+                                            <rect key="frame" x="17" y="134" width="400" height="135"/>
                                             <subviews>
-                                                <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="1" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tP1-yZ-bYg">
-                                                    <rect key="frame" x="239" y="109" width="139" height="16"/>
-                                                    <subviews>
-                                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ZUk-mg-wPF">
-                                                            <rect key="frame" x="-2" y="0.0" width="128" height="16"/>
-                                                            <textFieldCell key="cell" lineBreakMode="clipping" enabled="NO" title="Include Apple menu:" id="Hg2-79-8vb">
-                                                                <font key="font" usesAppearanceFont="YES"/>
-                                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                            </textFieldCell>
-                                                        </textField>
-                                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cSy-Aw-JZY">
-                                                            <rect key="frame" x="123" y="-1" width="18" height="18"/>
-                                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="uTD-oT-m7b">
-                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                <font key="font" metaFont="system"/>
-                                                                <connections>
-                                                                    <binding destination="dRT-HR-c3U" name="value" keyPath="values.searchAppleMenu" id="Ndk-x3-XZT">
-                                                                        <dictionary key="options">
-                                                                            <integer key="NSNullPlaceholder" value="1"/>
-                                                                        </dictionary>
-                                                                    </binding>
-                                                                </connections>
-                                                            </buttonCell>
-                                                        </button>
-                                                    </subviews>
-                                                    <visibilityPriorities>
-                                                        <integer value="1000"/>
-                                                        <integer value="1000"/>
-                                                    </visibilityPriorities>
-                                                    <customSpacing>
-                                                        <real value="3.4028234663852886e+38"/>
-                                                        <real value="3.4028234663852886e+38"/>
-                                                    </customSpacing>
-                                                </stackView>
-                                                <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IQL-n2-J15">
-                                                    <rect key="frame" x="232" y="84" width="146" height="16"/>
-                                                    <subviews>
-                                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ic6-Ma-IG3">
-                                                            <rect key="frame" x="-2" y="0.0" width="133" height="16"/>
-                                                            <textFieldCell key="cell" lineBreakMode="clipping" enabled="NO" title="Show disabled items:" id="eUe-6K-asQ">
-                                                                <font key="font" metaFont="system"/>
-                                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                            </textFieldCell>
-                                                        </textField>
-                                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5lz-qI-3Rf">
-                                                            <rect key="frame" x="130" y="-1" width="18" height="18"/>
-                                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="2v4-4Q-3Mg">
-                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                <font key="font" metaFont="system"/>
-                                                                <connections>
-                                                                    <binding destination="dRT-HR-c3U" name="value" keyPath="values.showDisabledItems" id="29c-8y-d9Y">
-                                                                        <dictionary key="options">
-                                                                            <integer key="NSNullPlaceholder" value="0"/>
-                                                                        </dictionary>
-                                                                    </binding>
-                                                                </connections>
-                                                            </buttonCell>
-                                                        </button>
-                                                    </subviews>
-                                                    <visibilityPriorities>
-                                                        <integer value="1000"/>
-                                                        <integer value="1000"/>
-                                                    </visibilityPriorities>
-                                                    <customSpacing>
-                                                        <real value="3.4028234663852886e+38"/>
-                                                        <real value="3.4028234663852886e+38"/>
-                                                    </customSpacing>
-                                                </stackView>
-                                                <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="1" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oxl-G8-Ij8">
-                                                    <rect key="frame" x="227" y="59" width="151" height="16"/>
-                                                    <subviews>
-                                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xcZ-ct-iXH">
-                                                            <rect key="frame" x="-2" y="0.0" width="140" height="16"/>
-                                                            <textFieldCell key="cell" lineBreakMode="clipping" enabled="NO" title="Case sensitive search:" id="Q89-45-WWd">
-                                                                <font key="font" metaFont="system"/>
-                                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                            </textFieldCell>
-                                                        </textField>
-                                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="uPv-cl-NRR">
-                                                            <rect key="frame" x="135" y="-1" width="18" height="18"/>
-                                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="fmC-4k-UHD">
-                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                <font key="font" metaFont="system"/>
-                                                                <connections>
-                                                                    <binding destination="dRT-HR-c3U" name="value" keyPath="values.searchCaseSensitive" id="JQZ-68-vTi"/>
-                                                                </connections>
-                                                            </buttonCell>
-                                                        </button>
-                                                    </subviews>
-                                                    <visibilityPriorities>
-                                                        <integer value="1000"/>
-                                                        <integer value="1000"/>
-                                                    </visibilityPriorities>
-                                                    <customSpacing>
-                                                        <real value="3.4028234663852886e+38"/>
-                                                        <real value="3.4028234663852886e+38"/>
-                                                    </customSpacing>
-                                                </stackView>
                                                 <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="2" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UCV-WY-UL1">
-                                                    <rect key="frame" x="0.0" y="0.0" width="378" height="50"/>
+                                                    <rect key="frame" x="0.0" y="85" width="356" height="50"/>
                                                     <subviews>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jag-8e-PnL">
-                                                            <rect key="frame" x="-2" y="17" width="142" height="16"/>
-                                                            <textFieldCell key="cell" lineBreakMode="clipping" enabled="NO" title="Search menu shortcut:" id="nNP-JN-Fdi">
+                                                            <rect key="frame" x="-2" y="17" width="120" height="16"/>
+                                                            <textFieldCell key="cell" lineBreakMode="clipping" enabled="NO" title="Keyboard shortcut:" id="nNP-JN-Fdi">
                                                                 <font key="font" metaFont="system"/>
                                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                             </textFieldCell>
                                                         </textField>
                                                         <customView verticalHuggingPriority="260" translatesAutoresizingMaskIntoConstraints="NO" id="lPA-a7-gXB" customClass="SRRecorderControl">
-                                                            <rect key="frame" x="140" y="0.0" width="238" height="50"/>
+                                                            <rect key="frame" x="118" y="0.0" width="238" height="50"/>
                                                             <userDefinedRuntimeAttributes>
                                                                 <userDefinedRuntimeAttribute type="boolean" keyPath="stringValueRespectsUserInterfaceLayoutDirection" value="YES"/>
                                                                 <userDefinedRuntimeAttribute type="boolean" keyPath="pausesGlobalShortcutMonitorWhileRecording" value="NO"/>
@@ -168,8 +67,116 @@
                                                         <real value="3.4028234663852886e+38"/>
                                                     </customSpacing>
                                                 </stackView>
+                                                <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="U4c-bT-Dmm">
+                                                    <rect key="frame" x="0.0" y="73" width="400" height="5"/>
+                                                </box>
+                                                <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="7" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tP1-yZ-bYg">
+                                                    <rect key="frame" x="0.0" y="50" width="152" height="16"/>
+                                                    <subviews>
+                                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cSy-Aw-JZY">
+                                                            <rect key="frame" x="-2" y="-1" width="18" height="18"/>
+                                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="uTD-oT-m7b">
+                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                <font key="font" metaFont="system"/>
+                                                                <connections>
+                                                                    <binding destination="dRT-HR-c3U" name="value" keyPath="values.searchAppleMenu" id="Ndk-x3-XZT">
+                                                                        <dictionary key="options">
+                                                                            <integer key="NSNullPlaceholder" value="1"/>
+                                                                        </dictionary>
+                                                                    </binding>
+                                                                </connections>
+                                                            </buttonCell>
+                                                        </button>
+                                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ZUk-mg-wPF">
+                                                            <rect key="frame" x="19" y="0.0" width="135" height="16"/>
+                                                            <textFieldCell key="cell" lineBreakMode="clipping" enabled="NO" title="Search  Apple menu" id="Hg2-79-8vb">
+                                                                <font key="font" metaFont="system"/>
+                                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                            </textFieldCell>
+                                                        </textField>
+                                                    </subviews>
+                                                    <visibilityPriorities>
+                                                        <integer value="1000"/>
+                                                        <integer value="1000"/>
+                                                    </visibilityPriorities>
+                                                    <customSpacing>
+                                                        <real value="3.4028234663852886e+38"/>
+                                                        <real value="3.4028234663852886e+38"/>
+                                                    </customSpacing>
+                                                </stackView>
+                                                <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="7" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oxl-G8-Ij8">
+                                                    <rect key="frame" x="0.0" y="25" width="91" height="16"/>
+                                                    <subviews>
+                                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="uPv-cl-NRR">
+                                                            <rect key="frame" x="-2" y="-1" width="18" height="18"/>
+                                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="fmC-4k-UHD">
+                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                <font key="font" metaFont="system"/>
+                                                                <connections>
+                                                                    <binding destination="dRT-HR-c3U" name="value" keyPath="values.searchCaseSensitive" id="JQZ-68-vTi"/>
+                                                                </connections>
+                                                            </buttonCell>
+                                                        </button>
+                                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xcZ-ct-iXH">
+                                                            <rect key="frame" x="19" y="0.0" width="74" height="16"/>
+                                                            <textFieldCell key="cell" lineBreakMode="clipping" enabled="NO" title="Match case" id="Q89-45-WWd">
+                                                                <font key="font" metaFont="system"/>
+                                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                            </textFieldCell>
+                                                        </textField>
+                                                    </subviews>
+                                                    <visibilityPriorities>
+                                                        <integer value="1000"/>
+                                                        <integer value="1000"/>
+                                                    </visibilityPriorities>
+                                                    <customSpacing>
+                                                        <real value="3.4028234663852886e+38"/>
+                                                        <real value="3.4028234663852886e+38"/>
+                                                    </customSpacing>
+                                                </stackView>
+                                                <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="7" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IQL-n2-J15">
+                                                    <rect key="frame" x="0.0" y="0.0" width="194" height="16"/>
+                                                    <subviews>
+                                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5lz-qI-3Rf">
+                                                            <rect key="frame" x="-2" y="-1" width="18" height="18"/>
+                                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="2v4-4Q-3Mg">
+                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                <font key="font" metaFont="system"/>
+                                                                <connections>
+                                                                    <binding destination="dRT-HR-c3U" name="value" keyPath="values.showDisabledItems" id="29c-8y-d9Y">
+                                                                        <dictionary key="options">
+                                                                            <integer key="NSNullPlaceholder" value="0"/>
+                                                                        </dictionary>
+                                                                    </binding>
+                                                                </connections>
+                                                            </buttonCell>
+                                                        </button>
+                                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ic6-Ma-IG3">
+                                                            <rect key="frame" x="19" y="0.0" width="177" height="16"/>
+                                                            <textFieldCell key="cell" lineBreakMode="clipping" enabled="NO" title="Include disabled menu items" id="eUe-6K-asQ">
+                                                                <font key="font" metaFont="system"/>
+                                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                            </textFieldCell>
+                                                        </textField>
+                                                    </subviews>
+                                                    <visibilityPriorities>
+                                                        <integer value="1000"/>
+                                                        <integer value="1000"/>
+                                                    </visibilityPriorities>
+                                                    <customSpacing>
+                                                        <real value="3.4028234663852886e+38"/>
+                                                        <real value="3.4028234663852886e+38"/>
+                                                    </customSpacing>
+                                                </stackView>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="U4c-bT-Dmm" secondAttribute="trailing" id="qtC-6B-gCI"/>
+                                            </constraints>
                                             <visibilityPriorities>
+                                                <integer value="1000"/>
                                                 <integer value="1000"/>
                                                 <integer value="1000"/>
                                                 <integer value="1000"/>
@@ -180,9 +187,15 @@
                                                 <real value="3.4028234663852886e+38"/>
                                                 <real value="3.4028234663852886e+38"/>
                                                 <real value="3.4028234663852886e+38"/>
+                                                <real value="3.4028234663852886e+38"/>
                                             </customSpacing>
                                         </stackView>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="Eje-Tg-5KU" secondAttribute="trailing" constant="17" id="7ev-4F-Awi"/>
+                                        <constraint firstItem="Eje-Tg-5KU" firstAttribute="top" secondItem="Uly-d4-shm" secondAttribute="top" constant="17" id="IRr-k0-NQU"/>
+                                        <constraint firstItem="Eje-Tg-5KU" firstAttribute="leading" secondItem="Uly-d4-shm" secondAttribute="leading" constant="17" id="wxz-eY-m9k"/>
+                                    </constraints>
                                 </view>
                             </tabViewItem>
                         </tabViewItems>
