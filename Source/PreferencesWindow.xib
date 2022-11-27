@@ -34,8 +34,8 @@
                                         <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="9" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Eje-Tg-5KU">
                                             <rect key="frame" x="17" y="134" width="400" height="135"/>
                                             <subviews>
-                                                <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="2" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UCV-WY-UL1">
-                                                    <rect key="frame" x="0.0" y="85" width="356" height="50"/>
+                                                <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="7" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UCV-WY-UL1">
+                                                    <rect key="frame" x="0.0" y="85" width="361" height="50"/>
                                                     <subviews>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jag-8e-PnL">
                                                             <rect key="frame" x="-2" y="17" width="120" height="16"/>
@@ -46,7 +46,7 @@
                                                             </textFieldCell>
                                                         </textField>
                                                         <customView verticalHuggingPriority="260" translatesAutoresizingMaskIntoConstraints="NO" id="lPA-a7-gXB" customClass="SRRecorderControl">
-                                                            <rect key="frame" x="118" y="0.0" width="238" height="50"/>
+                                                            <rect key="frame" x="123" y="0.0" width="238" height="50"/>
                                                             <userDefinedRuntimeAttributes>
                                                                 <userDefinedRuntimeAttribute type="boolean" keyPath="stringValueRespectsUserInterfaceLayoutDirection" value="YES"/>
                                                                 <userDefinedRuntimeAttribute type="boolean" keyPath="pausesGlobalShortcutMonitorWhileRecording" value="NO"/>
