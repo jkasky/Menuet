@@ -1,4 +1,25 @@
-[TODO]
+[BUGS]
+
+- Named menu sections show up in search results (e.g. Xcode: Product > Destination > Build)
+- Missing menu items (e.g. Xcode: Product > Build)
+
+
+[TASKS]
+
+- move away from using AppDelegate, use an AppState pattern
+
+
+[FEATURES]
+
+ - add cheatsheet panel with all shortcuts
+ - touch bar integration to show top 5 or map results to
+   numbers
+ - adapt search to rank items used more ofter towards the top
+ - alfred plugin, checkout requests in
+   https://www.alfredforum.com/topic/1993-menu-search/?hl=menu and the source
+   in https://github.com/ctwise/alfred-workflows. Try to solve for some of the
+   wants to make QM more attractive. Shortcut cheatsheat, favorites, etc.
+
 
 [NOTES]
 
@@ -26,19 +47,6 @@ Application
     - Menu Bar Item (Child, Top Level of Menu Bar)
       - Menu (Child, Single Child, No Title)
         - Menu Item (Child)
-
-Feature ideas:
-
- - touch bar integration to show top 5 or map results to
-   numbers
- - adapt search to rank items used more ofter towards the top
- - alfred plugin, checkout requests in
-   https://www.alfredforum.com/topic/1993-menu-search/?hl=menu and the source
-   in https://github.com/ctwise/alfred-workflows. Try to solve for some of the
-   wants to make QM more attractive. Shortcut cheatsheat, favorites, etc.
-
-x show shortcut characters
-
 Possible Names:
 
  - Quinu
