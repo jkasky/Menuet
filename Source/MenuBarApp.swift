@@ -12,7 +12,7 @@ struct MenuBarApp: App {
     // TODO: move this into a state object, migrate away from app delegate?
     KeyboardShortcuts.onKeyUp(for: .menuSearchShortcut) {
       NSApp.activate(ignoringOtherApps: true)
-      NSApp.sendAction(Selector(("showSearchPanel")), to: nil, from: nil)
+      NSApp.sendAction(#selector(AppDelegate.showSearchPanel), to: nil, from: nil)
     }
   }
 
@@ -23,7 +23,7 @@ struct MenuBarApp: App {
 
       Button("Search...") {
         NSApp.activate(ignoringOtherApps: true)
-        NSApp.sendAction(Selector(("showSearchPanel")), to: nil, from: nil)
+        NSApp.sendAction(#selector(AppDelegate.showSearchPanel), to: nil, from: nil)
       }
 
       Divider()
