@@ -32,8 +32,13 @@ enum SearchEvent: String {
 }
 
 
-class SearchManager {
-  
+class SearchManager: ObservableObject {
+
+  @Published var activeItem: MenuItem?
+  @Published var currentApp: NSRunningApplication?
+  @Published var searchResults: [MenuItem]
+  @Published var query: String
+
   static let shared = SearchManager()
   
   private var axClient: AX.Client
@@ -41,10 +46,6 @@ class SearchManager {
   
   private var currentIndex: MenuIndex
   private var selectedResult: Int
-  private var searchResults: [MenuItem]
-  
-  public var currentApp: NSRunningApplication?
-  public var activeItem: MenuItem?
   
   public var totalResults: Int {
     get {
@@ -52,10 +53,11 @@ class SearchManager {
     }
   }
 
-  private init() {
+  init() {
     axClient = AXClient()
     workspace = NSWorkspace.shared
     searchResults = []
+    query = ""
     selectedResult = -1
     currentApp = nil
     currentIndex = MenuIndex()
@@ -69,30 +71,53 @@ class SearchManager {
   func getResult(at index: Int) -> MenuItem {
     return searchResults[index]
   }
-  
-  func selectResult(at index: Int) {
-    selectedResult = index
+
+  func findMatchingResult(_ matcher: (_ item: MenuItem) -> Bool) -> MenuItem? {
+    return searchResults.first(where: matcher)
+  }
+
+  func selectNext() {
+    if selectedResult < searchResults.count - 1 {
+      selectedResult += 1
+      activateSelected()
+    }
+  }
+
+  func selectPrevious() {
+    if selectedResult > 0 {
+      selectedResult -= 1
+    } else {
+      selectedResult = -1
+    }
+    activateSelected()
   }
   
   func activateSelected() {
-    guard selectedResult >= 0 && searchResults.count > 0 else {
+    guard selectedResult >= 0 && selectedResult < searchResults.count else {
+      activeItem = nil
       return
     }
     activeItem = searchResults[selectedResult]
   }
+
+  func activate() {
+    if let menuBarApp = workspace.menuBarOwningApplication {
+      guard menuBarApp != currentApp else {
+        return
+      }
+      currentApp = menuBarApp
+    }
+  }
   
   func search(_ query: String) {
-    let menuBarApp = workspace.menuBarOwningApplication
-    guard menuBarApp != nil else {
-      return
-    }
-    if menuBarApp != currentApp {
-      currentApp = menuBarApp
-      let axApp = axClient.createApplication(application:menuBarApp!)
+    if let app = currentApp {
+      let axApp = axClient.createApplication(application:app)
       let walker = AXMenuWalker(application: axApp.topElement)
       currentIndex = MenuIndex()
       try? walker.walk(visitor: AXMenuIndexer(index: currentIndex))
     }
+    selectedResult = -1
+    activeItem = nil
     if query.count > 0 {
       searchResults = currentIndex.find(query: query)
     } else {
