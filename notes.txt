@@ -1,12 +1,5 @@
 [TODO]
 
-* Fix issue with Slack/Electron apps
-* Fix issue with PyCharm index getting corrupted
-* Add preferences and make accessible through menu bar icon.
-* Add keybindng setting
-* Change results table to view based table
-
-
 [NOTES]
 
 <xcode.app path>/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/HIServices.framework

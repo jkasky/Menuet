@@ -8,13 +8,16 @@
 
 import AppKit
 import Foundation
+import OSLog
 
+// TODO: Add missing glyphs for additional keys
+//       https://gist.github.com/swillits/df648e87016772c7f7e5dbed2b345066
 
 /**
  * A coded symbol (i.e. glyph) that represents a non-printable key.
  */
 struct KeyGlyph {
-    
+
   // Modifier Keys
   static let Alt           = KeyGlyph(0x8B, "\u{2387}")  //  ⎇
   static let Control       = KeyGlyph(0x06, "\u{2303}")  //  ⌃
@@ -42,7 +45,7 @@ struct KeyGlyph {
   static let Left          = KeyGlyph(0x64, "\u{2190}")  //  ←
   static let PageDown      = KeyGlyph(0x6B, "\u{21DF}")  //  ⇟
   static let PageUp        = KeyGlyph(0x62, "\u{21DE}")  //  ⇞
-  static let Power         = KeyGlyph(0x6E, "\u{2758}")  //  ❘⃝
+  static let Power         = KeyGlyph(0x6E, "\u{23FB}")  //  ⏻
   static let Return        = KeyGlyph(0x0B, "\u{21A9}")  //  ↩
   static let ReturnRTL     = KeyGlyph(0x0C, "\u{21AA}")  //  ↪
   static let Right         = KeyGlyph(0x65, "\u{2192}")  //  →
@@ -89,10 +92,23 @@ struct KeyGlyph {
   
   let code: Int
   let characters: String
-  
+
   init(_ code: Int, _ characters: String) {
     self.code = code
     self.characters = characters
+  }
+}
+
+
+extension KeyGlyph: CustomStringConvertible {
+  var description: String {
+    return characters
+  }
+}
+
+extension DefaultStringInterpolation {
+  mutating func appendInterpolation(_ value: KeyGlyph) {
+    appendInterpolation(value.description)
   }
 }
 
@@ -184,7 +200,23 @@ struct Modifiers: OptionSet {
     }
     return character
   }
-  
+
+  static func ==(lhs: Modifiers, rhs: NSEvent.ModifierFlags) -> Bool {
+    if lhs.contains(.control) != rhs.contains(.control) {
+      return false
+    }
+    if lhs.contains(.option) != rhs.contains(.option) {
+      return false
+    }
+    if lhs.contains(.shift) != rhs.contains(.shift) {
+      return false
+    }
+    if !lhs.contains(.noCommand) != rhs.contains(.command) {
+      return false
+    }
+    return true
+  }
+
   static let shift = Modifiers(rawValue: 1)
   static let option = Modifiers(rawValue: 2)
   static let control = Modifiers(rawValue: 4)
@@ -227,8 +259,13 @@ protocol MenuItemDelegate {
 }
 
 
-class MenuItem: CustomDebugStringConvertible {
-  
+class MenuItem: CustomDebugStringConvertible, Equatable, Identifiable {
+
+  static func == (left: MenuItem, right: MenuItem) -> Bool {
+    return left.id == right.id
+  }
+
+  let id: UUID
   let title: String
   let command: MenuItemCommand
   let path: [String]
@@ -237,11 +274,20 @@ class MenuItem: CustomDebugStringConvertible {
   var debugDescription: String {
     return "MenuItem<path:\(path.joined(separator: "/"))>"
   }
-  
+
+  var pathDescription: String {
+    if path[0] == "Apple" {
+      return ([KeyGlyph.Apple.characters] + path[1...]).joined(separator: " > ")
+    } else {
+      return path.joined(separator: " > ")
+    }
+  }
+
   private let delegate: MenuItemDelegate
   
   init(title: String, command: MenuItemCommand, path: [String],
        delegate:MenuItemDelegate) {
+    self.id = UUID()
     self.title = title
     self.command = command
     self.path = path
@@ -310,7 +356,8 @@ class AXMenuItemDelegate: MenuItemDelegate {
 class AXMenuIndexer: AXMenuVisitor {
 
   private let indexAppleMenu: Bool
-  
+  private let logger: Logger = Logger()
+
   private var path: [String] = []
   private var indexPath: [UInt] = []
   private var index: MenuIndex
@@ -351,12 +398,17 @@ class AXMenuIndexer: AXMenuVisitor {
     var character: String?
     if let glyphCode: Int = try? item.get(.MenuItemCmdGlyph) {
       character = KeyGlyph.forCode(glyphCode)?.characters
+      if character == nil {
+        logger.warning("menu item '\(title)' has command with unrecognized glyph code \(glyphCode)")
+      }
     } else {
       character = try? item.get(.MenuItemCmdChar)
     }
     var modifiers: Modifiers?
-    if let commandModifiers: Int = try? item.get(.MenuItemCmdModifiers) {
-      modifiers = Modifiers(rawValue: commandModifiers)
+    if character != nil {
+      if let commandModifiers: Int = try? item.get(.MenuItemCmdModifiers) {
+        modifiers = Modifiers(rawValue: commandModifiers)
+      }
     }
     let delegate = AXMenuItemDelegate(item, path: indexPath)
     let menuItem = MenuItem(
