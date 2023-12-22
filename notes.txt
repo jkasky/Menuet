@@ -1,12 +1,13 @@
 [BUGS]
 
+- search panel and settings window behind windows of other apps
 - Named menu sections show up in search results (e.g. Xcode: Product > Destination > Build)
 - Missing menu items (e.g. Xcode: Product > Build)
 
 
 [TASKS]
 
-- move away from using AppDelegate, use an AppState pattern
+- ?
 
 
 [FEATURES]

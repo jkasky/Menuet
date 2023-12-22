@@ -2,19 +2,60 @@ import KeyboardShortcuts
 import SwiftUI
 
 
-@main
-struct MenuBarApp: App {
-  @NSApplicationDelegateAdaptor private var appDelegate: AppDelegate
-
-  @StateObject private var searchManager = SearchManager.shared
+class AppState: ObservableObject {
+  private var application: NSApplication = NSApplication.shared
+  private var searchPanel: MenuSearchPanel?
 
   init() {
-    // TODO: move this into a state object, migrate away from app delegate?
+    initializeMenuResources()
+
     KeyboardShortcuts.onKeyUp(for: .menuSearchShortcut) {
-      NSApp.activate(ignoringOtherApps: true)
-      NSApp.sendAction(#selector(AppDelegate.showSearchPanel), to: nil, from: nil)
+      self.showSearchPanel()
+    }
+
+    makeProcessTrusted()
+  }
+
+  func activate() {
+    if !application.isActive {
+      application.activate()
     }
   }
+
+  func showSearchPanel() {
+    activate()
+    if searchPanel == nil {
+      searchPanel = MenuSearchPanel(contentRect: NSRect(x: 0, y: 0, width: 600, height: 50)) {
+        MenuSearchView()
+          .environmentObject(self)
+          .environmentObject(SearchManager.shared)
+      }
+    }
+    SearchManager.shared.activate()
+    searchPanel?.center()
+    searchPanel?.makeKeyAndOrderFront(nil)
+  }
+
+  private func makeProcessTrusted() {
+    let axClient = AXClient()
+    if (!axClient.isProcessTrusted()) {
+      // TODO: the trusted state should be managed globally so the app can
+      // check the state before showing the command window and re-prompt if
+      // necessary.
+      let trusted = axClient.makeProcessTrusted(withPrompt:true)
+      if !trusted {
+        NSLog("Process is not trusted.")
+      }
+    }
+  }
+}
+
+
+@main
+struct MenuBarApp: App {
+
+  @StateObject private var appState = AppState()
+  @StateObject private var searchManager = SearchManager.shared
 
   var body: some Scene {
     // TODO: use the system image? loading StatusBarIcon not working
@@ -22,20 +63,12 @@ struct MenuBarApp: App {
     MenuBarExtra("MenuBarPro App", systemImage: "menubar.rectangle") {
 
       Button("Search...") {
-        NSApp.activate(ignoringOtherApps: true)
-        NSApp.sendAction(#selector(AppDelegate.showSearchPanel), to: nil, from: nil)
+        appState.showSearchPanel()
       }
 
       Divider()
 
-      if #available(macOS 14, *) {
-        SettingsLink()
-      } else {
-        Button("Settings...") {
-          NSApp.activate(ignoringOtherApps: true)
-          NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
-        }
-      }
+      SettingsLink()
 
       Divider()
 
@@ -43,6 +76,7 @@ struct MenuBarApp: App {
         NSApp.terminate(nil)
       }
     }
+    .environmentObject(appState)
 
     Settings() {
       SettingsView()
