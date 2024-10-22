@@ -11,7 +11,6 @@
 
 [FEATURES]
 
- - add cheatsheet panel with all shortcuts
  - touch bar integration to show top 5 or map results to
    numbers
  - adapt search to rank items used more ofter towards the top
@@ -63,3 +62,21 @@ Possible Names:
 https://developer.apple.com/library/mac/documentation/ApplicationServices/Reference/AXUIElement_header_reference/
 https://developer.apple.com/library/prerelease/content/samplecode/UIElementInspector/
 http://pastebin.com/SZXVbUzg
+
+[COMPLETED]
+
+- Added a new `Source/KeyboardShortcutsCheatsheetPanel.swift` file to define the cheatsheet tool window.
+- Updated `Source/MenuBarApp.swift` to include a button to show the cheatsheet panel.
+- Updated `Source/AppDelegate.swift` to handle showing the cheatsheet panel.
+- Updated `Source/SettingsView.swift` to include a button to show the cheatsheet panel.
+- Defined a global keyboard shortcut using the `KeyboardShortcuts` package to trigger the cheatsheet panel.
+- Registered the global keyboard shortcut in the `init` method of the `MenuBarApp` struct.
+- When the global keyboard shortcut is pressed, the cheatsheet panel is displayed.
+- Added a menu item to the app's menu bar to show the cheatsheet panel.
+- When the menu item is selected, the cheatsheet panel is displayed.
+- Cheatsheet panel displays a searchable grid of all keyboard shortcuts with filters.
+- Cheatsheet panel is styled with a clear background, rounded corners, and consistent color scheme.
+- Cheatsheet panel is centered on the screen when first displayed.
+- Cheatsheet panel is movable by dragging on the background.
+- Cheatsheet panel floats on top of other windows and hides when unfocused.
+- Cheatsheet panel can be closed using the 'esc' key or when it loses focus.

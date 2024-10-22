@@ -1,11 +1,3 @@
-//
-//  AppDelegate.swift
-//  MenuFinder
-//
-//  Created by Jesse Kasky on 6/24/15.
-//  Copyright (c) 2015 Codjax. All rights reserved.
-//
-
 import Carbon
 import Cocoa
 import Combine
@@ -17,6 +9,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
   let application = NSApplication.shared
 
   var searchPanel: MenuSearchPanel?
+  var cheatsheetPanel: KeyboardShortcutsCheatsheetPanel?
     
   @IBOutlet
   var searchMenuItem: NSMenuItem?
@@ -29,6 +22,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     initializeMenuResources()
     initializeDefaults()
     makeProcessTrusted()
+    registerCheatsheetShortcut()
   }
 
   func applicationWillTerminate(_ notification: Notification) {
@@ -107,5 +101,22 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     searchPanel?.center()
     searchPanel?.makeKeyAndOrderFront(nil)
   }
-}
 
+  @objc func showCheatsheetPanel() {
+    if cheatsheetPanel == nil {
+      cheatsheetPanel = KeyboardShortcutsCheatsheetPanel(contentRect: NSRect(x: 0, y: 0, width: 800, height: 600)) {
+        CheatsheetView().environmentObject(SearchManager.shared)
+      }
+    }
+    SearchManager.shared.activate()
+    cheatsheetPanel?.center()
+    cheatsheetPanel?.makeKeyAndOrderFront(nil)
+  }
+
+  private func registerCheatsheetShortcut() {
+    KeyboardShortcuts.onKeyUp(for: .cheatsheetShortcut) {
+      NSApp.activate(ignoringOtherApps: true)
+      NSApp.sendAction(#selector(AppDelegate.showCheatsheetPanel), to: nil, from: nil)
+    }
+  }
+}

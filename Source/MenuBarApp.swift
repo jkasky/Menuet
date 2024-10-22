@@ -14,6 +14,10 @@ struct MenuBarApp: App {
       NSApp.activate(ignoringOtherApps: true)
       NSApp.sendAction(#selector(AppDelegate.showSearchPanel), to: nil, from: nil)
     }
+    KeyboardShortcuts.onKeyUp(for: .cheatsheetShortcut) {
+      NSApp.activate(ignoringOtherApps: true)
+      NSApp.sendAction(#selector(AppDelegate.showCheatsheetPanel), to: nil, from: nil)
+    }
   }
 
   var body: some Scene {
@@ -24,6 +28,11 @@ struct MenuBarApp: App {
       Button("Search...") {
         NSApp.activate(ignoringOtherApps: true)
         NSApp.sendAction(#selector(AppDelegate.showSearchPanel), to: nil, from: nil)
+      }
+
+      Button("Cheatsheet...") {
+        NSApp.activate(ignoringOtherApps: true)
+        NSApp.sendAction(#selector(AppDelegate.showCheatsheetPanel), to: nil, from: nil)
       }
 
       Divider()
