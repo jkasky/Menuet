@@ -23,6 +23,10 @@ class AppState: ObservableObject {
   }
 
   func showSearchPanel() {
+    // Walk the target app's menu BEFORE we activate or take key window,
+    // so menu items aren't disabled by the target app in response to
+    // resigning key/first-responder.
+    SearchManager.shared.activate()
     activate()
     if searchPanel == nil {
       searchPanel = MenuSearchPanel(contentRect: NSRect(x: 0, y: 0, width: 600, height: 50)) {
@@ -31,7 +35,6 @@ class AppState: ObservableObject {
           .environmentObject(SearchManager.shared)
       }
     }
-    SearchManager.shared.activate()
     searchPanel?.center()
     searchPanel?.makeKeyAndOrderFront(nil)
     DispatchQueue.main.async {

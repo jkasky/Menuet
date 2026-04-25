@@ -102,21 +102,17 @@ class SearchManager: ObservableObject {
   }
 
   func activate() {
-    if let menuBarApp = workspace.menuBarOwningApplication {
-      guard menuBarApp != currentApp else {
-        return
-      }
-      currentApp = menuBarApp
+    guard let menuBarApp = workspace.menuBarOwningApplication else {
+      return
     }
+    currentApp = menuBarApp
+    let axApp = axClient.createApplication(application: menuBarApp)
+    let walker = AXMenuWalker(application: axApp)
+    currentIndex = MenuIndex()
+    walker.walk(visitor: AXMenuIndexer(index: currentIndex))
   }
-  
+
   func search(_ query: String) {
-    if let app = currentApp {
-      let axApp = axClient.createApplication(application: app)
-      let walker = AXMenuWalker(application: axApp)
-      currentIndex = MenuIndex()
-      walker.walk(visitor: AXMenuIndexer(index: currentIndex))
-    }
     selectedResult = -1
     activeItem = nil
     if query.count > 0 {

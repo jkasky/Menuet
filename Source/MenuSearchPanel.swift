@@ -87,9 +87,9 @@ class MenuSearchPanel: NSPanel {
       case NSEvent.SpecialKey.upArrow.rawValue:
         searchManager.selectPrevious()
       case NSEvent.SpecialKey.carriageReturn.rawValue:
-        resignMain()
-        searchManager.currentApp?.activate()
-        searchManager.activeItem?.command.perform();
+        if let item = searchManager.activeItem {
+          dismissAndPerform(item.command)
+        }
       default:
         break
       }
@@ -102,8 +102,7 @@ class MenuSearchPanel: NSPanel {
     if let quickIndex = Int(event.charactersIgnoringModifiers!) {
       if quickIndex > 0 && quickIndex < 8 {
         let row = quickIndex - 1
-        searchManager.getResult(at: row).command.perform();
-        searchManager.currentApp?.activate()
+        dismissAndPerform(searchManager.getResult(at: row).command)
         return true
       }
     }
@@ -117,9 +116,22 @@ class MenuSearchPanel: NSPanel {
       $0.command.character.uppercased() == characters?.uppercased() &&
       $0.command.modifiers == event.modifierFlags
     }) {
-      itemWithEquivalent.command.perform()
-      searchManager.currentApp?.activate()
+      dismissAndPerform(itemWithEquivalent.command)
     }
     return super.performKeyEquivalent(with:event)
+  }
+
+  private func dismissAndPerform(_ command: MenuItemCommand) {
+    resignMain()
+    // .activateAllWindows so AppKit restores the target's previously-key
+    // window and its first responder.
+    SearchManager.shared.currentApp?.activate(options: [.activateAllWindows])
+    // NSMenu validation is lazy: items that depend on first-responder
+    // context (Cut/Copy/etc.) can still be flagged disabled at the
+    // moment of activation. Yield the runloop so the target processes
+    // its activation event before we press.
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+      command.perform()
+    }
   }
 }
