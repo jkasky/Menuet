@@ -20,5 +20,7 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+    <key>NSAccessibilityUsageDescription</key>
+    <string>MenuBar Pro needs accessibility access to read and perform application menubar items.</string>
 </dict>
 </plist>
