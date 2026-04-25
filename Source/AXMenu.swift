@@ -30,25 +30,22 @@ class AXMenuWalker {
 
   func walk(visitor: AXMenuVisitor) throws {
     let menuBar: AX.Element = try application.get(.MenuBar)
-    for menuBarItem: AX.Element in try menuBar.findAll(.MenuBarItem) {
-      let menu: AX.Element? = try menuBarItem.find(.Menu)
-      guard menu != nil else {
-        continue
-      }
+    for menuBarItem in menuBar.findAll(.MenuBarItem) {
+      guard let menu = menuBarItem.find(.Menu) else { continue }
       visitor.enterMenu(menuBarItem)
-      walkMenu(menu: menu!, visitor: visitor)
+      walkMenu(menu: menu, visitor: visitor)
       visitor.leaveMenu(menuBarItem)
     }
   }
 
   private func walkMenu(menu: AX.Element, visitor: AXMenuVisitor) {
-    for item in (try? menu.findAll(.MenuItem)) ?? [] {
+    for item in menu.findAll(.MenuItem) {
       switch item.childCount {
       // Single child element with role of Menu for sub-menus
       case 1:
-        if let menu = try? item.find(.Menu) as AX.Element? {
+        if let submenu = item.find(.Menu) {
           visitor.enterMenu(item)
-          walkMenu(menu: menu, visitor: visitor)
+          walkMenu(menu: submenu, visitor: visitor)
           visitor.leaveMenu(item)
         }
       default:

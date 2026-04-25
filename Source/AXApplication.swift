@@ -30,22 +30,16 @@ protocol AccessibilityApplication {
 
 
 class AXApplication: AccessibilityApplication {
-  let top: AX.Element
-
-  var topElement: AX.Element {
-    get {
-      return top
-    }
-  }
+  let topElement: AX.Element
 
   var menuBar: AX.Element? {
     get {
       do {
-        let menuBar: AX.Element = try top.get(.MenuBar)
+        let menuBar: AX.Element = try topElement.get(.MenuBar)
         return menuBar
       } catch {
         #if DEBUG
-        NSLog("failed to get menubar for \(top)")
+        NSLog("failed to get menubar for \(topElement)")
         #endif
       }
       return nil
@@ -53,6 +47,6 @@ class AXApplication: AccessibilityApplication {
   }
 
   init(pid: pid_t) {
-    top = AXElement(element: AXUIElementCreateApplication(pid))
+    topElement = AXElement(element: AXUIElementCreateApplication(pid))
   }
 }

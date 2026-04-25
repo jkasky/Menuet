@@ -47,21 +47,17 @@ protocol AccessibilityElement {
    Find first child element that matches given role.
 
    - parameter role: role to evaluate children against
-   - throws:
-     - `AX.APIError` if search fails
    - returns: first element matching role
    */
-  func find(_ role: AX.Role) throws -> AX.Element?
+  func find(_ role: AX.Role) -> AX.Element?
 
   /**
    Find all child elements that match given role.
 
    - parameter role: role to evaluate children against
-   - throws:
-     - `AX.APIError` if search fails
    - returns: array of matching child elements
    */
-  func findAll(_ role: AX.Role) throws -> [AX.Element]
+  func findAll(_ role: AX.Role) -> [AX.Element]
 
   /**
    Returns an attribute value as an element.
@@ -168,18 +164,12 @@ class AXElement: AX.Element {
   }
 
   var childCount: Int {
-    get {
-      let value:AnyObject? = try? get(.Children)
-      guard value != nil else {
-        return 0
-      }
-      return CFArrayGetCount((value as! CFArray))
-    }
+    return children.count
   }
 
   var children: [AX.Element] {
     get {
-      if cachedChildren.isEmpty && childCount > 0 {
+      if cachedChildren.isEmpty {
         guard let value:AnyObject = try? get(.Children) else {
           return []
         }
@@ -202,19 +192,17 @@ class AXElement: AX.Element {
   }
 
   func childAt(_ index: UInt) -> AX.Element? {
-    return children[Int(index)]
+    let i = Int(index)
+    guard i < children.count else { return nil }
+    return children[i]
   }
 
-  func find(_ role: AX.Role) throws -> AX.Element? {
-    return children.first {
-      return $0.isA(role)
-    }
+  func find(_ role: AX.Role) -> AX.Element? {
+    return children.first { $0.isA(role) }
   }
 
-  func findAll(_ role: AX.Role) throws -> [AX.Element] {
-    return children.filter {
-      return $0.isA(role)
-    }
+  func findAll(_ role: AX.Role) -> [AX.Element] {
+    return children.filter { $0.isA(role) }
   }
 
   private func get(_ attribute: AX.Attribute) throws -> AnyObject {
@@ -280,7 +268,7 @@ class AXElement: AX.Element {
     guard status == .success else {
       let error = AX.APIError(code: status)
       #if DEBUG
-      NSLog("Failed to perform '\(action)' on \(self): \(error.description)")
+      NSLog("Failed to perform '\(action)' on \(self): \(error.localizedDescription)")
       #endif
       throw error
     }

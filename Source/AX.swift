@@ -6,16 +6,16 @@
 //  Copyright © 2016 Codjax. All rights reserved.
 //
 
-import Carbon
+import ApplicationServices
 import Foundation
 
 
 enum AX {
-  typealias Action = AXActionEnum
-  typealias Attribute = AXAttributeEnum
+  typealias Action = AXAction
+  typealias Attribute = AXAttribute
   typealias APIError = AXAPIError
-  typealias Error = AXErrorEnum
-  typealias Role = AXRoleEnum
+  typealias Error = AXElementError
+  typealias Role = AXRole
 }
 
 
@@ -34,7 +34,7 @@ enum AX {
  | sort
  ```
  */
-enum AXActionEnum: String, RawRepresentable {
+enum AXAction: String, RawRepresentable {
   case Cancel = "AXCancel"
   case Confirm = "AXConfirm"
   case Decrement = "AXDecrement"
@@ -63,7 +63,7 @@ enum AXActionEnum: String, RawRepresentable {
  | sort
  ```
  */
-enum AXAttributeEnum: String, RawRepresentable {
+enum AXAttribute: String, RawRepresentable {
   case AMPMField = "AXAMPMField"
   case AllowedValues = "AXAllowedValues"
   case AlternateUIVisible = "AXAlternateUIVisible"
@@ -221,34 +221,27 @@ enum AXAttributeEnum: String, RawRepresentable {
 /**
  Error thrown when low-level accessibility API (Carbon) return errors.
  */
-class AXAPIError: Error {
-  
+struct AXAPIError: LocalizedError {
   let code: AXError
-  
-  init(code: AXError) {
-    self.code = code
-  }
 
-  var description: String {
-    get {
-      switch code {
-      case .actionUnsupported: return "actionUnsupported"
-      case .apiDisabled: return "apiDisabled"
-      case .attributeUnsupported: return "attributeUnsupported"
-      case .cannotComplete: return "cannotComplete"
-      case .failure: return "failure"
-      case .illegalArgument: return "illegalArgument"
-      case .invalidUIElement: return "invalidUIElement"
-      case .invalidUIElementObserver: return "invalidUIElementObserver"
-      case .noValue: return "noValue"
-      case .notEnoughPrecision: return "notEnoughPrecision"
-      case .notificationAlreadyRegistered: return "notificationAlreadyRegistered"
-      case .notificationNotRegistered: return "notificationNotRegistered"
-      case .notificationUnsupported: return "notificationUnsupported"
-      case .parameterizedAttributeUnsupported: return "paramerterizedAttributeUnsupported"
-      case .success: return "success"
-      default: return "unknown"
-      }
+  var errorDescription: String? {
+    switch code {
+    case .actionUnsupported: return "actionUnsupported"
+    case .apiDisabled: return "apiDisabled"
+    case .attributeUnsupported: return "attributeUnsupported"
+    case .cannotComplete: return "cannotComplete"
+    case .failure: return "failure"
+    case .illegalArgument: return "illegalArgument"
+    case .invalidUIElement: return "invalidUIElement"
+    case .invalidUIElementObserver: return "invalidUIElementObserver"
+    case .noValue: return "noValue"
+    case .notEnoughPrecision: return "notEnoughPrecision"
+    case .notificationAlreadyRegistered: return "notificationAlreadyRegistered"
+    case .notificationNotRegistered: return "notificationNotRegistered"
+    case .notificationUnsupported: return "notificationUnsupported"
+    case .parameterizedAttributeUnsupported: return "parameterizedAttributeUnsupported"
+    case .success: return "success"
+    default: return "unknown"
     }
   }
 }
@@ -257,7 +250,7 @@ class AXAPIError: Error {
 /**
  Accessibility errors thrown by AX framework.
  */
-enum AXErrorEnum: Error {
+enum AXElementError: Error {
   case attributeNotFound(AX.Attribute)
   case invalidType(String)
 }
@@ -274,7 +267,7 @@ enum AXErrorEnum: Error {
  | sort
  ```
  */
-enum AXRoleEnum: String, RawRepresentable {
+enum AXRole: String, RawRepresentable {
   case Application = "AXApplication"
   case Browser = "AXBrowser"
   case BusyIndicator = "AXBusyIndicator"
