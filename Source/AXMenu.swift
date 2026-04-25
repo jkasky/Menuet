@@ -22,14 +22,14 @@ protocol AXMenuVisitor {
 
 class AXMenuWalker {
 
-  private let application:AX.Element
+  private let application: AX.Application
 
-  init(application: AX.Element) {
+  init(application: AX.Application) {
     self.application = application
   }
 
-  func walk(visitor: AXMenuVisitor) throws {
-    let menuBar: AX.Element = try application.get(.MenuBar)
+  func walk(visitor: AXMenuVisitor) {
+    guard let menuBar = application.menuBar else { return }
     for menuBarItem in menuBar.findAll(.MenuBarItem) {
       guard let menu = menuBarItem.find(.Menu) else { continue }
       visitor.enterMenu(menuBarItem)

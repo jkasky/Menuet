@@ -377,6 +377,30 @@ class AXMenuItemDelegate: MenuItemDelegate {
 }
 
 
+struct MenuItemShortcut {
+
+  let character: String?
+  let modifiers: Modifiers?
+
+  static func extract(from item: AX.Element, logger: Logger) -> MenuItemShortcut {
+    var character: String?
+    if let glyphCode: Int = try? item.get(.MenuItemCmdGlyph) {
+      character = KeyGlyph.forCode(glyphCode)?.characters
+      if character == nil {
+        logger.warning("menu item '\(item.title)' has command with unrecognized glyph code \(glyphCode)")
+      }
+    } else {
+      character = try? item.get(.MenuItemCmdChar)
+    }
+    var modifiers: Modifiers?
+    if character != nil, let raw: Int = try? item.get(.MenuItemCmdModifiers) {
+      modifiers = Modifiers(rawValue: raw)
+    }
+    return MenuItemShortcut(character: character, modifiers: modifiers)
+  }
+}
+
+
 class AXMenuIndexer: AXMenuVisitor {
 
   private let indexAppleMenu: Bool
@@ -385,19 +409,19 @@ class AXMenuIndexer: AXMenuVisitor {
   private var path: [String] = []
   private var indexPath: [UInt] = []
   private var index: MenuIndex
-  
-  init(index: MenuIndex) {
+
+  init(index: MenuIndex, indexAppleMenu: Bool = UserDefaults.standard.searchAppleMenu) {
     self.index = index
-    self.indexAppleMenu = UserDefaults.standard.searchAppleMenu
+    self.indexAppleMenu = indexAppleMenu
   }
-  
+
   func enterMenu(_ menu: AX.Element) {
     if let title: String = try? menu.get(.Title) {
       path.append(title)
       indexPath.append(0)
     }
   }
-  
+
   func leaveMenu(_: AX.Element) {
     _ = path.popLast()
     _ = indexPath.popLast()
@@ -405,7 +429,7 @@ class AXMenuIndexer: AXMenuVisitor {
       indexPath[indexPath.endIndex.advanced(by: -1)] += 1
     }
   }
-  
+
   func visitMenuItem(_ item: AX.Element) {
     let title = item.title
     path.append(title)
@@ -419,27 +443,13 @@ class AXMenuIndexer: AXMenuVisitor {
     if !indexAppleMenu && path[0] == "Apple" {
       return
     }
-    var character: String?
-    if let glyphCode: Int = try? item.get(.MenuItemCmdGlyph) {
-      character = KeyGlyph.forCode(glyphCode)?.characters
-      if character == nil {
-        logger.warning("menu item '\(title)' has command with unrecognized glyph code \(glyphCode)")
-      }
-    } else {
-      character = try? item.get(.MenuItemCmdChar)
-    }
-    var modifiers: Modifiers?
-    if character != nil {
-      if let commandModifiers: Int = try? item.get(.MenuItemCmdModifiers) {
-        modifiers = Modifiers(rawValue: commandModifiers)
-      }
-    }
+    let shortcut = MenuItemShortcut.extract(from: item, logger: logger)
     let delegate = AXMenuItemDelegate(item, path: indexPath)
     let menuItem = MenuItem(
       title: title,
       command: MenuItemCommand(
-        character: character ?? "",
-        modifiers: modifiers ?? Modifiers.noCommand,
+        character: shortcut.character ?? "",
+        modifiers: shortcut.modifiers ?? Modifiers.noCommand,
         delegate: delegate),
       path: path,
       delegate: delegate)

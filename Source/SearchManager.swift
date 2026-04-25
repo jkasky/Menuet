@@ -54,8 +54,8 @@ class SearchManager: ObservableObject {
     }
   }
 
-  init() {
-    axClient = AXClient()
+  init(axClient: AX.Client = AXClient()) {
+    self.axClient = axClient
     workspace = NSWorkspace.shared
     searchResults = []
     query = ""
@@ -112,10 +112,10 @@ class SearchManager: ObservableObject {
   
   func search(_ query: String) {
     if let app = currentApp {
-      let axApp = axClient.createApplication(application:app)
-      let walker = AXMenuWalker(application: axApp.topElement)
+      let axApp = axClient.createApplication(application: app)
+      let walker = AXMenuWalker(application: axApp)
       currentIndex = MenuIndex()
-      try? walker.walk(visitor: AXMenuIndexer(index: currentIndex))
+      walker.walk(visitor: AXMenuIndexer(index: currentIndex))
     }
     selectedResult = -1
     activeItem = nil
