@@ -51,6 +51,30 @@ class AppState: ObservableObject {
 }
 
 
+struct MenuBarContent: View {
+  @EnvironmentObject var appState: AppState
+  @Environment(\.openSettings) private var openSettings
+
+  var body: some View {
+    Button("Search...") {
+      appState.showSearchPanel()
+    }
+
+    Divider()
+
+    Button("Settings...") {
+      NSApp.activate(ignoringOtherApps: true)
+      openSettings()
+    }
+
+    Divider()
+
+    Button("Quit MenuBar Pro") {
+      NSApp.terminate(nil)
+    }
+  }
+}
+
 @main
 struct MenuBarApp: App {
 
@@ -61,22 +85,9 @@ struct MenuBarApp: App {
     // TODO: use the system image? loading StatusBarIcon not working
     // MenuBarExtra("MenuBarPro App", image: "StatusBarIcon") {
     MenuBarExtra("MenuBarPro App", systemImage: "menubar.rectangle") {
-
-      Button("Search...") {
-        appState.showSearchPanel()
-      }
-
-      Divider()
-
-      SettingsLink()
-
-      Divider()
-
-      Button("Quit MenuBar Pro") {
-        NSApp.terminate(nil)
-      }
+      MenuBarContent()
+        .environmentObject(appState)
     }
-    .environmentObject(appState)
 
     Settings() {
       SettingsView()
