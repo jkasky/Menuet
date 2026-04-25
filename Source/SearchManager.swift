@@ -38,6 +38,7 @@ class SearchManager: ObservableObject {
   @Published var currentApp: NSRunningApplication?
   @Published var searchResults: [MenuItem]
   @Published var query: String
+  @Published var focusTrigger: Bool = false
 
   static let shared = SearchManager()
   

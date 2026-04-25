@@ -34,6 +34,9 @@ class AppState: ObservableObject {
     SearchManager.shared.activate()
     searchPanel?.center()
     searchPanel?.makeKeyAndOrderFront(nil)
+    DispatchQueue.main.async {
+      SearchManager.shared.focusTrigger.toggle()
+    }
   }
 
   private func makeProcessTrusted() {

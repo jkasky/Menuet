@@ -56,6 +56,7 @@ struct AppIcon: View {
 
 struct SearchView: View {
   @EnvironmentObject var searchManager: SearchManager
+  @FocusState private var isFocused: Bool
 
   var body: some View {
     HStack() {
@@ -63,8 +64,12 @@ struct SearchView: View {
       TextField("Menu Search", text: $searchManager.query)
         .font(.system(size: 24))
         .textFieldStyle(.plain)
+        .focused($isFocused)
     }
     .padding(.leading, 10)
+    .onChange(of: searchManager.focusTrigger) {
+      isFocused = true
+    }
     .onReceive(
       searchManager.$query.debounce(for: .seconds(0.4), scheduler: DispatchQueue.main)
     ) { q in
