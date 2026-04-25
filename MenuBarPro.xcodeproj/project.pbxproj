@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -87,6 +87,10 @@
 		D19451EF21D78A27003607D2 /* SearchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		48F6AF6B2F9DBEAD00400ED8 /* .claude */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = .claude; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		4878358A1B3B91E700BC911B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -119,6 +123,7 @@
 		487835841B3B91E600BC911B = {
 			isa = PBXGroup;
 			children = (
+				48F6AF6B2F9DBEAD00400ED8 /* .claude */,
 				48E24E3F271154470087D9F8 /* Scripts */,
 				48F9817D25C69C8D00920957 /* Entitlements */,
 				4878358F1B3B91E700BC911B /* Source */,
