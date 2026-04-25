@@ -40,15 +40,11 @@ class AXMenuWalker {
 
   private func walkMenu(menu: AX.Element, visitor: AXMenuVisitor) {
     for item in menu.findAll(.MenuItem) {
-      switch item.childCount {
-      // Single child element with role of Menu for sub-menus
-      case 1:
-        if let submenu = item.find(.Menu) {
-          visitor.enterMenu(item)
-          walkMenu(menu: submenu, visitor: visitor)
-          visitor.leaveMenu(item)
-        }
-      default:
+      if let submenu = item.find(.Menu) {
+        visitor.enterMenu(item)
+        walkMenu(menu: submenu, visitor: visitor)
+        visitor.leaveMenu(item)
+      } else {
         visitor.visitMenuItem(item)
       }
     }
