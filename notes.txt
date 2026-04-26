@@ -1,9 +1,10 @@
 [BUGS]
 
-- search panel and settings window behind windows of other apps
 - Named menu sections show up in search results (e.g. Xcode: Product > Destination > Build)
-- Missing menu items (e.g. Xcode: Product > Build)
-
+  [No known AX attribute distinguishes section headers from regular items on macOS 14+;
+   all checked attrs — role, subrole, enabled, cmdChar/Glyph/Mark/Modifiers/VKey,
+   primaryUIElement role — are identical between section headers and no-shortcut items]
+   
 
 [TASKS]
 
@@ -13,13 +14,6 @@
 [FEATURES]
 
  - add cheatsheet panel with all shortcuts
- - touch bar integration to show top 5 or map results to
-   numbers
- - adapt search to rank items used more ofter towards the top
- - alfred plugin, checkout requests in
-   https://www.alfredforum.com/topic/1993-menu-search/?hl=menu and the source
-   in https://github.com/ctwise/alfred-workflows. Try to solve for some of the
-   wants to make QM more attractive. Shortcut cheatsheat, favorites, etc.
 
 
 [NOTES]
