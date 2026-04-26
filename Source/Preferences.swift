@@ -12,6 +12,7 @@ import SwiftUI
 
 extension KeyboardShortcuts.Name {
   static let menuSearchShortcut = Self("menuSearchShortcut")
+  static let cheatsheetShortcut = Self("cheatsheetShortcut")
 }
 
 

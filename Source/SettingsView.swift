@@ -18,6 +18,7 @@ struct SettingsView: View {
     Form {
       Section(header: Text("Keyboard Shortcuts")) {
         KeyboardShortcuts.Recorder("Search", name: .menuSearchShortcut)
+        KeyboardShortcuts.Recorder("Cheatsheet", name: .cheatsheetShortcut)
       }
 
       Section(header: Text("Search Options")) {

@@ -39,6 +39,8 @@ class SearchManager: ObservableObject {
   @Published var searchResults: [MenuItem]
   @Published var query: String
   @Published var focusTrigger: Bool = false
+  @Published var cheatsheetGroups: [CheatsheetGroup] = []
+  @Published var cheatsheetResetTrigger: Bool = false
 
   static let shared = SearchManager()
   
@@ -110,6 +112,43 @@ class SearchManager: ObservableObject {
     let walker = AXMenuWalker(application: axApp)
     currentIndex = MenuIndex()
     walker.walk(visitor: AXMenuIndexer(index: currentIndex))
+    cheatsheetGroups = []
+  }
+
+  func loadCheatsheetGroups() {
+    cheatsheetGroups = Self.groupForCheatsheet(currentIndex.itemsWithShortcuts())
+  }
+
+  func cheatsheetItem(matching event: NSEvent) -> MenuItem? {
+    var characters = event.charactersIgnoringModifiers?.uppercased()
+    if characters == nil || characters == "" {
+      characters = event.characters?.uppercased()
+    }
+    guard let target = characters, !target.isEmpty else { return nil }
+    for group in cheatsheetGroups {
+      for item in group.items {
+        if item.command.character.uppercased() == target
+          && item.command.modifiers == event.modifierFlags {
+          return item
+        }
+      }
+    }
+    return nil
+  }
+
+  static func groupForCheatsheet(_ items: [MenuItem]) -> [CheatsheetGroup] {
+    var order: [String] = []
+    var buckets: [String: [MenuItem]] = [:]
+    for item in items {
+      guard let menu = item.path.first, !menu.isEmpty else { continue }
+      if menu == MenuItem.appleMenuTitle { continue }
+      if buckets[menu] == nil {
+        order.append(menu)
+        buckets[menu] = []
+      }
+      buckets[menu]?.append(item)
+    }
+    return order.map { CheatsheetGroup(menu: $0, items: buckets[$0] ?? []) }
   }
 
   func search(_ query: String) {
@@ -149,4 +188,11 @@ class SearchManager: ObservableObject {
       currentIndex = MenuIndex()
     }
   }
+}
+
+
+struct CheatsheetGroup: Identifiable {
+  var id: String { menu }
+  let menu: String
+  let items: [MenuItem]
 }

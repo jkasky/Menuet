@@ -5,12 +5,17 @@ import SwiftUI
 class AppState: ObservableObject {
   private var application: NSApplication = NSApplication.shared
   private var searchPanel: MenuSearchPanel?
+  private var cheatsheetPanel: MenuCheatsheetPanel?
 
   init() {
     initializeMenuResources()
 
     KeyboardShortcuts.onKeyUp(for: .menuSearchShortcut) {
       self.showSearchPanel()
+    }
+
+    KeyboardShortcuts.onKeyUp(for: .cheatsheetShortcut) {
+      self.showCheatsheetPanel()
     }
 
     makeProcessTrusted()
@@ -42,6 +47,28 @@ class AppState: ObservableObject {
     }
   }
 
+  func showCheatsheetPanel() {
+    // Walk first, then activate, so the target app's menu items aren't
+    // disabled in response to resigning key/first-responder.
+    SearchManager.shared.activate()
+    SearchManager.shared.loadCheatsheetGroups()
+    activate()
+    if cheatsheetPanel == nil {
+      cheatsheetPanel = MenuCheatsheetPanel(
+        contentRect: NSRect(x: 0, y: 0, width: 1100, height: 720)
+      ) {
+        MenuCheatsheetView()
+          .environmentObject(self)
+          .environmentObject(SearchManager.shared)
+      }
+    }
+    cheatsheetPanel?.positionAtTop()
+    cheatsheetPanel?.makeKeyAndOrderFront(nil)
+    DispatchQueue.main.async {
+      SearchManager.shared.cheatsheetResetTrigger.toggle()
+    }
+  }
+
   private func makeProcessTrusted() {
     let axClient = AXClient()
     if (!axClient.isProcessTrusted()) {
@@ -64,6 +91,10 @@ struct MenuBarContent: View {
   var body: some View {
     Button("Search...") {
       appState.showSearchPanel()
+    }
+
+    Button("Cheatsheet...") {
+      appState.showCheatsheetPanel()
     }
 
     Divider()

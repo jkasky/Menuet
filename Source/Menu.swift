@@ -285,6 +285,8 @@ protocol MenuItemDelegate {
 
 class MenuItem: CustomDebugStringConvertible, Equatable, Identifiable {
 
+  static let appleMenuTitle = "Apple"
+
   static func == (left: MenuItem, right: MenuItem) -> Bool {
     return left.id == right.id
   }
@@ -300,7 +302,7 @@ class MenuItem: CustomDebugStringConvertible, Equatable, Identifiable {
   }
 
   var pathDescription: String {
-    if path[0] == "Apple" {
+    if path[0] == MenuItem.appleMenuTitle {
       return ([KeyGlyph.Apple.characters] + path[1...]).joined(separator: " > ")
     } else {
       return path.joined(separator: " > ")
@@ -331,6 +333,10 @@ class MenuIndex {
 
   func add(item: MenuItem, path: String) {
     items.append(item)
+  }
+
+  func itemsWithShortcuts() -> [MenuItem] {
+    return items.filter { !$0.command.character.isEmpty }
   }
 
   func find(query: String) -> [MenuItem] {
@@ -447,7 +453,7 @@ class AXMenuIndexer: AXMenuVisitor {
       _ = path.popLast()
       indexPath[indexPath.endIndex.advanced(by: -1)] += 1
     }
-    if !indexAppleMenu && path[0] == "Apple" {
+    if !indexAppleMenu && path[0] == MenuItem.appleMenuTitle {
       return
     }
     let shortcut = MenuItemShortcut.extract(from: item, logger: logger)
