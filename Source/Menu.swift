@@ -322,27 +322,34 @@ class MenuItem: CustomDebugStringConvertible, Equatable, Identifiable {
 
 
 class MenuIndex {
-  
-  private var trie = Trie<MenuItem>()
-  
+
+  private var items: [MenuItem] = []
+
   var size: Int {
-    return trie.count
+    return items.count
   }
-  
+
   func add(item: MenuItem, path: String) {
-    trie.insert(label: path, value: item)
+    items.append(item)
   }
-  
+
   func find(query: String) -> [MenuItem] {
-    let matcher: (Character, Character) -> Bool
-      = UserDefaults.standard.searchCaseSensitive
-      ? { $0 == $1 }
-      : { $0.lowercased() == $1.lowercased() }
-    let results = trie.find(sequence: query, match: matcher)
-    if UserDefaults.standard.showDisabledItems {
-      return results.filter { $0.title != "" }
+    guard !query.isEmpty else { return [] }
+    let caseSensitive = UserDefaults.standard.searchCaseSensitive
+    let showDisabled = UserDefaults.standard.showDisabledItems
+
+    var scored: [(MenuItem, Int)] = []
+    scored.reserveCapacity(items.count)
+    for item in items {
+      guard !item.title.isEmpty else { continue }
+      guard showDisabled || item.enabled else { continue }
+      guard let match = FuzzyMatch.score(
+        query: query, candidate: item.title, caseSensitive: caseSensitive)
+      else { continue }
+      let pathBonus = max(0, 10 - item.path.count)
+      scored.append((item, match.score + pathBonus))
     }
-    return results.filter { $0.enabled }
+    return scored.sorted { $0.1 > $1.1 }.map { $0.0 }
   }
 }
 
