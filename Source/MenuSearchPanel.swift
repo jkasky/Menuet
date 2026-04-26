@@ -67,9 +67,9 @@ class MenuSearchPanel: NSPanel {
     return true
   }
 
-  // On 'esc' close panel
+  // On 'esc' close panel and restore focus to the previous app
   override func cancelOperation(_ sender: Any?) {
-    close()
+    dismiss()
   }
 
   // When no longer main, close panel
@@ -121,11 +121,16 @@ class MenuSearchPanel: NSPanel {
     return super.performKeyEquivalent(with:event)
   }
 
-  private func dismissAndPerform(_ command: MenuItemCommand) {
+  // Close the panel and restore the target app as frontmost.
+  // .activateAllWindows so AppKit restores the target's previously-key
+  // window and its first responder.
+  private func dismiss() {
     resignMain()
-    // .activateAllWindows so AppKit restores the target's previously-key
-    // window and its first responder.
     SearchManager.shared.currentApp?.activate(options: [.activateAllWindows])
+  }
+
+  private func dismissAndPerform(_ command: MenuItemCommand) {
+    dismiss()
     // NSMenu validation is lazy: items that depend on first-responder
     // context (Cut/Copy/etc.) can still be flagged disabled at the
     // moment of activation. Yield the runloop so the target processes
