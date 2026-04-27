@@ -74,7 +74,6 @@
 		4878359F1B3B91E700BC911B /* MenuBarProTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MenuBarProTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		487835A41B3B91E700BC911B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		487835A51B3B91E700BC911B /* MenumateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenumateTests.swift; sourceTree = "<group>"; };
-		487835AF1B3B9C0B00BC911B /* notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = notes.txt; sourceTree = "<group>"; };
 		489EB1732A6C6C30000271CB /* MenuSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuSearchView.swift; sourceTree = "<group>"; };
 		48AE1CA327082AEA00EF0234 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/MacOSX.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		48C044D51D23B1DA00F49A94 /* AX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AX.swift; sourceTree = "<group>"; };
@@ -138,7 +137,6 @@
 				487835A21B3B91E700BC911B /* Tests */,
 				4878358E1B3B91E700BC911B /* Products */,
 				486B29E81B3BC617002DAE0B /* Frameworks */,
-				487835AF1B3B9C0B00BC911B /* notes.txt */,
 			);
 			sourceTree = "<group>";
 		};
