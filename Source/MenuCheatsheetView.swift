@@ -16,7 +16,8 @@ struct MenuCheatsheetView: View {
         CheatsheetHeader(
           appIcon: searchManager.currentApp?.icon,
           appName: searchManager.currentApp?.localizedName ?? "Keyboard Shortcuts",
-          query: searchManager.cheatsheetQuery
+          query: searchManager.cheatsheetQuery,
+          matchCount: searchManager.cheatsheetMatchIDs.count
         )
           .padding(.horizontal, 20)
           .padding(.top, 16)
@@ -71,6 +72,7 @@ private struct CheatsheetHeader: View {
   let appIcon: NSImage?
   let appName: String
   let query: String
+  let matchCount: Int
 
   var body: some View {
     HStack(spacing: 10) {
@@ -92,6 +94,10 @@ private struct CheatsheetHeader: View {
           .font(.system(.headline, design: .rounded))
           .foregroundStyle(Color.accentColor)
           .lineLimit(1)
+        Text("\(matchCount) \(matchCount == 1 ? "match" : "matches")")
+          .font(.system(.subheadline, design: .rounded))
+          .foregroundStyle(.secondary)
+          .monospacedDigit()
       }
       Spacer()
       Text(appName)
