@@ -41,6 +41,10 @@ class SearchManager: ObservableObject {
   @Published var focusTrigger: Bool = false
   @Published var cheatsheetGroups: [CheatsheetGroup] = []
   @Published var cheatsheetResetTrigger: Bool = false
+  @Published var cheatsheetQuery: String = ""
+  @Published var cheatsheetActiveItem: MenuItem?
+  @Published private(set) var cheatsheetMatchIDs: Set<UUID> = []
+  private var cheatsheetMatchOrder: [MenuItem] = []
 
   static let shared = SearchManager()
   
@@ -117,6 +121,65 @@ class SearchManager: ObservableObject {
 
   func loadCheatsheetGroups() {
     cheatsheetGroups = Self.groupForCheatsheet(currentIndex.itemsWithShortcuts())
+    cheatsheetClearQuery()
+  }
+
+  func cheatsheetAppend(_ character: Character) {
+    cheatsheetQuery.append(character)
+    recomputeCheatsheetMatches()
+  }
+
+  func cheatsheetBackspace() {
+    guard !cheatsheetQuery.isEmpty else { return }
+    cheatsheetQuery.removeLast()
+    recomputeCheatsheetMatches()
+  }
+
+  func cheatsheetClearQuery() {
+    cheatsheetQuery = ""
+    cheatsheetMatchOrder = []
+    cheatsheetMatchIDs = []
+    cheatsheetActiveItem = nil
+  }
+
+  func cheatsheetSelectNextMatch() {
+    guard !cheatsheetMatchOrder.isEmpty else { return }
+    let nextIndex: Int
+    if let active = cheatsheetActiveItem,
+       let i = cheatsheetMatchOrder.firstIndex(where: { $0.id == active.id }) {
+      nextIndex = (i + 1) % cheatsheetMatchOrder.count
+    } else {
+      nextIndex = 0
+    }
+    cheatsheetActiveItem = cheatsheetMatchOrder[nextIndex]
+  }
+
+  private func recomputeCheatsheetMatches() {
+    if cheatsheetQuery.isEmpty {
+      cheatsheetMatchOrder = []
+      cheatsheetMatchIDs = []
+      cheatsheetActiveItem = nil
+      return
+    }
+    let caseSensitive = UserDefaults.standard.searchCaseSensitive
+    // Walk groups in display order so Tab visits matches top-to-bottom
+    // through the rendered list. Keep the score so we can still seed the
+    // initial highlight with the best fuzzy match.
+    var inDisplayOrder: [(MenuItem, Int)] = []
+    for group in cheatsheetGroups {
+      for item in group.items {
+        guard !item.title.isEmpty else { continue }
+        guard let match = FuzzyMatch.score(
+          query: cheatsheetQuery,
+          candidate: item.title,
+          caseSensitive: caseSensitive)
+        else { continue }
+        inDisplayOrder.append((item, match.score))
+      }
+    }
+    cheatsheetMatchOrder = inDisplayOrder.map { $0.0 }
+    cheatsheetMatchIDs = Set(cheatsheetMatchOrder.map(\.id))
+    cheatsheetActiveItem = inDisplayOrder.max { $0.1 < $1.1 }?.0
   }
 
   func cheatsheetItem(matching event: NSEvent) -> MenuItem? {
@@ -183,6 +246,8 @@ class SearchManager: ObservableObject {
    */
   func reset() {
     clear()
+    cheatsheetClearQuery()
+    cheatsheetGroups = []
     currentApp = nil
     if currentIndex.size > 0 {
       currentIndex = MenuIndex()

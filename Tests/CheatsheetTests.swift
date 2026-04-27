@@ -119,3 +119,133 @@ class CheatsheetGroupingTests: XCTestCase {
     XCTAssertTrue(SearchManager.groupForCheatsheet([]).isEmpty)
   }
 }
+
+
+class CheatsheetSearchTests: XCTestCase {
+
+  private func makeManager() -> SearchManager {
+    let menuBar = makeMenuBar([
+      makeMenuBarItem(title: "File", items: [
+        makeItem("New",       cmdChar: "N"),
+        makeItem("New Window", cmdChar: "N", modifiers: 1),
+        makeItem("Save",      cmdChar: "S"),
+      ]),
+      makeMenuBarItem(title: "Edit", items: [
+        makeItem("Copy",  cmdChar: "C"),
+        makeItem("Paste", cmdChar: "V"),
+      ]),
+    ])
+    let items = buildIndex(menuBar).itemsWithShortcuts()
+    let mgr = SearchManager()
+    mgr.cheatsheetGroups = SearchManager.groupForCheatsheet(items)
+    return mgr
+  }
+
+  func testTypingHighlightsBestMatch() {
+    let mgr = makeManager()
+
+    mgr.cheatsheetAppend("c")
+
+    XCTAssertEqual(mgr.cheatsheetQuery, "c")
+    XCTAssertEqual(mgr.cheatsheetActiveItem?.title, "Copy")
+    XCTAssertTrue(mgr.cheatsheetMatchIDs.contains(mgr.cheatsheetActiveItem!.id))
+  }
+
+  func testTabCyclesAndLoops() {
+    let mgr = makeManager()
+
+    mgr.cheatsheetAppend("n")  // Matches "New" and "New Window"
+    let firstID = mgr.cheatsheetActiveItem?.id
+    XCTAssertNotNil(firstID)
+
+    mgr.cheatsheetSelectNextMatch()
+    let secondID = mgr.cheatsheetActiveItem?.id
+    XCTAssertNotNil(secondID)
+    XCTAssertNotEqual(firstID, secondID)
+
+    mgr.cheatsheetSelectNextMatch()
+    XCTAssertEqual(mgr.cheatsheetActiveItem?.id, firstID, "Tab past end should loop to first")
+  }
+
+  func testTabFollowsDisplayOrderNotScore() {
+    // "Save" (File menu, displayed third) is a stronger fuzzy match for
+    // "sa" than "Paste" (Edit menu, displayed fifth) — but Tab should
+    // still walk top-to-bottom through both in display order.
+    let mgr = makeManager()
+    mgr.cheatsheetAppend("a")  // Matches Save, Paste
+
+    let displayOrder = mgr.cheatsheetGroups
+      .flatMap { $0.items }
+      .filter { mgr.cheatsheetMatchIDs.contains($0.id) }
+      .map(\.id)
+    let startIndex = displayOrder.firstIndex(of: mgr.cheatsheetActiveItem!.id)!
+    let expected = (0..<displayOrder.count).map { displayOrder[(startIndex + $0) % displayOrder.count] }
+
+    let visited = sequenceOf(mgr, count: displayOrder.count)
+    XCTAssertEqual(visited, expected)
+  }
+
+  // Returns the sequence of active-item IDs across `count` Tab presses,
+  // starting from whatever is currently active.
+  private func sequenceOf(_ mgr: SearchManager, count: Int) -> [UUID] {
+    var ids: [UUID] = []
+    if let id = mgr.cheatsheetActiveItem?.id { ids.append(id) }
+    for _ in 1..<count {
+      mgr.cheatsheetSelectNextMatch()
+      if let id = mgr.cheatsheetActiveItem?.id { ids.append(id) }
+    }
+    return ids
+  }
+
+  func testClearQueryResetsState() {
+    let mgr = makeManager()
+    mgr.cheatsheetAppend("c")
+    XCTAssertNotNil(mgr.cheatsheetActiveItem)
+
+    mgr.cheatsheetClearQuery()
+
+    XCTAssertEqual(mgr.cheatsheetQuery, "")
+    XCTAssertNil(mgr.cheatsheetActiveItem)
+    XCTAssertTrue(mgr.cheatsheetMatchIDs.isEmpty)
+  }
+
+  func testBackspaceOnEmptyIsNoop() {
+    let mgr = makeManager()
+
+    mgr.cheatsheetBackspace()
+
+    XCTAssertEqual(mgr.cheatsheetQuery, "")
+    XCTAssertNil(mgr.cheatsheetActiveItem)
+  }
+
+  func testBackspaceShortensQueryAndRecomputes() {
+    let mgr = makeManager()
+    mgr.cheatsheetAppend("c")
+    mgr.cheatsheetAppend("o")
+    mgr.cheatsheetAppend("z")  // No item matches "coz"
+    XCTAssertNil(mgr.cheatsheetActiveItem)
+
+    mgr.cheatsheetBackspace()  // Back to "co" → matches "Copy"
+
+    XCTAssertEqual(mgr.cheatsheetQuery, "co")
+    XCTAssertEqual(mgr.cheatsheetActiveItem?.title, "Copy")
+  }
+
+  func testNoMatchesLeavesActiveNil() {
+    let mgr = makeManager()
+
+    mgr.cheatsheetAppend("z")
+
+    XCTAssertNil(mgr.cheatsheetActiveItem)
+    XCTAssertTrue(mgr.cheatsheetMatchIDs.isEmpty)
+  }
+
+  func testSelectNextWithNoMatchesIsNoop() {
+    let mgr = makeManager()
+    mgr.cheatsheetAppend("z")
+
+    mgr.cheatsheetSelectNextMatch()
+
+    XCTAssertNil(mgr.cheatsheetActiveItem)
+  }
+}

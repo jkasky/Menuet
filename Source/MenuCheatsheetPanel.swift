@@ -45,7 +45,12 @@ class MenuCheatsheetPanel: NSPanel {
   override var canBecomeMain: Bool { true }
 
   override func cancelOperation(_ sender: Any?) {
-    dismiss()
+    let mgr = SearchManager.shared
+    if !mgr.cheatsheetQuery.isEmpty {
+      mgr.cheatsheetClearQuery()
+    } else {
+      dismiss()
+    }
   }
 
   override func resignMain() {
@@ -59,6 +64,43 @@ class MenuCheatsheetPanel: NSPanel {
       return true
     }
     return super.performKeyEquivalent(with: event)
+  }
+
+  override func keyDown(with event: NSEvent) {
+    let mgr = SearchManager.shared
+
+    // Tab → cycle to next match (loops at end).
+    if event.keyCode == 48 {
+      mgr.cheatsheetSelectNextMatch()
+      return
+    }
+
+    // Return / numpad Enter → invoke highlighted item.
+    if event.keyCode == 36 || event.keyCode == 76 {
+      if let item = mgr.cheatsheetActiveItem {
+        dismissAndPerform(item.command)
+      }
+      return
+    }
+
+    // Backspace → delete one character from query.
+    if event.keyCode == 51 {
+      mgr.cheatsheetBackspace()
+      return
+    }
+
+    // Append printable characters with no command-class modifiers
+    // (Shift is permitted so capitals/symbols still type).
+    let blocking: NSEvent.ModifierFlags = [.command, .control, .option]
+    if event.modifierFlags.intersection(blocking).isEmpty,
+       let chars = event.charactersIgnoringModifiers,
+       !chars.isEmpty,
+       chars.unicodeScalars.allSatisfy({ $0.value >= 0x20 && $0.value != 0x7F }) {
+      for c in chars { mgr.cheatsheetAppend(c) }
+      return
+    }
+
+    super.keyDown(with: event)
   }
 
   private func dismiss() {

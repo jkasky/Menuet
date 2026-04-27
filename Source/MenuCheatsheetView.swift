@@ -15,7 +15,8 @@ struct MenuCheatsheetView: View {
       VStack(alignment: .leading, spacing: 0) {
         CheatsheetHeader(
           appIcon: searchManager.currentApp?.icon,
-          appName: searchManager.currentApp?.localizedName ?? "Keyboard Shortcuts"
+          appName: searchManager.currentApp?.localizedName ?? "Keyboard Shortcuts",
+          query: searchManager.cheatsheetQuery
         )
           .padding(.horizontal, 20)
           .padding(.top, 16)
@@ -44,6 +45,12 @@ struct MenuCheatsheetView: View {
             .onChange(of: searchManager.cheatsheetResetTrigger) { _, _ in
               proxy.scrollTo(Self.scrollTopID, anchor: .top)
             }
+            .onChange(of: searchManager.cheatsheetActiveItem?.id) { _, newID in
+              guard let id = newID else { return }
+              withAnimation(.easeOut(duration: 0.15)) {
+                proxy.scrollTo(id, anchor: .center)
+              }
+            }
             .onPreferenceChange(ContentHeightKey.self) { height in
               sizeAction.report(height)
             }
@@ -63,20 +70,29 @@ struct MenuCheatsheetView: View {
 private struct CheatsheetHeader: View {
   let appIcon: NSImage?
   let appName: String
+  let query: String
 
   var body: some View {
     HStack(spacing: 10) {
-      if let icon = appIcon {
+      if query.isEmpty, let icon = appIcon {
         Image(nsImage: icon)
           .resizable()
           .interpolation(.high)
           .frame(width: 22, height: 22)
       } else {
-        Image(systemName: "keyboard")
-          .foregroundStyle(.secondary)
+        Image(systemName: query.isEmpty ? "keyboard" : "magnifyingglass")
+          .foregroundStyle(query.isEmpty ? AnyShapeStyle(.secondary) : AnyShapeStyle(Color.accentColor))
+          .frame(width: 22, height: 22)
       }
-      Text("Keyboard Shortcuts")
-        .font(.system(.headline, design: .rounded))
+      if query.isEmpty {
+        Text("Keyboard Shortcuts")
+          .font(.system(.headline, design: .rounded))
+      } else {
+        Text(query)
+          .font(.system(.headline, design: .rounded))
+          .foregroundStyle(Color.accentColor)
+          .lineLimit(1)
+      }
       Spacer()
       Text(appName)
         .font(.system(.subheadline, design: .rounded))
@@ -164,10 +180,16 @@ private struct CheatsheetSection: View {
 private struct ShortcutRow: View {
   let item: MenuItem
 
+  @EnvironmentObject var searchManager: SearchManager
   @Environment(\.cheatsheetInvoke) private var invoke
   @State private var hovering = false
 
   var body: some View {
+    let query = searchManager.cheatsheetQuery
+    let isActive = searchManager.cheatsheetActiveItem?.id == item.id
+    let isMatch = query.isEmpty || searchManager.cheatsheetMatchIDs.contains(item.id)
+    let dimmed = !query.isEmpty && !isMatch
+
     Button {
       invoke.perform(item.command)
     } label: {
@@ -176,13 +198,13 @@ private struct ShortcutRow: View {
         VStack(alignment: .leading, spacing: 1) {
           Text(item.title)
             .font(.system(.body))
-            .foregroundStyle(.primary)
+            .foregroundStyle(isActive ? AnyShapeStyle(Color.white) : AnyShapeStyle(.primary))
             .lineLimit(1)
             .truncationMode(.tail)
           if item.path.count > 2 {
             Text(submenuBreadcrumb)
               .font(.caption2)
-              .foregroundStyle(.tertiary)
+              .foregroundStyle(isActive ? AnyShapeStyle(Color.white.opacity(0.85)) : AnyShapeStyle(.tertiary))
               .lineLimit(1)
           }
         }
@@ -193,11 +215,20 @@ private struct ShortcutRow: View {
       .padding(.vertical, 4)
       .background(
         RoundedRectangle(cornerRadius: 6, style: .continuous)
-          .fill(hovering ? Color.primary.opacity(0.08) : Color.clear)
+          .fill(rowBackground)
       )
     }
     .buttonStyle(.plain)
     .onHover { hovering = $0 }
+    .opacity(dimmed ? 0.35 : 1.0)
+    .id(item.id)
+  }
+
+  private var rowBackground: Color {
+    let isActive = searchManager.cheatsheetActiveItem?.id == item.id
+    if isActive { return Color.accentColor }
+    if hovering { return Color.primary.opacity(0.08) }
+    return Color.clear
   }
 
   private var submenuBreadcrumb: String {
