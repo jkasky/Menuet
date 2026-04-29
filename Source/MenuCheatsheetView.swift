@@ -8,10 +8,7 @@ struct MenuCheatsheetView: View {
   private static let scrollTopID = "cheatsheet.top"
 
   var body: some View {
-    ZStack {
-      VisualEffectView(material: .hudWindow, blendingMode: .behindWindow)
-        .ignoresSafeArea()
-
+    PanelBackground {
       VStack(alignment: .leading, spacing: 0) {
         CheatsheetHeader(
           appIcon: searchManager.currentApp?.icon,
@@ -19,9 +16,8 @@ struct MenuCheatsheetView: View {
           query: searchManager.cheatsheetQuery,
           matchCount: searchManager.cheatsheetMatchIDs.count
         )
-          .padding(.horizontal, 20)
-          .padding(.top, 16)
-          .padding(.bottom, 12)
+          .padding(.horizontal, 16)
+          .padding(.vertical, 8)
 
         Divider().opacity(0.4)
 
@@ -59,11 +55,6 @@ struct MenuCheatsheetView: View {
         }
       }
     }
-    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-    .overlay(
-      RoundedRectangle(cornerRadius: 14, style: .continuous)
-        .strokeBorder(Color.white.opacity(0.08), lineWidth: 1)
-    )
   }
 }
 
@@ -80,11 +71,12 @@ private struct CheatsheetHeader: View {
         Image(nsImage: icon)
           .resizable()
           .interpolation(.high)
-          .frame(width: 22, height: 22)
+          .frame(width: 48, height: 48)
       } else {
         Image(systemName: query.isEmpty ? "keyboard" : "magnifyingglass")
+          .font(.system(size: 28))
           .foregroundStyle(query.isEmpty ? AnyShapeStyle(.secondary) : AnyShapeStyle(Color.accentColor))
-          .frame(width: 22, height: 22)
+          .frame(width: 48, height: 48)
       }
       if query.isEmpty {
         Text("Keyboard Shortcuts")
@@ -202,7 +194,7 @@ private struct ShortcutRow: View {
       HStack(alignment: .center, spacing: 10) {
         ShortcutChip(text: item.command.stringValue)
         VStack(alignment: .leading, spacing: 1) {
-          Text(item.title)
+          Text(fuzzyHighlight(item.title, query: query))
             .font(.system(.body))
             .foregroundStyle(isActive ? AnyShapeStyle(Color.white) : AnyShapeStyle(.primary))
             .lineLimit(1)
@@ -243,43 +235,3 @@ private struct ShortcutRow: View {
 }
 
 
-private struct ShortcutChip: View {
-  let text: String
-
-  var body: some View {
-    Text(text)
-      .font(.system(.body, design: .rounded).weight(.medium))
-      .foregroundStyle(.primary)
-      .frame(minWidth: 56, alignment: .trailing)
-      .padding(.horizontal, 8)
-      .padding(.vertical, 3)
-      .background(
-        RoundedRectangle(cornerRadius: 5, style: .continuous)
-          .fill(Color.primary.opacity(0.08))
-      )
-      .overlay(
-        RoundedRectangle(cornerRadius: 5, style: .continuous)
-          .strokeBorder(Color.primary.opacity(0.10), lineWidth: 0.5)
-      )
-  }
-}
-
-
-struct VisualEffectView: NSViewRepresentable {
-  let material: NSVisualEffectView.Material
-  let blendingMode: NSVisualEffectView.BlendingMode
-
-  func makeNSView(context: Context) -> NSVisualEffectView {
-    let v = NSVisualEffectView()
-    v.material = material
-    v.blendingMode = blendingMode
-    v.state = .active
-    v.isEmphasized = true
-    return v
-  }
-
-  func updateNSView(_ nsView: NSVisualEffectView, context: Context) {
-    nsView.material = material
-    nsView.blendingMode = blendingMode
-  }
-}

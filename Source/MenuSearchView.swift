@@ -12,22 +12,18 @@ struct MenuSearchView: View {
   @EnvironmentObject var searchManager: SearchManager
 
   var body: some View {
-    ZStack() {
-      RoundedRectangle(cornerRadius: 16.0, style: .circular)
-        .foregroundColor(Color(nsColor: .controlBackgroundColor))
-      VStack() {
+    PanelBackground {
+      VStack(alignment: .leading, spacing: 0) {
         SearchView()
-        if (!searchManager.searchResults.isEmpty) {
-          Divider()
+          .padding(.horizontal, 16)
+          .padding(.vertical, 8)
+        if !searchManager.searchResults.isEmpty {
+          Divider().opacity(0.4)
           ResultsView()
         }
       }
-      .padding(.top, 10.0)
-      .padding(.bottom, 10.0)
     }
-    .background(.clear)
-    .containerShape(RoundedRectangle(cornerRadius: 16.0))
-    .frame(minWidth: 600, maxWidth:600, minHeight: 40, maxHeight: 500)
+    .frame(minWidth: 600, maxWidth: 600, minHeight: 40, maxHeight: 500)
     .fixedSize()
   }
 }
@@ -48,8 +44,12 @@ struct AppIcon: View {
   var body: some View {
     if let icon = searchManager.currentApp?.icon {
       Image(nsImage: icon)
+        .resizable()
+        .interpolation(.high)
+        .frame(width: 48, height: 48)
     } else {
       placeholder
+        .frame(width: 48, height: 48)
     }
   }
 }
@@ -59,14 +59,19 @@ struct SearchView: View {
   @FocusState private var isFocused: Bool
 
   var body: some View {
-    HStack() {
+    HStack(spacing: 10) {
       AppIcon()
       TextField("Menu Search", text: $searchManager.query)
-        .font(.system(size: 24))
+        .font(.system(.title2, design: .rounded))
         .textFieldStyle(.plain)
         .focused($isFocused)
+      if !searchManager.query.isEmpty {
+        Text("\(searchManager.searchResults.count) \(searchManager.searchResults.count == 1 ? "match" : "matches")")
+          .font(.system(.subheadline, design: .rounded))
+          .foregroundStyle(.secondary)
+          .monospacedDigit()
+      }
     }
-    .padding(.leading, 10)
     .onChange(of: searchManager.focusTrigger) {
       isFocused = true
     }
@@ -85,9 +90,9 @@ struct ResultsView: View {
   var body: some View {
     ScrollViewReader { proxy in
       ScrollView {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 2) {
           ForEach($searchManager.searchResults.indices, id: \.self) { index in
-            ResultView(result: $searchManager.searchResults[index], index: index)
+            ResultView(result: $searchManager.searchResults[index])
               .frame(maxWidth: .infinity, alignment: .leading)
               .id(searchManager.searchResults[index].id)
           }
@@ -99,8 +104,8 @@ struct ResultsView: View {
           maxHeight: .infinity,
           alignment: .topLeading
         )
-        .padding(.leading, 10.0)
-        .padding(.trailing, 25.0)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
       }
       .frame(maxHeight: 500.0)
       .onReceive(searchManager.$activeItem) { activeItem in
@@ -115,26 +120,35 @@ struct ResultsView: View {
 struct ResultView: View {
   @EnvironmentObject var searchManager: SearchManager
   @Binding var result: MenuItem
-  @State var index: Int
   @State var isActive: Bool = false
+  @State private var hovering: Bool = false
 
   var body: some View {
-    HStack(alignment: .top) {
-      Text(index < 7 ? "\(KeyGlyph.Command.characters)\(index + 1)" : "")
-        .frame(minWidth: 32)
-      VStack(alignment: .leading) {
-        Text(result.title)
+    HStack(alignment: .center, spacing: 10) {
+      VStack(alignment: .leading, spacing: 1) {
+        Text(fuzzyHighlight(result.title, query: searchManager.query))
+          .font(.system(.body))
+          .foregroundStyle(isActive ? AnyShapeStyle(Color.white) : AnyShapeStyle(.primary))
+          .lineLimit(1)
+          .truncationMode(.tail)
         Text(result.pathDescription)
-          .font(.system(size: 12))
-          .foregroundColor(Color(nsColor: .secondaryLabelColor))
+          .font(.caption2)
+          .foregroundStyle(isActive ? AnyShapeStyle(Color.white.opacity(0.85)) : AnyShapeStyle(.tertiary))
+          .lineLimit(1)
       }
-      Spacer()
-      Text(result.command.stringValue)
+      Spacer(minLength: 0)
+      if !result.command.stringValue.isEmpty {
+        ShortcutChip(text: result.command.stringValue)
+      }
     }
-    .frame(maxWidth: .infinity)
-    .padding([.top, .bottom], 3)
-    .padding(.trailing, 5)
-    .background(isActive ? Color.accentColor : Color.clear)
+    .contentShape(Rectangle())
+    .padding(.horizontal, 6)
+    .padding(.vertical, 4)
+    .background(
+      RoundedRectangle(cornerRadius: 6, style: .continuous)
+        .fill(rowBackground)
+    )
+    .onHover { hovering = $0 }
     .onReceive(searchManager.$activeItem) { activeItem in
       if let item = activeItem {
         isActive = result == item
@@ -142,5 +156,11 @@ struct ResultView: View {
         isActive = false
       }
     }
+  }
+
+  private var rowBackground: Color {
+    if isActive { return Color.accentColor }
+    if hovering { return Color.primary.opacity(0.08) }
+    return Color.clear
   }
 }

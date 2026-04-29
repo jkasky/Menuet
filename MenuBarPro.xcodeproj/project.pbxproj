@@ -12,6 +12,7 @@
 		481490262A6D7A26000F2627 /* MenuSearchPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481490252A6D7A26000F2627 /* MenuSearchPanel.swift */; };
 		481CCC020CCCCCCCCCCC0002 /* MenuCheatsheetPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481CCC010CCCCCCCCCCC0001 /* MenuCheatsheetPanel.swift */; };
 		481CCC040CCCCCCCCCCC0004 /* MenuCheatsheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481CCC030CCCCCCCCCCC0003 /* MenuCheatsheetView.swift */; };
+		481CCC080CCCCCCCCCCC0008 /* PanelChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481CCC070CCCCCCCCCCC0007 /* PanelChrome.swift */; };
 		481CCC060CCCCCCCCCCC0006 /* CheatsheetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481CCC050CCCCCCCCCCC0005 /* CheatsheetTests.swift */; };
 		4822C9D12A1733FE00CD843B /* MenuBarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4822C9D02A1733FE00CD843B /* MenuBarApp.swift */; };
 		482C8A912A6BA7F300A8B5DB /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482C8A902A6BA7F300A8B5DB /* SettingsView.swift */; };
@@ -61,6 +62,7 @@
 		481490252A6D7A26000F2627 /* MenuSearchPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuSearchPanel.swift; sourceTree = "<group>"; };
 		481CCC010CCCCCCCCCCC0001 /* MenuCheatsheetPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCheatsheetPanel.swift; sourceTree = "<group>"; };
 		481CCC030CCCCCCCCCCC0003 /* MenuCheatsheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCheatsheetView.swift; sourceTree = "<group>"; };
+		481CCC070CCCCCCCCCCC0007 /* PanelChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelChrome.swift; sourceTree = "<group>"; };
 		481CCC050CCCCCCCCCCC0005 /* CheatsheetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheatsheetTests.swift; sourceTree = "<group>"; };
 		4822C9D02A1733FE00CD843B /* MenuBarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarApp.swift; sourceTree = "<group>"; };
 		482C8A902A6BA7F300A8B5DB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 				489EB1732A6C6C30000271CB /* MenuSearchView.swift */,
 				481CCC010CCCCCCCCCCC0001 /* MenuCheatsheetPanel.swift */,
 				481CCC030CCCCCCCCCCC0003 /* MenuCheatsheetView.swift */,
+				481CCC070CCCCCCCCCCC0007 /* PanelChrome.swift */,
 				48D557D72B2D7D4300956ABA /* Preferences.swift */,
 				482C8A902A6BA7F300A8B5DB /* SettingsView.swift */,
 				D19451EF21D78A27003607D2 /* SearchManager.swift */,
@@ -359,6 +362,7 @@
 				481490262A6D7A26000F2627 /* MenuSearchPanel.swift in Sources */,
 				481CCC020CCCCCCCCCCC0002 /* MenuCheatsheetPanel.swift in Sources */,
 				481CCC040CCCCCCCCCCC0004 /* MenuCheatsheetView.swift in Sources */,
+				481CCC080CCCCCCCCCCC0008 /* PanelChrome.swift in Sources */,
 				48C044D61D23B1DA00F49A94 /* AX.swift in Sources */,
 				4875779C1B51E7B900339D78 /* AXApplication.swift in Sources */,
 				48CECD311EA4A0BF007BD237 /* AXClient.swift in Sources */,

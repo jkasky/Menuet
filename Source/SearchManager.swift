@@ -75,10 +75,6 @@ class SearchManager: ObservableObject {
     return searchResults.count > 0
   }
   
-  func getResult(at index: Int) -> MenuItem {
-    return searchResults[index]
-  }
-
   func findMatchingResult(_ matcher: (_ item: MenuItem) -> Bool) -> MenuItem? {
     return searchResults.first(where: matcher)
   }

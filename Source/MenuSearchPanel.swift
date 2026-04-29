@@ -99,14 +99,6 @@ class MenuSearchPanel: NSPanel {
 
   override func performKeyEquivalent(with event: NSEvent) -> Bool {
     let searchManager = SearchManager.shared
-    if let quickIndex = Int(event.charactersIgnoringModifiers!) {
-      if quickIndex > 0 && quickIndex < 8 {
-        let row = quickIndex - 1
-        dismissAndPerform(searchManager.getResult(at: row).command)
-        return true
-      }
-    }
-
     var characters = event.charactersIgnoringModifiers?.uppercased()
     if characters == nil || characters != "" {
       characters = event.characters?.uppercased()
