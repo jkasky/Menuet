@@ -106,7 +106,7 @@ struct MenuBarContent: View {
 
     Divider()
 
-    Button("Quit MenuBar Pro") {
+    Button("Quit Menuet") {
       NSApp.terminate(nil)
     }
   }
@@ -120,8 +120,8 @@ struct MenuBarApp: App {
 
   var body: some Scene {
     // TODO: use the system image? loading StatusBarIcon not working
-    // MenuBarExtra("MenuBarPro App", image: "StatusBarIcon") {
-    MenuBarExtra("MenuBarPro App", systemImage: "menubar.rectangle") {
+    // MenuBarExtra("Menuet", image: "StatusBarIcon") {
+    MenuBarExtra("Menuet", systemImage: "menubar.rectangle") {
       MenuBarContent()
         .environmentObject(appState)
     }

@@ -1,9 +1,7 @@
 //
 //  AX.swift
-//  MenuFinder
+//  Menuet
 //
-//  Created by Jesse Kasky on 6/29/16.
-//  Copyright © 2016 Codjax. All rights reserved.
 //
 
 import ApplicationServices

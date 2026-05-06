@@ -1,8 +1,7 @@
 //
 //  FuzzyMatch.swift
-//  MenuBar Pro
+//  Menuet
 //
-//  Copyright © 2026 Codjax. All rights reserved.
 //
 
 import Foundation

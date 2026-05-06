@@ -1,6 +1,6 @@
 //
 //  FakeAXClient.swift
-//  MenuBarProTests
+//  MenuetTests
 //
 
 import AppKit

@@ -1,6 +1,6 @@
 //
 //  FakeAXElement.swift
-//  MenuBarProTests
+//  MenuetTests
 //
 
 import Foundation

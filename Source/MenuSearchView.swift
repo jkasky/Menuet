@@ -1,9 +1,7 @@
 //
 //  MenuSearchView.swift
-//  MenuBar Pro
+//  Menuet
 //
-//  Created by Jesse Kasky on 7/22/23.
-//  Copyright © 2023 Codjax. All rights reserved.
 //
 
 import SwiftUI

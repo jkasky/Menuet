@@ -1,6 +1,6 @@
 //
 //  AXMenuIndexerTests.swift
-//  MenuBarProTests
+//  MenuetTests
 //
 
 import OSLog

@@ -1,9 +1,7 @@
 //
 //  AXClient.swift
-//  MenuFinder
+//  Menuet
 //
-//  Created by Jesse Kasky on 4/17/17.
-//  Copyright © 2017 Codjax. All rights reserved.
 //
 
 import Cocoa

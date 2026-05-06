@@ -1,9 +1,7 @@
 //
 //  Menu.swift
-//  MenuFinder
+//  Menuet
 //
-//  Created by Jesse Kasky on 2018-12-09.
-//  Copyright © 2018 Codjax. All rights reserved.
 //
 
 import AppKit

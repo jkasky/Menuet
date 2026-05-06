@@ -1,9 +1,7 @@
 //
 //  Preferences.swift
-//  Menumate
+//  Menuet
 //
-//  Created by Jesse Kasky on 12/13/20.
-//  Copyright © 2020 Codjax. All rights reserved.
 //
 
 import KeyboardShortcuts

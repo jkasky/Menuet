@@ -1,9 +1,7 @@
 //
 //  AXVisitor.swift
-//  Menumate
+//  Menuet
 //
-//  Created by Jesse Kasky on 2/8/21.
-//  Copyright © 2021 Codjax. All rights reserved.
 //
 
 import Foundation

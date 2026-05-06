@@ -1,6 +1,6 @@
 //
 //  FakeAXApplication.swift
-//  MenuBarProTests
+//  MenuetTests
 //
 
 import Foundation

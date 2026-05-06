@@ -1,6 +1,6 @@
 //
 //  AXMenuWalkerTests.swift
-//  MenuBarProTests
+//  MenuetTests
 //
 
 import XCTest

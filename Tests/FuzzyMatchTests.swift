@@ -1,8 +1,7 @@
 //
 //  FuzzyMatchTests.swift
-//  MenuBarProTests
+//  MenuetTests
 //
-//  Copyright © 2026 Codjax. All rights reserved.
 //
 
 import XCTest

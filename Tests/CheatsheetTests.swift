@@ -1,6 +1,6 @@
 //
 //  CheatsheetTests.swift
-//  MenuBarProTests
+//  MenuetTests
 //
 
 import XCTest

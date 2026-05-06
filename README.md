@@ -1,4 +1,4 @@
-# MenuBar Pro
+# Menuet
 
 A macOS menu-bar utility that lets you search and invoke any menu item in the
 frontmost app via a global hotkey, plus a cheatsheet panel that displays every
@@ -8,14 +8,12 @@ Built on the macOS Accessibility API. Runs as an `LSUIElement` (no Dock icon).
 
 ## Build & Test
 
-The Xcode scheme is `"MenuBar Pro"` (with a space).
-
 ```sh
 # Build
-xcodebuild -project MenuBarPro.xcodeproj -scheme "MenuBar Pro" -configuration Debug build
+xcodebuild -project Menuet.xcodeproj -scheme Menuet -configuration Debug build
 
 # Test
-xcodebuild -project MenuBarPro.xcodeproj -scheme "MenuBar Pro" test
+xcodebuild -project Menuet.xcodeproj -scheme Menuet test
 ```
 
 First launch prompts for Accessibility permission, which is required for AX

@@ -4,21 +4,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Build & Test
 
-The Xcode scheme is `"MenuBar Pro"` (with a space) — not `MenuBarPro`. The project file is `MenuBarPro.xcodeproj`.
+The Xcode project is `Menuet.xcodeproj` and the scheme is `Menuet`.
 
 ```sh
 # Build
-xcodebuild -project MenuBarPro.xcodeproj -scheme "MenuBar Pro" -configuration Debug build
+xcodebuild -project Menuet.xcodeproj -scheme Menuet -configuration Debug build
 
 # List schemes (when in doubt)
-xcodebuild -project MenuBarPro.xcodeproj -list
+xcodebuild -project Menuet.xcodeproj -list
 
 # Run all tests
-xcodebuild -project MenuBarPro.xcodeproj -scheme "MenuBar Pro" test
+xcodebuild -project Menuet.xcodeproj -scheme Menuet test
 
 # Single test (XCTest)
-xcodebuild -project MenuBarPro.xcodeproj -scheme "MenuBar Pro" test \
-  -only-testing:MenuBarProTests/AXMenuWalkerTests/testWalkSimpleMenu
+xcodebuild -project Menuet.xcodeproj -scheme Menuet test \
+  -only-testing:MenuetTests/AXMenuWalkerTests/testWalkSimpleMenu
 ```
 
 SourceKit frequently emits cross-file `Cannot find type/in scope` diagnostics for symbols defined in sibling files in `Source/`. These are resolution noise from an out-of-sync index, not real errors. Trust `xcodebuild` over the diagnostic stream.
