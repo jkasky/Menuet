@@ -18,6 +18,10 @@ struct MenuSearchView: View {
         if !searchManager.searchResults.isEmpty {
           Divider().opacity(0.4)
           ResultsView()
+          Divider().opacity(0.4)
+          FooterHintView()
+            .padding(.horizontal, 16)
+            .padding(.vertical, 6)
         }
       }
     }
@@ -120,6 +124,8 @@ struct ResultView: View {
   @Binding var result: MenuItem
   @State var isActive: Bool = false
   @State private var hovering: Bool = false
+  @State private var chipScale: CGFloat = 1.0
+  @AppStorage("requireShortcutToInvoke") private var requireShortcutToInvoke = true
 
   var body: some View {
     HStack(alignment: .center, spacing: 10) {
@@ -136,7 +142,19 @@ struct ResultView: View {
       }
       Spacer(minLength: 0)
       if !result.command.stringValue.isEmpty {
-        ShortcutChip(text: result.command.stringValue)
+        ShortcutChip(
+          text: result.command.stringValue,
+          highlighted: isActive && requireShortcutToInvoke
+        )
+        .scaleEffect(chipScale)
+        .animation(.interpolatingSpring(stiffness: 400, damping: 12), value: chipScale)
+        .onChange(of: searchManager.blockedReturnPulse) {
+          guard isActive else { return }
+          chipScale = 1.2
+          DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+            chipScale = 1.0
+          }
+        }
       }
     }
     .contentShape(Rectangle())
@@ -160,5 +178,25 @@ struct ResultView: View {
     if isActive { return Color.accentColor }
     if hovering { return Color.primary.opacity(0.08) }
     return Color.clear
+  }
+}
+
+
+struct FooterHintView: View {
+  @EnvironmentObject var searchManager: SearchManager
+  @AppStorage("requireShortcutToInvoke") private var requireShortcutToInvoke = true
+
+  var body: some View {
+    let shortcut = searchManager.activeItem?.command.stringValue ?? ""
+    let hint: String
+    if requireShortcutToInvoke && !shortcut.isEmpty {
+      hint = "Press \(shortcut) to invoke"
+    } else {
+      hint = "↵ Return to invoke"
+    }
+    return Text(hint)
+      .font(.system(.caption, design: .rounded))
+      .foregroundStyle(.secondary)
+      .frame(maxWidth: .infinity, alignment: .center)
   }
 }

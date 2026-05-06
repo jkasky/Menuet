@@ -86,7 +86,12 @@ class MenuSearchPanel: NSPanel {
         searchManager.selectPrevious()
       case NSEvent.SpecialKey.carriageReturn.rawValue:
         if let item = searchManager.activeItem {
-          dismissAndPerform(item.command)
+          let hasShortcut = !item.command.stringValue.isEmpty
+          if hasShortcut && UserDefaults.standard.requireShortcutToInvoke {
+            searchManager.blockedReturnPulse += 1
+          } else {
+            dismissAndPerform(item.command)
+          }
         }
       default:
         break

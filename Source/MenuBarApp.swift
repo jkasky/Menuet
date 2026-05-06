@@ -8,6 +8,7 @@ class AppState: ObservableObject {
   private var cheatsheetPanel: MenuCheatsheetPanel?
 
   init() {
+    UserDefaults.standard.register(defaults: ["requireShortcutToInvoke": true])
     initializeMenuResources()
 
     KeyboardShortcuts.onKeyUp(for: .menuSearchShortcut) {

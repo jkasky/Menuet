@@ -28,6 +28,7 @@ struct PanelBackground<Content: View>: View {
 struct ShortcutChip: View {
   let text: String
   var minWidth: CGFloat = 56
+  var highlighted: Bool = false
 
   var body: some View {
     Text(text)
@@ -38,11 +39,14 @@ struct ShortcutChip: View {
       .padding(.vertical, 3)
       .background(
         RoundedRectangle(cornerRadius: 5, style: .continuous)
-          .fill(Color.primary.opacity(0.08))
+          .fill(highlighted ? Color.white.opacity(0.22) : Color.primary.opacity(0.08))
       )
       .overlay(
         RoundedRectangle(cornerRadius: 5, style: .continuous)
-          .strokeBorder(Color.primary.opacity(0.10), lineWidth: 0.5)
+          .strokeBorder(
+            highlighted ? Color.white.opacity(0.4) : Color.primary.opacity(0.10),
+            lineWidth: highlighted ? 1 : 0.5
+          )
       )
   }
 }
