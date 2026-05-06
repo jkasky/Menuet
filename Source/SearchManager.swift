@@ -42,6 +42,7 @@ class SearchManager: ObservableObject {
   @Published var cheatsheetQuery: String = ""
   @Published var cheatsheetActiveItem: MenuItem?
   @Published private(set) var cheatsheetMatchIDs: Set<UUID> = []
+  @Published var blockedReturnPulse: Int = 0
   private var cheatsheetMatchOrder: [MenuItem] = []
 
   static let shared = SearchManager()

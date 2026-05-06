@@ -11,6 +11,7 @@ struct SettingsView: View {
   @AppStorage("menuSearchAppleMenu") private var searchAppleMenu = false
   @AppStorage("menuSearchMatchCase") private var matchCase = false
   @AppStorage("menuSearchShowDisabled") private var includeDisabled = false
+  @AppStorage("requireShortcutToInvoke") private var requireShortcutToInvoke = true
 
   var body: some View {
     Form {
@@ -32,6 +33,15 @@ struct SettingsView: View {
 
         Toggle(isOn: $includeDisabled) {
           Text("Include disabled menu items")
+        }.toggleStyle(.switch)
+
+        Toggle(isOn: $requireShortcutToInvoke) {
+          VStack(alignment: .leading, spacing: 2) {
+            Text("Require shortcut to invoke")
+            Text("When an item has a keyboard shortcut, press it to invoke. Helps you learn the shortcuts you actually use.")
+              .font(.caption)
+              .foregroundStyle(.secondary)
+          }
         }.toggleStyle(.switch)
       }
     }.formStyle(.grouped)

@@ -42,4 +42,13 @@ extension UserDefaults  {
       setValue(newValue, forKey: "showDisabledItems")
     }
   }
+
+  var requireShortcutToInvoke: Bool {
+    get {
+      return bool(forKey: "requireShortcutToInvoke")
+    }
+    set {
+      setValue(newValue, forKey: "requireShortcutToInvoke")
+    }
+  }
 }
