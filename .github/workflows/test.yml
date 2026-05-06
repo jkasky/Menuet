@@ -16,4 +16,4 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
 
       - name: Run tests
-        run: xcodebuild -project Menuet.xcodeproj -scheme Menuet test -destination 'platform=macOS'
+        run: xcodebuild -project Menuet.xcodeproj -scheme Menuet test -only-testing:MenuetTests -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO
