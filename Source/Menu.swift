@@ -19,6 +19,10 @@ struct KeyGlyph {
   // Modifier Keys
   static let Alt           = KeyGlyph(0x8B, "\u{2387}")  //  ⎇
   static let Control       = KeyGlyph(0x06, "\u{2303}")  //  ⌃
+  // U+FE0E variation selector forces text-style (monochrome) rendering of
+  // the globe codepoint, matching how macOS draws the Fn/Globe modifier in
+  // its own menus instead of the colored emoji presentation.
+  static let Globe         = KeyGlyph(0x98, "\u{1F310}\u{FE0E}") //  🌐︎
   static let Option        = KeyGlyph(0x07, "\u{2325}")  //  ⌥
   static let Shift         = KeyGlyph(0x05, "\u{21E7}")  //  ⇧
 
@@ -149,6 +153,7 @@ func initializeMenuResources() {
     .End,
     .Enter,
     .Escape,
+    .Globe,
     .Help,
     .Home,
     .Left,
@@ -198,7 +203,7 @@ func initializeMenuResources() {
 
 struct Modifiers: OptionSet {
   let rawValue: Int
-  
+
   var stringValue: String {
     var value = ""
     if self.contains(.control) {
@@ -213,9 +218,17 @@ struct Modifiers: OptionSet {
     if !self.contains(.noCommand) {
       value.append(KeyGlyph.Command.characters)
     }
+    // Globe is visually wider than ⌃⌥⇧⌘, so flank it with thin spaces to
+    // match the breathing room macOS gives it in its own menu rendering
+    // (e.g. "⌃ 🌐 F" rather than "⌃🌐F").
+    if self.contains(.function) {
+      value.append("\u{2009}")
+      value.append(KeyGlyph.Globe.characters)
+      value.append("\u{2009}")
+    }
     return value
   }
-  
+
   func joinWith(_ character: String) -> String {
     if self.rawValue > 0 {
       return self.stringValue + character
@@ -238,6 +251,9 @@ struct Modifiers: OptionSet {
     if !lhs.contains(.noCommand) != rhs.contains(.command) {
       return false
     }
+    if lhs.contains(.function) != rhs.contains(.function) {
+      return false
+    }
     return true
   }
 
@@ -245,6 +261,7 @@ struct Modifiers: OptionSet {
   static let option = Modifiers(rawValue: 2)
   static let control = Modifiers(rawValue: 4)
   static let noCommand = Modifiers(rawValue: 8)
+  static let function = Modifiers(rawValue: 16)
 }
 
 
