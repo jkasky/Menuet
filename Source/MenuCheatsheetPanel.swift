@@ -1,3 +1,4 @@
+import Carbon.HIToolbox
 import SwiftUI
 
 
@@ -70,13 +71,13 @@ class MenuCheatsheetPanel: NSPanel {
     let mgr = SearchManager.shared
 
     // Tab → cycle to next match (loops at end).
-    if event.keyCode == 48 {
+    if Int(event.keyCode) == kVK_Tab {
       mgr.cheatsheetSelectNextMatch()
       return
     }
 
     // Return / numpad Enter → invoke highlighted item.
-    if event.keyCode == 36 || event.keyCode == 76 {
+    if Int(event.keyCode) == kVK_Return || Int(event.keyCode) == kVK_ANSI_KeypadEnter {
       if let item = mgr.cheatsheetActiveItem {
         dismissAndPerform(item.command)
       }
@@ -84,7 +85,7 @@ class MenuCheatsheetPanel: NSPanel {
     }
 
     // Backspace → delete one character from query.
-    if event.keyCode == 51 {
+    if Int(event.keyCode) == kVK_Delete {
       mgr.cheatsheetBackspace()
       return
     }

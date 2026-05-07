@@ -4,6 +4,7 @@
 //
 //
 
+import Carbon.HIToolbox
 import SwiftUI
 
 struct MenuSearchView: View {
@@ -27,6 +28,41 @@ struct MenuSearchView: View {
     }
     .frame(minWidth: 600, maxWidth: 600, minHeight: 40, maxHeight: 500)
     .fixedSize()
+    // Intercept arrows / Return at the focus-tree ancestor so they fire while
+    // the TextField holds focus. SwiftUI delivers ancestor .onKeyPress before
+    // the field editor's text-navigation actions for these keys. We read
+    // NSApp.currentEvent because KeyPress.key doesn't reliably carry keyCode
+    // across keyboard layouts (the Maccy approach).
+    .onKeyPress(phases: [.down, .repeat]) { _ in handleKeyPress() }
+  }
+
+  private func handleKeyPress() -> KeyPress.Result {
+    // Pass through while IME composition is active so candidate selection works.
+    if let inputClient = NSApp.keyWindow?.firstResponder as? NSTextInputClient,
+       inputClient.hasMarkedText() {
+      return .ignored
+    }
+    guard let event = NSApp.currentEvent else { return .ignored }
+
+    switch Int(event.keyCode) {
+    case kVK_DownArrow:
+      searchManager.selectNext()
+      return .handled
+    case kVK_UpArrow:
+      searchManager.selectPrevious()
+      return .handled
+    case kVK_Return, kVK_ANSI_KeypadEnter:
+      guard let item = searchManager.activeItem else { return .handled }
+      let hasShortcut = !item.command.stringValue.isEmpty
+      if hasShortcut && UserDefaults.standard.requireShortcutToInvoke {
+        searchManager.blockedReturnPulse += 1
+      } else if let panel = NSApp.keyWindow as? MenuSearchPanel {
+        panel.dismissAndPerform(item.command)
+      }
+      return .handled
+    default:
+      return .ignored
+    }
   }
 }
 
@@ -122,10 +158,11 @@ struct ResultsView: View {
 struct ResultView: View {
   @EnvironmentObject var searchManager: SearchManager
   @Binding var result: MenuItem
-  @State var isActive: Bool = false
   @State private var hovering: Bool = false
   @State private var chipScale: CGFloat = 1.0
   @AppStorage("requireShortcutToInvoke") private var requireShortcutToInvoke = true
+
+  private var isActive: Bool { searchManager.activeItem == result }
 
   var body: some View {
     HStack(alignment: .center, spacing: 10) {
@@ -165,13 +202,6 @@ struct ResultView: View {
         .fill(rowBackground)
     )
     .onHover { hovering = $0 }
-    .onReceive(searchManager.$activeItem) { activeItem in
-      if let item = activeItem {
-        isActive = result == item
-      } else {
-        isActive = false
-      }
-    }
   }
 
   private var rowBackground: Color {

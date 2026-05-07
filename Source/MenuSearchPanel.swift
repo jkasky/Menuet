@@ -76,30 +76,6 @@ class MenuSearchPanel: NSPanel {
     close()
   }
 
-  override func keyUp(with event: NSEvent) {
-    let searchManager = SearchManager.shared
-    if let key = event.characters?.unicodeScalars.first {
-      switch Int(key.value) {
-      case NSEvent.SpecialKey.downArrow.rawValue:
-        searchManager.selectNext()
-      case NSEvent.SpecialKey.upArrow.rawValue:
-        searchManager.selectPrevious()
-      case NSEvent.SpecialKey.carriageReturn.rawValue:
-        if let item = searchManager.activeItem {
-          let hasShortcut = !item.command.stringValue.isEmpty
-          if hasShortcut && UserDefaults.standard.requireShortcutToInvoke {
-            searchManager.blockedReturnPulse += 1
-          } else {
-            dismissAndPerform(item.command)
-          }
-        }
-      default:
-        break
-      }
-    }
-    super.keyUp(with: event)
-  }
-
   override func performKeyEquivalent(with event: NSEvent) -> Bool {
     let searchManager = SearchManager.shared
     var characters = event.charactersIgnoringModifiers?.uppercased()
@@ -124,7 +100,7 @@ class MenuSearchPanel: NSPanel {
     SearchManager.shared.currentApp?.activate(options: [.activateAllWindows])
   }
 
-  private func dismissAndPerform(_ command: MenuItemCommand) {
+  func dismissAndPerform(_ command: MenuItemCommand) {
     dismiss()
     // NSMenu validation is lazy: items that depend on first-responder
     // context (Cut/Copy/etc.) can still be flagged disabled at the
