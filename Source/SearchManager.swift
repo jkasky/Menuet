@@ -238,9 +238,10 @@ class SearchManager: ObservableObject {
   }
   
   /**
-   * Clears the search results, selected result, and any active item.
+   * Clears the search query, results, selected result, and any active item.
    */
   func clear() {
+    query = ""
     searchResults.removeAll()
     selectedResult = -1
     activeItem = nil
