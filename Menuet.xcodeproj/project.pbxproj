@@ -12,8 +12,8 @@
 		481490262A6D7A26000F2627 /* MenuSearchPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481490252A6D7A26000F2627 /* MenuSearchPanel.swift */; };
 		481CCC020CCCCCCCCCCC0002 /* MenuCheatsheetPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481CCC010CCCCCCCCCCC0001 /* MenuCheatsheetPanel.swift */; };
 		481CCC040CCCCCCCCCCC0004 /* MenuCheatsheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481CCC030CCCCCCCCCCC0003 /* MenuCheatsheetView.swift */; };
-		481CCC080CCCCCCCCCCC0008 /* PanelChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481CCC070CCCCCCCCCCC0007 /* PanelChrome.swift */; };
 		481CCC060CCCCCCCCCCC0006 /* CheatsheetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481CCC050CCCCCCCCCCC0005 /* CheatsheetTests.swift */; };
+		481CCC080CCCCCCCCCCC0008 /* PanelChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481CCC070CCCCCCCCCCC0007 /* PanelChrome.swift */; };
 		4822C9D12A1733FE00CD843B /* MenuBarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4822C9D02A1733FE00CD843B /* MenuBarApp.swift */; };
 		482C8A912A6BA7F300A8B5DB /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482C8A902A6BA7F300A8B5DB /* SettingsView.swift */; };
 		4853E21B1F37FA6900D96A08 /* MenuItemCommandTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4853E21A1F37FA6900D96A08 /* MenuItemCommandTests.swift */; };
@@ -61,15 +61,15 @@
 		481490252A6D7A26000F2627 /* MenuSearchPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuSearchPanel.swift; sourceTree = "<group>"; };
 		481CCC010CCCCCCCCCCC0001 /* MenuCheatsheetPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCheatsheetPanel.swift; sourceTree = "<group>"; };
 		481CCC030CCCCCCCCCCC0003 /* MenuCheatsheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCheatsheetView.swift; sourceTree = "<group>"; };
-		481CCC070CCCCCCCCCCC0007 /* PanelChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelChrome.swift; sourceTree = "<group>"; };
 		481CCC050CCCCCCCCCCC0005 /* CheatsheetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheatsheetTests.swift; sourceTree = "<group>"; };
+		481CCC070CCCCCCCCCCC0007 /* PanelChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelChrome.swift; sourceTree = "<group>"; };
 		4822C9D02A1733FE00CD843B /* MenuBarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarApp.swift; sourceTree = "<group>"; };
 		482C8A902A6BA7F300A8B5DB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4853E21A1F37FA6900D96A08 /* MenuItemCommandTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuItemCommandTests.swift; sourceTree = "<group>"; };
 		4853E2251F37FFD400D96A08 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		4853E2271F38001F00D96A08 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		4875779B1B51E7B900339D78 /* AXApplication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AXApplication.swift; sourceTree = "<group>"; };
-		4878358D1B3B91E700BC911B /* Menuet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Menuet.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4878358D1B3B91E700BC911B /* Menuet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Menuet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		487835911B3B91E700BC911B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		487835961B3B91E700BC911B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		4878359F1B3B91E700BC911B /* MenuetTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MenuetTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -239,7 +239,7 @@
 			);
 			dependencies = (
 			);
-			name = "Menuet";
+			name = Menuet;
 			packageProductDependencies = (
 				48F1B0C82ADFBA3900E6492E /* KeyboardShortcuts */,
 			);
@@ -466,7 +466,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.menuet;
-				PRODUCT_NAME = "Menuet";
+				PRODUCT_NAME = Menuet;
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -523,7 +523,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = app.menuet;
-				PRODUCT_NAME = "Menuet";
+				PRODUCT_NAME = Menuet;
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
@@ -624,6 +624,7 @@
 				"MF_MAKE_PROCESS_TRUSTED[arch=*]" = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.codjax.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_VERSION = 5.0;
@@ -658,6 +659,7 @@
 				"MF_MAKE_PROCESS_TRUSTED[arch=*]" = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.codjax.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
