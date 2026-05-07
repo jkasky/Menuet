@@ -33,6 +33,7 @@ class AppState: ObservableObject {
     // so menu items aren't disabled by the target app in response to
     // resigning key/first-responder.
     SearchManager.shared.activate()
+    SearchManager.shared.clear()
     activate()
     if searchPanel == nil {
       searchPanel = MenuSearchPanel(contentRect: NSRect(x: 0, y: 0, width: 600, height: 50)) {
