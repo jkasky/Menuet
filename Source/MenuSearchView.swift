@@ -7,8 +7,30 @@
 import Carbon.HIToolbox
 import SwiftUI
 
+enum SearchKeyAction {
+  case next
+  case previous
+  case invoke
+}
+
+struct PendingSearchAction: Equatable {
+  let action: SearchKeyAction
+  let id = UUID()
+
+  static func == (lhs: PendingSearchAction, rhs: PendingSearchAction) -> Bool {
+    lhs.id == rhs.id
+  }
+}
+
 struct MenuSearchView: View {
   @EnvironmentObject var searchManager: SearchManager
+  // .onKeyPress fires inside a SwiftUI view update, so mutating @Published
+  // state directly there triggers "Publishing changes from within view
+  // updates is not allowed". Instead we record the intent in @State and
+  // perform the mutation in .onChange, which runs between update cycles.
+  // Each press gets a fresh UUID so repeated identical actions still
+  // trigger .onChange (key-repeat correctness).
+  @State private var pendingAction: PendingSearchAction?
 
   var body: some View {
     PanelBackground {
@@ -34,6 +56,10 @@ struct MenuSearchView: View {
     // NSApp.currentEvent because KeyPress.key doesn't reliably carry keyCode
     // across keyboard layouts (the Maccy approach).
     .onKeyPress(phases: [.down, .repeat]) { _ in handleKeyPress() }
+    .onChange(of: pendingAction) { _, pending in
+      guard let pending else { return }
+      performAction(pending.action)
+    }
   }
 
   private func handleKeyPress() -> KeyPress.Result {
@@ -46,22 +72,33 @@ struct MenuSearchView: View {
 
     switch Int(event.keyCode) {
     case kVK_DownArrow:
-      searchManager.selectNext()
+      pendingAction = PendingSearchAction(action: .next)
       return .handled
     case kVK_UpArrow:
-      searchManager.selectPrevious()
+      pendingAction = PendingSearchAction(action: .previous)
       return .handled
     case kVK_Return, kVK_ANSI_KeypadEnter:
-      guard let item = searchManager.activeItem else { return .handled }
+      pendingAction = PendingSearchAction(action: .invoke)
+      return .handled
+    default:
+      return .ignored
+    }
+  }
+
+  private func performAction(_ action: SearchKeyAction) {
+    switch action {
+    case .next:
+      searchManager.selectNext()
+    case .previous:
+      searchManager.selectPrevious()
+    case .invoke:
+      guard let item = searchManager.activeItem else { return }
       let hasShortcut = !item.command.stringValue.isEmpty
       if hasShortcut && UserDefaults.standard.requireShortcutToInvoke {
         searchManager.blockedReturnPulse += 1
       } else if let panel = NSApp.keyWindow as? MenuSearchPanel {
         panel.dismissAndPerform(item.command)
       }
-      return .handled
-    default:
-      return .ignored
     }
   }
 }
