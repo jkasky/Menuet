@@ -202,6 +202,10 @@ func initializeMenuResources() {
 struct Modifiers: OptionSet {
   let rawValue: Int
 
+  init(rawValue: Int) {
+    self.rawValue = rawValue
+  }
+
   var stringValue: String {
     var value = ""
     if self.contains(.control) {
@@ -234,6 +238,27 @@ struct Modifiers: OptionSet {
       return self.stringValue + character
     }
     return character
+  }
+
+  // Item must hold every bit the filter requires; .command must match
+  // exactly (filter has cmd ⇔ item lacks .noCommand). Extra modifier bits
+  // on the item are tolerated.
+  func containsFilter(_ filter: NSEvent.ModifierFlags) -> Bool {
+    if filter.isEmpty { return true }
+    let required = Modifiers(eventFlags: filter)
+    let positive: Modifiers = [.shift, .control, .option, .function]
+    return self.isSuperset(of: required.intersection(positive))
+        && self.contains(.noCommand) == required.contains(.noCommand)
+  }
+
+  init(eventFlags: NSEvent.ModifierFlags) {
+    var raw = 0
+    if eventFlags.contains(.shift) { raw |= Modifiers.shift.rawValue }
+    if eventFlags.contains(.control) { raw |= Modifiers.control.rawValue }
+    if eventFlags.contains(.option) { raw |= Modifiers.option.rawValue }
+    if eventFlags.contains(.function) { raw |= Modifiers.function.rawValue }
+    if !eventFlags.contains(.command) { raw |= Modifiers.noCommand.rawValue }
+    self.init(rawValue: raw)
   }
 
   static func ==(lhs: Modifiers, rhs: NSEvent.ModifierFlags) -> Bool {

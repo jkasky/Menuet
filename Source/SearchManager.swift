@@ -42,8 +42,19 @@ class SearchManager: ObservableObject {
   @Published var cheatsheetQuery: String = ""
   @Published var cheatsheetActiveItem: MenuItem?
   @Published private(set) var cheatsheetMatchIDs: Set<UUID> = []
+  @Published private(set) var cheatsheetModifierFilter: NSEvent.ModifierFlags = []
   @Published var blockedReturnPulse: Int = 0
   private var cheatsheetMatchOrder: [MenuItem] = []
+
+  var filteredCheatsheetGroups: [CheatsheetGroup] {
+    if cheatsheetModifierFilter.isEmpty { return cheatsheetGroups }
+    return cheatsheetGroups.compactMap { group in
+      let items = group.items.filter {
+        $0.command.modifiers.containsFilter(cheatsheetModifierFilter)
+      }
+      return items.isEmpty ? nil : CheatsheetGroup(menu: group.menu, items: items)
+    }
+  }
 
   static let shared = SearchManager()
   
@@ -135,6 +146,12 @@ class SearchManager: ObservableObject {
     cheatsheetMatchOrder = []
     cheatsheetMatchIDs = []
     cheatsheetActiveItem = nil
+    cheatsheetModifierFilter = []
+  }
+
+  func cheatsheetUpdateModifierFilter(_ flags: NSEvent.ModifierFlags) {
+    guard flags != cheatsheetModifierFilter else { return }
+    cheatsheetModifierFilter = flags
   }
 
   func cheatsheetSelectNextMatch() {

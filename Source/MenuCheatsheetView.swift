@@ -14,7 +14,8 @@ struct MenuCheatsheetView: View {
           appIcon: searchManager.currentApp?.icon,
           appName: searchManager.currentApp?.localizedName ?? "Keyboard Shortcuts",
           query: searchManager.cheatsheetQuery,
-          matchCount: searchManager.cheatsheetMatchIDs.count
+          matchCount: searchManager.cheatsheetMatchIDs.count,
+          modifierFilter: searchManager.cheatsheetModifierFilter
         )
           .padding(.horizontal, 16)
           .padding(.vertical, 8)
@@ -26,7 +27,7 @@ struct MenuCheatsheetView: View {
             ScrollView {
               Color.clear.frame(height: 0).id(Self.scrollTopID)
               MasonryColumns(
-                groups: searchManager.cheatsheetGroups,
+                groups: searchManager.filteredCheatsheetGroups,
                 availableWidth: geo.size.width - 40
               )
               .padding(20)
@@ -64,37 +65,43 @@ private struct CheatsheetHeader: View {
   let appName: String
   let query: String
   let matchCount: Int
+  let modifierFilter: NSEvent.ModifierFlags
 
   var body: some View {
-    HStack(spacing: 10) {
-      if query.isEmpty, let icon = appIcon {
-        Image(nsImage: icon)
-          .resizable()
-          .interpolation(.high)
-          .frame(width: 48, height: 48)
-      } else {
-        Image(systemName: query.isEmpty ? "keyboard" : "magnifyingglass")
-          .font(.system(size: 28))
-          .foregroundStyle(query.isEmpty ? AnyShapeStyle(.secondary) : AnyShapeStyle(Color.accentColor))
-          .frame(width: 48, height: 48)
-      }
-      if query.isEmpty {
-        Text("Keyboard Shortcuts")
-          .font(.system(.headline, design: .rounded))
-      } else {
-        Text(query)
-          .font(.system(.headline, design: .rounded))
-          .foregroundStyle(Color.accentColor)
-          .lineLimit(1)
-        Text("\(matchCount) \(matchCount == 1 ? "match" : "matches")")
+    ZStack {
+      HStack(spacing: 10) {
+        if query.isEmpty, let icon = appIcon {
+          Image(nsImage: icon)
+            .resizable()
+            .interpolation(.high)
+            .frame(width: 48, height: 48)
+        } else {
+          Image(systemName: query.isEmpty ? "keyboard" : "magnifyingglass")
+            .font(.system(size: 28))
+            .foregroundStyle(query.isEmpty ? AnyShapeStyle(.secondary) : AnyShapeStyle(Color.accentColor))
+            .frame(width: 48, height: 48)
+        }
+        if query.isEmpty {
+          Text("Keyboard Shortcuts")
+            .font(.system(.headline, design: .rounded))
+        } else {
+          Text(query)
+            .font(.system(.headline, design: .rounded))
+            .foregroundStyle(Color.accentColor)
+            .lineLimit(1)
+          Text("\(matchCount) \(matchCount == 1 ? "match" : "matches")")
+            .font(.system(.subheadline, design: .rounded))
+            .foregroundStyle(.secondary)
+            .monospacedDigit()
+        }
+        Spacer()
+        Text(appName)
           .font(.system(.subheadline, design: .rounded))
           .foregroundStyle(.secondary)
-          .monospacedDigit()
       }
-      Spacer()
-      Text(appName)
-        .font(.system(.subheadline, design: .rounded))
-        .foregroundStyle(.secondary)
+      if !modifierFilter.isEmpty {
+        ModifierIndicatorChips(flags: modifierFilter)
+      }
     }
   }
 }
@@ -234,4 +241,36 @@ private struct ShortcutRow: View {
   }
 }
 
+
+private struct ModifierIndicatorChips: View {
+  let flags: NSEvent.ModifierFlags
+
+  private static let chipTable: [(flag: NSEvent.ModifierFlags, symbol: String, color: Color, label: String)] = [
+    (.control,  KeyGlyph.Control.characters, .yellow,    "Control"),
+    (.option,   KeyGlyph.Option.characters,  .yellow,    "Option"),
+    (.shift,    KeyGlyph.Shift.characters,   .blue,      "Shift"),
+    (.command,  KeyGlyph.Command.characters, .blue,      "Command"),
+    (.function, KeyGlyph.Globe.characters,   .secondary, "Function"),
+  ]
+
+  var body: some View {
+    HStack(spacing: 4) {
+      ForEach(Self.chipTable.filter { flags.contains($0.flag) }, id: \.label) { entry in
+        chip(symbol: entry.symbol, color: entry.color, label: entry.label)
+      }
+    }
+  }
+
+  @ViewBuilder
+  private func chip(symbol: String, color: Color, label: String) -> some View {
+    HStack(spacing: 2) {
+      Text(symbol).foregroundStyle(color)
+      Text(label).foregroundStyle(.secondary)
+    }
+    .font(.system(.caption2, design: .monospaced))
+    .padding(.horizontal, 5)
+    .padding(.vertical, 2)
+    .background(color.opacity(0.12), in: RoundedRectangle(cornerRadius: 4))
+  }
+}
 

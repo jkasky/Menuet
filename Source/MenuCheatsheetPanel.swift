@@ -50,6 +50,7 @@ class MenuCheatsheetPanel: NSPanel {
     if !mgr.cheatsheetQuery.isEmpty {
       mgr.cheatsheetClearQuery()
     } else {
+      mgr.cheatsheetUpdateModifierFilter([])
       dismiss()
     }
   }
@@ -57,6 +58,13 @@ class MenuCheatsheetPanel: NSPanel {
   override func resignMain() {
     super.resignMain()
     close()
+  }
+
+  override func flagsChanged(with event: NSEvent) {
+    let mask: NSEvent.ModifierFlags = [.shift, .control, .option, .command, .function]
+    let held = event.modifierFlags.intersection(mask)
+    SearchManager.shared.cheatsheetUpdateModifierFilter(held)
+    super.flagsChanged(with: event)
   }
 
   override func performKeyEquivalent(with event: NSEvent) -> Bool {

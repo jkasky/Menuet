@@ -249,3 +249,141 @@ class CheatsheetSearchTests: XCTestCase {
     XCTAssertNil(mgr.cheatsheetActiveItem)
   }
 }
+
+
+// AX convention: Modifiers' .noCommand bit (rawValue 8) is *set* when the item
+// does NOT use Command. So an item with rawValue 0 has Command; rawValue 8 has
+// no Command. Tests construct items by raw Int matching what AX would emit.
+class CheatsheetModifierFilterTests: XCTestCase {
+
+  private static let hasCommand = 0
+  private static let noCommand = Modifiers.noCommand.rawValue
+  private static let controlNoCmd = Modifiers.control.union(.noCommand).rawValue
+  private static let optionNoCmd = Modifiers.option.union(.noCommand).rawValue
+  private static let shiftNoCmd = Modifiers.shift.union(.noCommand).rawValue
+  private static let controlAndCommand = Modifiers.control.rawValue
+
+  private func makeManager(withItems items: [FakeAXElement], inMenu menuName: String) -> SearchManager {
+    let menuBar = makeMenuBar([makeMenuBarItem(title: menuName, items: items)])
+    let itemsIndexed = buildIndex(menuBar).itemsWithShortcuts()
+    let mgr = SearchManager()
+    mgr.cheatsheetGroups = SearchManager.groupForCheatsheet(itemsIndexed)
+    return mgr
+  }
+
+  // ---------------------------------------------------------------- Modifiers.containsFilter
+
+  func testEmptyFilterMatchesAllModifiers() {
+    XCTAssertTrue(Modifiers().containsFilter([]))
+    XCTAssertTrue(Modifiers.control.union(.noCommand).containsFilter([]))
+    XCTAssertTrue(Modifiers(rawValue: Self.hasCommand).containsFilter([]))
+  }
+
+  func testControlFilterMatchesControlItems() {
+    let flags: NSEvent.ModifierFlags = [.control]
+    XCTAssertTrue(Modifiers.control.union(.noCommand).containsFilter(flags))
+    XCTAssertFalse(Modifiers.noCommand.containsFilter(flags))
+    XCTAssertFalse(Modifiers.control.containsFilter(flags))
+    XCTAssertFalse(Modifiers(rawValue: Self.hasCommand).containsFilter(flags))
+  }
+
+  func testCommandFilterMatchesCommandItems() {
+    let flags: NSEvent.ModifierFlags = [.command]
+    XCTAssertTrue(Modifiers(rawValue: Self.hasCommand).containsFilter(flags))
+    XCTAssertFalse(Modifiers.noCommand.containsFilter(flags))
+    XCTAssertFalse(Modifiers.control.union(.noCommand).containsFilter(flags))
+  }
+
+  func testOptionFilterMatchesOptionItems() {
+    let flags: NSEvent.ModifierFlags = [.option]
+    XCTAssertTrue(Modifiers.option.union(.noCommand).containsFilter(flags))
+    XCTAssertFalse(Modifiers.control.union(.noCommand).containsFilter(flags))
+  }
+
+  func testShiftFilterMatchesShiftItems() {
+    let flags: NSEvent.ModifierFlags = [.shift]
+    XCTAssertTrue(Modifiers.shift.union(.noCommand).containsFilter(flags))
+    XCTAssertFalse(Modifiers.option.union(.noCommand).containsFilter(flags))
+  }
+
+  func testCombinedFilterMatchesItemsWithAllModifiers() {
+    let flags: NSEvent.ModifierFlags = [.control, .command]
+    XCTAssertTrue(Modifiers(rawValue: Self.controlAndCommand).containsFilter(flags))
+    XCTAssertFalse(Modifiers.noCommand.containsFilter(flags))
+    XCTAssertTrue(Modifiers.control.containsFilter(flags))
+    XCTAssertFalse(Modifiers(rawValue: Self.hasCommand).containsFilter(flags))
+  }
+
+  // ---------------------------------------------------------------- SearchManager filteredCheatsheetGroups
+
+  func testFilteredGroupsExcludesNonMatchingItems() {
+    let mgr = makeManager(withItems: [
+      makeItem("Copy", cmdChar: "C", modifiers: Self.controlNoCmd),
+      makeItem("Paste", cmdChar: "V", modifiers: Self.noCommand),
+    ], inMenu: "Edit")
+
+    mgr.cheatsheetUpdateModifierFilter([.control])
+
+    let filtered = mgr.filteredCheatsheetGroups
+
+    XCTAssertEqual(filtered.count, 1)
+    XCTAssertEqual(filtered[0].items.count, 1)
+    XCTAssertEqual(filtered[0].items[0].title, "Copy")
+  }
+
+  func testEmptyFilterReturnsAllGroups() {
+    let mgr = makeManager(withItems: [
+      makeItem("Copy", cmdChar: "C", modifiers: Self.controlNoCmd),
+      makeItem("Paste", cmdChar: "V", modifiers: Self.noCommand),
+    ], inMenu: "Edit")
+
+    mgr.cheatsheetUpdateModifierFilter([])
+
+    let filtered = mgr.filteredCheatsheetGroups
+
+    XCTAssertEqual(filtered.count, 1)
+    XCTAssertEqual(filtered[0].items.count, 2)
+  }
+
+  func testFilterClearingShowsAllItemsAgain() {
+    let mgr = makeManager(withItems: [
+      makeItem("Copy", cmdChar: "C", modifiers: Self.controlNoCmd),
+      makeItem("Paste", cmdChar: "V", modifiers: Self.noCommand),
+    ], inMenu: "Edit")
+
+    mgr.cheatsheetUpdateModifierFilter([.control])
+    XCTAssertEqual(mgr.filteredCheatsheetGroups[0].items.count, 1)
+
+    mgr.cheatsheetUpdateModifierFilter([])
+    XCTAssertEqual(mgr.filteredCheatsheetGroups[0].items.count, 2)
+  }
+
+  func testCheatsheetClearQueryResetsModifierFilter() {
+    let mgr = makeManager(withItems: [
+      makeItem("Copy", cmdChar: "C", modifiers: Self.controlNoCmd),
+    ], inMenu: "Edit")
+
+    mgr.cheatsheetUpdateModifierFilter([.command])
+    mgr.cheatsheetQuery = "co"
+
+    mgr.cheatsheetClearQuery()
+
+    XCTAssertTrue(mgr.cheatsheetQuery.isEmpty)
+    XCTAssertTrue(mgr.cheatsheetModifierFilter.isEmpty)
+  }
+
+  func testCommandFilterExcludesNonCommandItems() {
+    let mgr = makeManager(withItems: [
+      makeItem("Copy", cmdChar: "C", modifiers: Self.hasCommand),
+      makeItem("Paste", cmdChar: "V", modifiers: Self.noCommand),
+    ], inMenu: "Edit")
+
+    mgr.cheatsheetUpdateModifierFilter([.command])
+
+    let filtered = mgr.filteredCheatsheetGroups
+
+    XCTAssertEqual(filtered[0].items.count, 1)
+    XCTAssertEqual(filtered[0].items[0].title, "Copy")
+  }
+}
+
