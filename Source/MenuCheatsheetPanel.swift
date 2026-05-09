@@ -27,13 +27,15 @@ class MenuCheatsheetPanel: NSPanel {
     standardWindowButton(.miniaturizeButton)?.isHidden = true
     standardWindowButton(.zoomButton)?.isHidden = true
 
+    // The NSHostingView delivers SwiftUI events on main; assumeIsolated
+    // bridges the @Sendable closure into our @MainActor methods.
     let hostingView = NSHostingView(
       rootView: view()
         .environment(\.cheatsheetInvoke, CheatsheetInvokeAction { [weak self] command in
-          self?.dismissAndPerform(command)
+          MainActor.assumeIsolated { self?.dismissAndPerform(command) }
         })
         .environment(\.cheatsheetSize, CheatsheetSizeAction { [weak self] height in
-          self?.applyIdealContentHeight(height)
+          MainActor.assumeIsolated { self?.applyIdealContentHeight(height) }
         })
         .ignoresSafeArea()
     )
@@ -158,8 +160,8 @@ class MenuCheatsheetPanel: NSPanel {
 }
 
 
-struct CheatsheetInvokeAction {
-  let perform: (MenuItemCommand) -> Void
+struct CheatsheetInvokeAction: Sendable {
+  let perform: @Sendable (MenuItemCommand) -> Void
 }
 
 private struct CheatsheetInvokeKey: EnvironmentKey {
@@ -174,8 +176,8 @@ extension EnvironmentValues {
 }
 
 
-struct CheatsheetSizeAction {
-  let report: (CGFloat) -> Void
+struct CheatsheetSizeAction: Sendable {
+  let report: @Sendable (CGFloat) -> Void
 }
 
 private struct CheatsheetSizeKey: EnvironmentKey {

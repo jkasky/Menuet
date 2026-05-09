@@ -109,7 +109,7 @@ private struct CheatsheetHeader: View {
 
 
 private struct ContentHeightKey: PreferenceKey {
-  static var defaultValue: CGFloat = 0
+  static var defaultValue: CGFloat { 0 }
   static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
     value = max(value, nextValue())
   }

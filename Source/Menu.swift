@@ -84,25 +84,28 @@ struct KeyGlyph {
   static let F15           = KeyGlyph(0x89, "F15")
   static let Fn            = KeyGlyph(0x96, "fn")
   
-  /**
-   * Holds map of virtual codes to associated KeyGlyph.
-   */
-  private static var codeMap: [Int: KeyGlyph] = [:]
-  
-  /**
-   * Returns KeyGlyph for given virtual code.
-   */
+  /// Map of virtual key codes to glyphs. Built once at type-load time
+  /// from the static constants above; immutable thereafter.
+  private static let codeMap: [Int: KeyGlyph] = {
+    let glyphs: [KeyGlyph] = [
+      .Alt, .Apple, .AppleOutlined, .Blank, .CapsLock, .Checkmark, .Clear,
+      .Command, .ContextMenu, .Control, .ControlISO, .Delete, .DeleteRTL,
+      .Diamond, .Down, .DownDashed, .Eject, .End, .Enter, .Escape, .Globe,
+      .Help, .Home, .Left, .LeftDashed, .LeftQuoteJapanese, .Option,
+      .PageDown, .PageUp, .ParagraphKorean, .Pencil, .Power, .Return,
+      .ReturnNonmarking, .ReturnRTL, .Right, .RightDashed,
+      .RightQuoteJapanese, .Shift, .Space, .Tab, .TabRTL, .Trademark, .Up,
+      .UpDashed, .F1, .F2, .F3, .F4, .F5, .F6, .F7, .F8, .F9, .F10, .F11,
+      .F12, .F13, .F14, .F15, .Fn,
+    ]
+    return Dictionary(uniqueKeysWithValues: glyphs.map { ($0.code, $0) })
+  }()
+
+  /// Returns the KeyGlyph for the given virtual key code, if any.
   static func forCode(_ code: Int) -> KeyGlyph? {
     return codeMap[code]
   }
-  
-  /**
-   * Adds new KeyGlyph to code map.
-   */
-  fileprivate static func mapCode(_ glyph: KeyGlyph) {
-    codeMap[glyph.code] = glyph
-  }
-  
+
   let code: Int
   let characters: String
 
@@ -122,79 +125,6 @@ extension KeyGlyph: CustomStringConvertible {
 extension DefaultStringInterpolation {
   mutating func appendInterpolation(_ value: KeyGlyph) {
     appendInterpolation(value.description)
-  }
-}
-
-
-// Enumerate all the static constants to force initialization so that the
-// lookup by code map is built. If there is a better way to do this in Swift,
-// figure it out.
-func initializeMenuResources() {
-  let glyphs: [KeyGlyph] = [
-    .Alt,
-    .Apple,
-    .AppleOutlined,
-    .Blank,
-    .CapsLock,
-    .Checkmark,
-    .Clear,
-    .Command,
-    .ContextMenu,
-    .Control,
-    .ControlISO,
-    .Delete,
-    .DeleteRTL,
-    .Diamond,
-    .Down,
-    .DownDashed,
-    .Eject,
-    .End,
-    .Enter,
-    .Escape,
-    .Globe,
-    .Help,
-    .Home,
-    .Left,
-    .LeftDashed,
-    .LeftQuoteJapanese,
-    .Option,
-    .PageDown,
-    .PageUp,
-    .ParagraphKorean,
-    .Pencil,
-    .Power,
-    .Return,
-    .ReturnNonmarking,
-    .ReturnRTL,
-    .Right,
-    .RightDashed,
-    .RightQuoteJapanese,
-    .Shift,
-    .Space,
-    .Tab,
-    .TabRTL,
-    .Trademark,
-    .Up,
-    .UpDashed,
-    .F1,
-    .F2,
-    .F3,
-    .F4,
-    .F5,
-    .F6,
-    .F7,
-    .F8,
-    .F9,
-    .F10,
-    .F11,
-    .F12,
-    .F13,
-    .F14,
-    .F15,
-    .Fn,
-  ]
-  for g in glyphs {
-    KeyGlyph.mapCode(g)
   }
 }
 
@@ -288,13 +218,17 @@ struct Modifiers: OptionSet {
 }
 
 
-class MenuItemCommand {
-  
+/// All stored properties are immutable; the optional delegate is only
+/// invoked via `perform()` which is always called on main (AX actions
+/// require main thread). Treat as Sendable so it can flow through
+/// @Sendable closure parameters at SwiftUI environment boundaries.
+final class MenuItemCommand: @unchecked Sendable {
+
   let character: String
   let modifiers: Modifiers
   let stringValue: String
   let delegate: MenuItemDelegate?
-  
+
   init(character: String, modifiers: Modifiers,
        delegate: MenuItemDelegate? = nil) {
     self.character = character
@@ -302,7 +236,7 @@ class MenuItemCommand {
     self.stringValue = modifiers.joinWith(character)
     self.delegate = delegate
   }
-  
+
   func perform() {
     delegate?.press()
   }

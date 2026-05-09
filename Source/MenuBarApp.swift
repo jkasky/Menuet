@@ -10,7 +10,6 @@ class AppState: ObservableObject {
 
   init() {
     UserDefaults.standard.register(defaults: ["requireShortcutToInvoke": true])
-    initializeMenuResources()
 
     // KeyboardShortcuts dispatches the callback on main; assumeIsolated
     // bridges the non-isolated closure into our @MainActor methods.
