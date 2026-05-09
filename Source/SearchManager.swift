@@ -8,28 +8,6 @@ import AppKit
 import Foundation
 
 
-enum SearchEvent: String {
-  case ResultsChanged = "searchResultsChanged"
-
-  var name: Notification.Name {
-    get {
-      return Notification.Name(self.rawValue)
-    }
-  }
-
-  func notification() -> Notification {
-    return Notification(name: Notification.Name(self.rawValue))
-  }
-
-  func observe(_ observer: Any, _ selector: Selector) {
-    NotificationCenter.default.addObserver(
-      observer,
-      selector: selector,
-      name: self.name, object: nil)
-  }
-}
-
-
 class SearchManager: ObservableObject {
 
   @Published var activeItem: MenuItem?
@@ -234,7 +212,6 @@ class SearchManager: ObservableObject {
     } else {
       clear()
     }
-    NotificationCenter.default.post(SearchEvent.ResultsChanged.notification())
   }
   
   /**
