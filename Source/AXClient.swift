@@ -13,6 +13,16 @@ extension AX {
 }
 
 
+// Apple declares `kAXTrustedCheckOptionPrompt` as a global `var` in
+// ApplicationServices' C headers, which strict concurrency flags as
+// shared mutable state. The value is documented stable and used
+// verbatim in every call. Hardcode the string to avoid the diagnostic
+// without losing intent.
+//
+// Reference: HIServices/AXUIElement.h
+private let trustedCheckOptionPromptKey: String = "AXTrustedCheckOptionPrompt"
+
+
 protocol AccessibilityClient {
 
   /**
@@ -49,8 +59,7 @@ class AXClient: AccessibilityClient {
   }
 
   func makeProcessTrusted(withPrompt: Bool=true) -> Bool {
-    let key = kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String
-    let options = [key: withPrompt]
+    let options = [trustedCheckOptionPromptKey: withPrompt]
     return AXIsProcessTrustedWithOptions(options as CFDictionary)
   }
 
