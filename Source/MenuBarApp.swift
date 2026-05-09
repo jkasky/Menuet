@@ -52,8 +52,8 @@ class AppState: ObservableObject {
   func showCheatsheetPanel() {
     // Walk first, then activate, so the target app's menu items aren't
     // disabled in response to resigning key/first-responder.
-    SearchManager.shared.activate()
-    SearchManager.shared.loadCheatsheetGroups()
+    MenuIndexProvider.shared.refresh()
+    CheatsheetSession.shared.load()
     activate()
     if cheatsheetPanel == nil {
       cheatsheetPanel = MenuCheatsheetPanel(
@@ -61,13 +61,14 @@ class AppState: ObservableObject {
       ) {
         MenuCheatsheetView()
           .environmentObject(self)
-          .environmentObject(SearchManager.shared)
+          .environmentObject(CheatsheetSession.shared)
+          .environmentObject(MenuIndexProvider.shared)
       }
     }
     cheatsheetPanel?.positionAtTop()
     cheatsheetPanel?.makeKeyAndOrderFront(nil)
     DispatchQueue.main.async {
-      SearchManager.shared.cheatsheetResetTrigger.toggle()
+      CheatsheetSession.shared.resetTrigger.toggle()
     }
   }
 

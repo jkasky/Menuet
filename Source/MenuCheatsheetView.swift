@@ -2,7 +2,8 @@ import SwiftUI
 
 
 struct MenuCheatsheetView: View {
-  @EnvironmentObject var searchManager: SearchManager
+  @EnvironmentObject var cheatsheet: CheatsheetSession
+  @EnvironmentObject var menus: MenuIndexProvider
   @Environment(\.cheatsheetSize) private var sizeAction
 
   private static let scrollTopID = "cheatsheet.top"
@@ -11,11 +12,11 @@ struct MenuCheatsheetView: View {
     PanelBackground {
       VStack(alignment: .leading, spacing: 0) {
         CheatsheetHeader(
-          appIcon: searchManager.currentApp?.icon,
-          appName: searchManager.currentApp?.localizedName ?? "Keyboard Shortcuts",
-          query: searchManager.cheatsheetQuery,
-          matchCount: searchManager.cheatsheetMatchIDs.count,
-          modifierFilter: searchManager.cheatsheetModifierFilter
+          appIcon: menus.currentApp?.icon,
+          appName: menus.currentApp?.localizedName ?? "Keyboard Shortcuts",
+          query: cheatsheet.query,
+          matchCount: cheatsheet.matchIDs.count,
+          modifierFilter: cheatsheet.modifierFilter
         )
           .padding(.horizontal, 16)
           .padding(.vertical, 8)
@@ -27,7 +28,7 @@ struct MenuCheatsheetView: View {
             ScrollView {
               Color.clear.frame(height: 0).id(Self.scrollTopID)
               MasonryColumns(
-                groups: searchManager.filteredCheatsheetGroups,
+                groups: cheatsheet.filteredGroups,
                 availableWidth: geo.size.width - 40
               )
               .padding(20)
@@ -40,10 +41,10 @@ struct MenuCheatsheetView: View {
                 }
               )
             }
-            .onChange(of: searchManager.cheatsheetResetTrigger) { _, _ in
+            .onChange(of: cheatsheet.resetTrigger) { _, _ in
               proxy.scrollTo(Self.scrollTopID, anchor: .top)
             }
-            .onChange(of: searchManager.cheatsheetActiveItem?.id) { _, newID in
+            .onChange(of: cheatsheet.activeItem?.id) { _, newID in
               guard let id = newID else { return }
               withAnimation(.easeOut(duration: 0.15)) {
                 proxy.scrollTo(id, anchor: .center)
@@ -185,14 +186,14 @@ private struct CheatsheetSection: View {
 private struct ShortcutRow: View {
   let item: MenuItem
 
-  @EnvironmentObject var searchManager: SearchManager
+  @EnvironmentObject var cheatsheet: CheatsheetSession
   @Environment(\.cheatsheetInvoke) private var invoke
   @State private var hovering = false
 
   var body: some View {
-    let query = searchManager.cheatsheetQuery
-    let isActive = searchManager.cheatsheetActiveItem?.id == item.id
-    let isMatch = query.isEmpty || searchManager.cheatsheetMatchIDs.contains(item.id)
+    let query = cheatsheet.query
+    let isActive = cheatsheet.activeItem?.id == item.id
+    let isMatch = query.isEmpty || cheatsheet.matchIDs.contains(item.id)
     let dimmed = !query.isEmpty && !isMatch
 
     Button {
@@ -230,7 +231,7 @@ private struct ShortcutRow: View {
   }
 
   private var rowBackground: Color {
-    let isActive = searchManager.cheatsheetActiveItem?.id == item.id
+    let isActive = cheatsheet.activeItem?.id == item.id
     if isActive { return Color.accentColor }
     if hovering { return Color.primary.opacity(0.08) }
     return Color.clear

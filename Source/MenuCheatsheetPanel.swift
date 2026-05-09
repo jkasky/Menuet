@@ -46,11 +46,11 @@ class MenuCheatsheetPanel: NSPanel {
   override var canBecomeMain: Bool { true }
 
   override func cancelOperation(_ sender: Any?) {
-    let mgr = SearchManager.shared
-    if !mgr.cheatsheetQuery.isEmpty {
-      mgr.cheatsheetClearQuery()
+    let cheatsheet = CheatsheetSession.shared
+    if !cheatsheet.query.isEmpty {
+      cheatsheet.clearQuery()
     } else {
-      mgr.cheatsheetUpdateModifierFilter([])
+      cheatsheet.updateModifierFilter([])
       dismiss()
     }
   }
@@ -63,12 +63,12 @@ class MenuCheatsheetPanel: NSPanel {
   override func flagsChanged(with event: NSEvent) {
     let mask: NSEvent.ModifierFlags = [.shift, .control, .option, .command, .function]
     let held = event.modifierFlags.intersection(mask)
-    SearchManager.shared.cheatsheetUpdateModifierFilter(held)
+    CheatsheetSession.shared.updateModifierFilter(held)
     super.flagsChanged(with: event)
   }
 
   override func performKeyEquivalent(with event: NSEvent) -> Bool {
-    if let item = SearchManager.shared.cheatsheetItem(matching: event) {
+    if let item = CheatsheetSession.shared.item(matching: event) {
       dismissAndPerform(item.command)
       return true
     }
@@ -76,17 +76,17 @@ class MenuCheatsheetPanel: NSPanel {
   }
 
   override func keyDown(with event: NSEvent) {
-    let mgr = SearchManager.shared
+    let cheatsheet = CheatsheetSession.shared
 
     // Tab → cycle to next match (loops at end).
     if Int(event.keyCode) == kVK_Tab {
-      mgr.cheatsheetSelectNextMatch()
+      cheatsheet.selectNextMatch()
       return
     }
 
     // Return / numpad Enter → invoke highlighted item.
     if Int(event.keyCode) == kVK_Return || Int(event.keyCode) == kVK_ANSI_KeypadEnter {
-      if let item = mgr.cheatsheetActiveItem {
+      if let item = cheatsheet.activeItem {
         dismissAndPerform(item.command)
       }
       return
@@ -94,7 +94,7 @@ class MenuCheatsheetPanel: NSPanel {
 
     // Backspace → delete one character from query.
     if Int(event.keyCode) == kVK_Delete {
-      mgr.cheatsheetBackspace()
+      cheatsheet.backspace()
       return
     }
 
@@ -105,7 +105,7 @@ class MenuCheatsheetPanel: NSPanel {
        let chars = event.charactersIgnoringModifiers,
        !chars.isEmpty,
        chars.unicodeScalars.allSatisfy({ $0.value >= 0x20 && $0.value != 0x7F }) {
-      for c in chars { mgr.cheatsheetAppend(c) }
+      for c in chars { cheatsheet.append(c) }
       return
     }
 
@@ -114,7 +114,7 @@ class MenuCheatsheetPanel: NSPanel {
 
   private func dismiss() {
     resignMain()
-    SearchManager.shared.currentApp?.activate(options: [.activateAllWindows])
+    MenuIndexProvider.shared.currentApp?.activate(options: [.activateAllWindows])
   }
 
   func dismissAndPerform(_ command: MenuItemCommand) {

@@ -94,7 +94,7 @@ class CheatsheetGroupingTests: XCTestCase {
     ])
     let items = buildIndex(menuBar).itemsWithShortcuts()
 
-    let groups = SearchManager.groupForCheatsheet(items)
+    let groups = CheatsheetSession.groupForCheatsheet(items)
 
     XCTAssertEqual(groups.map(\.menu), ["File", "Edit"])
     XCTAssertEqual(groups[0].items.map(\.title), ["New", "Save"])
@@ -110,20 +110,20 @@ class CheatsheetGroupingTests: XCTestCase {
     // should still drop them.
     let items = buildIndex(menuBar, indexAppleMenu: true).itemsWithShortcuts()
 
-    let groups = SearchManager.groupForCheatsheet(items)
+    let groups = CheatsheetSession.groupForCheatsheet(items)
 
     XCTAssertEqual(groups.map(\.menu), ["File"])
   }
 
   func testEmptyInputProducesNoGroups() {
-    XCTAssertTrue(SearchManager.groupForCheatsheet([]).isEmpty)
+    XCTAssertTrue(CheatsheetSession.groupForCheatsheet([]).isEmpty)
   }
 }
 
 
 class CheatsheetSearchTests: XCTestCase {
 
-  private func makeManager() -> SearchManager {
+  private func makeManager() -> CheatsheetSession {
     let menuBar = makeMenuBar([
       makeMenuBarItem(title: "File", items: [
         makeItem("New",       cmdChar: "N"),
@@ -136,35 +136,35 @@ class CheatsheetSearchTests: XCTestCase {
       ]),
     ])
     let items = buildIndex(menuBar).itemsWithShortcuts()
-    let mgr = SearchManager()
-    mgr.cheatsheetGroups = SearchManager.groupForCheatsheet(items)
+    let mgr = CheatsheetSession()
+    mgr.groups = CheatsheetSession.groupForCheatsheet(items)
     return mgr
   }
 
   func testTypingHighlightsBestMatch() {
     let mgr = makeManager()
 
-    mgr.cheatsheetAppend("c")
+    mgr.append("c")
 
-    XCTAssertEqual(mgr.cheatsheetQuery, "c")
-    XCTAssertEqual(mgr.cheatsheetActiveItem?.title, "Copy")
-    XCTAssertTrue(mgr.cheatsheetMatchIDs.contains(mgr.cheatsheetActiveItem!.id))
+    XCTAssertEqual(mgr.query, "c")
+    XCTAssertEqual(mgr.activeItem?.title, "Copy")
+    XCTAssertTrue(mgr.matchIDs.contains(mgr.activeItem!.id))
   }
 
   func testTabCyclesAndLoops() {
     let mgr = makeManager()
 
-    mgr.cheatsheetAppend("n")  // Matches "New" and "New Window"
-    let firstID = mgr.cheatsheetActiveItem?.id
+    mgr.append("n")  // Matches "New" and "New Window"
+    let firstID = mgr.activeItem?.id
     XCTAssertNotNil(firstID)
 
-    mgr.cheatsheetSelectNextMatch()
-    let secondID = mgr.cheatsheetActiveItem?.id
+    mgr.selectNextMatch()
+    let secondID = mgr.activeItem?.id
     XCTAssertNotNil(secondID)
     XCTAssertNotEqual(firstID, secondID)
 
-    mgr.cheatsheetSelectNextMatch()
-    XCTAssertEqual(mgr.cheatsheetActiveItem?.id, firstID, "Tab past end should loop to first")
+    mgr.selectNextMatch()
+    XCTAssertEqual(mgr.activeItem?.id, firstID, "Tab past end should loop to first")
   }
 
   func testTabFollowsDisplayOrderNotScore() {
@@ -172,13 +172,13 @@ class CheatsheetSearchTests: XCTestCase {
     // "sa" than "Paste" (Edit menu, displayed fifth) — but Tab should
     // still walk top-to-bottom through both in display order.
     let mgr = makeManager()
-    mgr.cheatsheetAppend("a")  // Matches Save, Paste
+    mgr.append("a")  // Matches Save, Paste
 
-    let displayOrder = mgr.cheatsheetGroups
+    let displayOrder = mgr.groups
       .flatMap { $0.items }
-      .filter { mgr.cheatsheetMatchIDs.contains($0.id) }
+      .filter { mgr.matchIDs.contains($0.id) }
       .map(\.id)
-    let startIndex = displayOrder.firstIndex(of: mgr.cheatsheetActiveItem!.id)!
+    let startIndex = displayOrder.firstIndex(of: mgr.activeItem!.id)!
     let expected = (0..<displayOrder.count).map { displayOrder[(startIndex + $0) % displayOrder.count] }
 
     let visited = sequenceOf(mgr, count: displayOrder.count)
@@ -187,66 +187,66 @@ class CheatsheetSearchTests: XCTestCase {
 
   // Returns the sequence of active-item IDs across `count` Tab presses,
   // starting from whatever is currently active.
-  private func sequenceOf(_ mgr: SearchManager, count: Int) -> [UUID] {
+  private func sequenceOf(_ mgr: CheatsheetSession, count: Int) -> [UUID] {
     var ids: [UUID] = []
-    if let id = mgr.cheatsheetActiveItem?.id { ids.append(id) }
+    if let id = mgr.activeItem?.id { ids.append(id) }
     for _ in 1..<count {
-      mgr.cheatsheetSelectNextMatch()
-      if let id = mgr.cheatsheetActiveItem?.id { ids.append(id) }
+      mgr.selectNextMatch()
+      if let id = mgr.activeItem?.id { ids.append(id) }
     }
     return ids
   }
 
   func testClearQueryResetsState() {
     let mgr = makeManager()
-    mgr.cheatsheetAppend("c")
-    XCTAssertNotNil(mgr.cheatsheetActiveItem)
+    mgr.append("c")
+    XCTAssertNotNil(mgr.activeItem)
 
-    mgr.cheatsheetClearQuery()
+    mgr.clearQuery()
 
-    XCTAssertEqual(mgr.cheatsheetQuery, "")
-    XCTAssertNil(mgr.cheatsheetActiveItem)
-    XCTAssertTrue(mgr.cheatsheetMatchIDs.isEmpty)
+    XCTAssertEqual(mgr.query, "")
+    XCTAssertNil(mgr.activeItem)
+    XCTAssertTrue(mgr.matchIDs.isEmpty)
   }
 
   func testBackspaceOnEmptyIsNoop() {
     let mgr = makeManager()
 
-    mgr.cheatsheetBackspace()
+    mgr.backspace()
 
-    XCTAssertEqual(mgr.cheatsheetQuery, "")
-    XCTAssertNil(mgr.cheatsheetActiveItem)
+    XCTAssertEqual(mgr.query, "")
+    XCTAssertNil(mgr.activeItem)
   }
 
   func testBackspaceShortensQueryAndRecomputes() {
     let mgr = makeManager()
-    mgr.cheatsheetAppend("c")
-    mgr.cheatsheetAppend("o")
-    mgr.cheatsheetAppend("z")  // No item matches "coz"
-    XCTAssertNil(mgr.cheatsheetActiveItem)
+    mgr.append("c")
+    mgr.append("o")
+    mgr.append("z")  // No item matches "coz"
+    XCTAssertNil(mgr.activeItem)
 
-    mgr.cheatsheetBackspace()  // Back to "co" → matches "Copy"
+    mgr.backspace()  // Back to "co" → matches "Copy"
 
-    XCTAssertEqual(mgr.cheatsheetQuery, "co")
-    XCTAssertEqual(mgr.cheatsheetActiveItem?.title, "Copy")
+    XCTAssertEqual(mgr.query, "co")
+    XCTAssertEqual(mgr.activeItem?.title, "Copy")
   }
 
   func testNoMatchesLeavesActiveNil() {
     let mgr = makeManager()
 
-    mgr.cheatsheetAppend("z")
+    mgr.append("z")
 
-    XCTAssertNil(mgr.cheatsheetActiveItem)
-    XCTAssertTrue(mgr.cheatsheetMatchIDs.isEmpty)
+    XCTAssertNil(mgr.activeItem)
+    XCTAssertTrue(mgr.matchIDs.isEmpty)
   }
 
   func testSelectNextWithNoMatchesIsNoop() {
     let mgr = makeManager()
-    mgr.cheatsheetAppend("z")
+    mgr.append("z")
 
-    mgr.cheatsheetSelectNextMatch()
+    mgr.selectNextMatch()
 
-    XCTAssertNil(mgr.cheatsheetActiveItem)
+    XCTAssertNil(mgr.activeItem)
   }
 }
 
@@ -263,11 +263,11 @@ class CheatsheetModifierFilterTests: XCTestCase {
   private static let shiftNoCmd = Modifiers.shift.union(.noCommand).rawValue
   private static let controlAndCommand = Modifiers.control.rawValue
 
-  private func makeManager(withItems items: [FakeAXElement], inMenu menuName: String) -> SearchManager {
+  private func makeManager(withItems items: [FakeAXElement], inMenu menuName: String) -> CheatsheetSession {
     let menuBar = makeMenuBar([makeMenuBarItem(title: menuName, items: items)])
     let itemsIndexed = buildIndex(menuBar).itemsWithShortcuts()
-    let mgr = SearchManager()
-    mgr.cheatsheetGroups = SearchManager.groupForCheatsheet(itemsIndexed)
+    let mgr = CheatsheetSession()
+    mgr.groups = CheatsheetSession.groupForCheatsheet(itemsIndexed)
     return mgr
   }
 
@@ -314,7 +314,7 @@ class CheatsheetModifierFilterTests: XCTestCase {
     XCTAssertFalse(Modifiers(rawValue: Self.hasCommand).containsFilter(flags))
   }
 
-  // ---------------------------------------------------------------- SearchManager filteredCheatsheetGroups
+  // ---------------------------------------------------------------- CheatsheetSession filteredGroups
 
   func testFilteredGroupsExcludesNonMatchingItems() {
     let mgr = makeManager(withItems: [
@@ -322,9 +322,9 @@ class CheatsheetModifierFilterTests: XCTestCase {
       makeItem("Paste", cmdChar: "V", modifiers: Self.noCommand),
     ], inMenu: "Edit")
 
-    mgr.cheatsheetUpdateModifierFilter([.control])
+    mgr.updateModifierFilter([.control])
 
-    let filtered = mgr.filteredCheatsheetGroups
+    let filtered = mgr.filteredGroups
 
     XCTAssertEqual(filtered.count, 1)
     XCTAssertEqual(filtered[0].items.count, 1)
@@ -337,9 +337,9 @@ class CheatsheetModifierFilterTests: XCTestCase {
       makeItem("Paste", cmdChar: "V", modifiers: Self.noCommand),
     ], inMenu: "Edit")
 
-    mgr.cheatsheetUpdateModifierFilter([])
+    mgr.updateModifierFilter([])
 
-    let filtered = mgr.filteredCheatsheetGroups
+    let filtered = mgr.filteredGroups
 
     XCTAssertEqual(filtered.count, 1)
     XCTAssertEqual(filtered[0].items.count, 2)
@@ -351,11 +351,11 @@ class CheatsheetModifierFilterTests: XCTestCase {
       makeItem("Paste", cmdChar: "V", modifiers: Self.noCommand),
     ], inMenu: "Edit")
 
-    mgr.cheatsheetUpdateModifierFilter([.control])
-    XCTAssertEqual(mgr.filteredCheatsheetGroups[0].items.count, 1)
+    mgr.updateModifierFilter([.control])
+    XCTAssertEqual(mgr.filteredGroups[0].items.count, 1)
 
-    mgr.cheatsheetUpdateModifierFilter([])
-    XCTAssertEqual(mgr.filteredCheatsheetGroups[0].items.count, 2)
+    mgr.updateModifierFilter([])
+    XCTAssertEqual(mgr.filteredGroups[0].items.count, 2)
   }
 
   func testCheatsheetClearQueryResetsModifierFilter() {
@@ -363,13 +363,13 @@ class CheatsheetModifierFilterTests: XCTestCase {
       makeItem("Copy", cmdChar: "C", modifiers: Self.controlNoCmd),
     ], inMenu: "Edit")
 
-    mgr.cheatsheetUpdateModifierFilter([.command])
-    mgr.cheatsheetQuery = "co"
+    mgr.updateModifierFilter([.command])
+    mgr.query = "co"
 
-    mgr.cheatsheetClearQuery()
+    mgr.clearQuery()
 
-    XCTAssertTrue(mgr.cheatsheetQuery.isEmpty)
-    XCTAssertTrue(mgr.cheatsheetModifierFilter.isEmpty)
+    XCTAssertTrue(mgr.query.isEmpty)
+    XCTAssertTrue(mgr.modifierFilter.isEmpty)
   }
 
   func testCommandFilterExcludesNonCommandItems() {
@@ -378,9 +378,9 @@ class CheatsheetModifierFilterTests: XCTestCase {
       makeItem("Paste", cmdChar: "V", modifiers: Self.noCommand),
     ], inMenu: "Edit")
 
-    mgr.cheatsheetUpdateModifierFilter([.command])
+    mgr.updateModifierFilter([.command])
 
-    let filtered = mgr.filteredCheatsheetGroups
+    let filtered = mgr.filteredGroups
 
     XCTAssertEqual(filtered[0].items.count, 1)
     XCTAssertEqual(filtered[0].items[0].title, "Copy")
