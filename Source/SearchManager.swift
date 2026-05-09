@@ -5,6 +5,7 @@
 //
 
 import AppKit
+import Combine
 import Foundation
 
 
@@ -35,28 +36,25 @@ class SearchManager: ObservableObject {
   }
 
   static let shared = SearchManager()
-  
-  private var axClient: AX.Client
-  private var workspace: NSWorkspace
-  
-  private var currentIndex: MenuIndex
+
+  private let menus: MenuIndexProvider
+
+  private var currentIndex: MenuIndex { menus.index }
   private var selectedResult: Int
-  
+
   public var totalResults: Int {
     get {
       return searchResults.count
     }
   }
 
-  init(axClient: AX.Client = AXClient()) {
-    self.axClient = axClient
-    workspace = NSWorkspace.shared
+  init(menus: MenuIndexProvider = MenuIndexProvider()) {
+    self.menus = menus
     searchResults = []
     query = ""
     selectedResult = -1
-    currentApp = nil
-    currentIndex = MenuIndex()
     activeItem = nil
+    menus.$currentApp.assign(to: &$currentApp)
   }
   
   func hasResults() -> Bool {
@@ -92,14 +90,7 @@ class SearchManager: ObservableObject {
   }
 
   func activate() {
-    guard let menuBarApp = workspace.menuBarOwningApplication else {
-      return
-    }
-    currentApp = menuBarApp
-    let axApp = axClient.createApplication(application: menuBarApp)
-    let walker = AXMenuWalker(application: axApp)
-    currentIndex = MenuIndex()
-    walker.walk(visitor: AXMenuIndexer(index: currentIndex))
+    menus.refresh()
     cheatsheetGroups = []
   }
 
@@ -238,10 +229,7 @@ class SearchManager: ObservableObject {
     clear()
     cheatsheetClearQuery()
     cheatsheetGroups = []
-    currentApp = nil
-    if currentIndex.size > 0 {
-      currentIndex = MenuIndex()
-    }
+    menus.clear()
   }
 }
 
