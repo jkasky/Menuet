@@ -2,6 +2,7 @@ import KeyboardShortcuts
 import SwiftUI
 
 
+@MainActor
 class AppState: ObservableObject {
   private var application: NSApplication = NSApplication.shared
   private var searchPanel: MenuSearchPanel?
@@ -11,12 +12,14 @@ class AppState: ObservableObject {
     UserDefaults.standard.register(defaults: ["requireShortcutToInvoke": true])
     initializeMenuResources()
 
+    // KeyboardShortcuts dispatches the callback on main; assumeIsolated
+    // bridges the non-isolated closure into our @MainActor methods.
     KeyboardShortcuts.onKeyUp(for: .menuSearchShortcut) {
-      self.showSearchPanel()
+      MainActor.assumeIsolated { self.showSearchPanel() }
     }
 
     KeyboardShortcuts.onKeyUp(for: .cheatsheetShortcut) {
-      self.showCheatsheetPanel()
+      MainActor.assumeIsolated { self.showCheatsheetPanel() }
     }
 
     makeProcessTrusted()

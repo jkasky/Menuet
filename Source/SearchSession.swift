@@ -10,6 +10,7 @@ import Foundation
 /// State for the menu-search panel: typed query, fuzzy results, current
 /// selection, and the keystroke pulses that drive UI feedback. Reads its
 /// source data from a shared `MenuIndexProvider`.
+@MainActor
 class SearchSession: ObservableObject {
 
   static let shared = SearchSession()

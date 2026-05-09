@@ -10,6 +10,7 @@ import Foundation
 /// Walks the AX menu tree of the frontmost app and exposes the resulting
 /// `MenuIndex`. This is the single source of truth for "what menu does the
 /// target app have right now"; sessions read from it.
+@MainActor
 final class MenuIndexProvider: ObservableObject {
 
   static let shared = MenuIndexProvider()

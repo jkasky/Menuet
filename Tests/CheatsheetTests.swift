@@ -79,6 +79,7 @@ class MenuIndexShortcutsTests: XCTestCase {
 }
 
 
+@MainActor
 class CheatsheetGroupingTests: XCTestCase {
 
   func testGroupsByTopLevelMenuPreservingOrder() {
@@ -121,6 +122,7 @@ class CheatsheetGroupingTests: XCTestCase {
 }
 
 
+@MainActor
 class CheatsheetSearchTests: XCTestCase {
 
   private func makeManager() -> CheatsheetSession {
@@ -254,6 +256,7 @@ class CheatsheetSearchTests: XCTestCase {
 // AX convention: Modifiers' .noCommand bit (rawValue 8) is *set* when the item
 // does NOT use Command. So an item with rawValue 0 has Command; rawValue 8 has
 // no Command. Tests construct items by raw Int matching what AX would emit.
+@MainActor
 class CheatsheetModifierFilterTests: XCTestCase {
 
   private static let hasCommand = 0

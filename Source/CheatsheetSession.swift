@@ -11,6 +11,7 @@ import Foundation
 /// displayed, the typed filter query, the modifier-key filter, and which
 /// item is currently highlighted. Reads its source data from a shared
 /// `MenuIndexProvider`.
+@MainActor
 final class CheatsheetSession: ObservableObject {
 
   static let shared = CheatsheetSession()
