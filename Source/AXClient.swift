@@ -4,6 +4,7 @@
 //
 //
 
+import ApplicationServices
 import Cocoa
 import Foundation
 
@@ -53,6 +54,30 @@ protocol AccessibilityClient {
 
 
 class AXClient: AccessibilityClient {
+
+  /// Per-call AX messaging timeout in seconds. Applied to the system-wide
+  /// accessibility object, which per Apple's docs scopes the timeout
+  /// globally for this process — every subsequent AX query (including
+  /// the menu walk) gets bounded.
+  ///
+  /// Setting it on a non-system-wide element scopes only to that element
+  /// and does NOT cascade to descendants, so the system-wide call is the
+  /// only single-shot way to bound the walk.
+  ///
+  /// Override at runtime via `defaults write app.menuet axMessagingTimeout -float 1.0`.
+  /// Values <= 0 fall back to the hardcoded default (0 has special
+  /// meaning to AX: "use the global default", which we don't want).
+  static let defaultMessagingTimeout: Float = 0.5
+
+  static var configuredMessagingTimeout: Float {
+    let stored = UserDefaults.standard.float(forKey: "axMessagingTimeout")
+    return stored > 0 ? stored : defaultMessagingTimeout
+  }
+
+  init(messagingTimeout: Float = AXClient.configuredMessagingTimeout) {
+    let systemWide = AXUIElementCreateSystemWide()
+    _ = AXUIElementSetMessagingTimeout(systemWide, messagingTimeout)
+  }
 
   func isProcessTrusted() -> Bool {
     return AXIsProcessTrusted()
