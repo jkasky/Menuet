@@ -1,43 +1,36 @@
 //
-//  SearchManager.swift
+//  SearchSession.swift
 //  Menuet
-//
 //
 
 import AppKit
-import Combine
 import Foundation
 
 
-class SearchManager: ObservableObject {
+/// State for the menu-search panel: typed query, fuzzy results, current
+/// selection, and the keystroke pulses that drive UI feedback. Reads its
+/// source data from a shared `MenuIndexProvider`.
+class SearchSession: ObservableObject {
+
+  static let shared = SearchSession()
 
   @Published var activeItem: MenuItem?
-  @Published var currentApp: NSRunningApplication?
   @Published var searchResults: [MenuItem]
   @Published var query: String
   @Published var focusTrigger: Bool = false
   @Published var blockedReturnPulse: Int = 0
 
-  static let shared = SearchManager()
-
   private let menus: MenuIndexProvider
-
-  private var currentIndex: MenuIndex { menus.index }
   private var selectedResult: Int
 
-  public var totalResults: Int {
-    get {
-      return searchResults.count
-    }
-  }
+  public var totalResults: Int { searchResults.count }
 
-  init(menus: MenuIndexProvider = MenuIndexProvider()) {
+  init(menus: MenuIndexProvider = .shared) {
     self.menus = menus
     searchResults = []
     query = ""
     selectedResult = -1
     activeItem = nil
-    menus.$currentApp.assign(to: &$currentApp)
   }
 
   func hasResults() -> Bool {
@@ -72,23 +65,18 @@ class SearchManager: ObservableObject {
     activeItem = searchResults[selectedResult]
   }
 
-  func activate() {
-    menus.refresh()
-  }
-
   func search(_ query: String) {
     selectedResult = -1
     activeItem = nil
     if query.count > 0 {
-      searchResults = currentIndex.find(query: query)
+      searchResults = menus.index.find(query: query)
     } else {
       clear()
     }
   }
 
-  /**
-   * Clears the search query, results, selected result, and any active item.
-   */
+  /// Clears the typed query, results, and the highlighted item. The
+  /// underlying menu index (held by `MenuIndexProvider`) is untouched.
   func clear() {
     query = ""
     searchResults.removeAll()

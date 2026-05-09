@@ -23,7 +23,7 @@ struct PendingSearchAction: Equatable {
 }
 
 struct MenuSearchView: View {
-  @EnvironmentObject var searchManager: SearchManager
+  @EnvironmentObject var search: SearchSession
   // .onKeyPress fires inside a SwiftUI view update, so mutating @Published
   // state directly there triggers "Publishing changes from within view
   // updates is not allowed". Instead we record the intent in @State and
@@ -38,7 +38,7 @@ struct MenuSearchView: View {
         SearchView()
           .padding(.horizontal, 16)
           .padding(.vertical, 8)
-        if !searchManager.searchResults.isEmpty {
+        if !search.searchResults.isEmpty {
           Divider().opacity(0.4)
           ResultsView()
           Divider().opacity(0.4)
@@ -88,14 +88,14 @@ struct MenuSearchView: View {
   private func performAction(_ action: SearchKeyAction) {
     switch action {
     case .next:
-      searchManager.selectNext()
+      search.selectNext()
     case .previous:
-      searchManager.selectPrevious()
+      search.selectPrevious()
     case .invoke:
-      guard let item = searchManager.activeItem else { return }
+      guard let item = search.activeItem else { return }
       let hasShortcut = !item.command.stringValue.isEmpty
       if hasShortcut && UserDefaults.standard.requireShortcutToInvoke {
-        searchManager.blockedReturnPulse += 1
+        search.blockedReturnPulse += 1
       } else if let panel = NSApp.keyWindow as? MenuSearchPanel {
         panel.dismissAndPerform(item.command)
       }
@@ -105,19 +105,21 @@ struct MenuSearchView: View {
 
 struct MenuSearchView_Previews: PreviewProvider {
     static var previews: some View {
-      let searchManager = SearchManager()
-      searchManager.query = "About"
-      searchManager.activate()
-      return MenuSearchView().environmentObject(searchManager)
+      let menus = MenuIndexProvider()
+      let search = SearchSession(menus: menus)
+      search.query = "About"
+      return MenuSearchView()
+        .environmentObject(search)
+        .environmentObject(menus)
     }
 }
 
 struct AppIcon: View {
-  @EnvironmentObject var searchManager: SearchManager
+  @EnvironmentObject var menus: MenuIndexProvider
   private var placeholder = Image(systemName: "app")
 
   var body: some View {
-    if let icon = searchManager.currentApp?.icon {
+    if let icon = menus.currentApp?.icon {
       Image(nsImage: icon)
         .resizable()
         .interpolation(.high)
@@ -130,46 +132,46 @@ struct AppIcon: View {
 }
 
 struct SearchView: View {
-  @EnvironmentObject var searchManager: SearchManager
+  @EnvironmentObject var search: SearchSession
   @FocusState private var isFocused: Bool
 
   var body: some View {
     HStack(spacing: 10) {
       AppIcon()
-      TextField("Menu Search", text: $searchManager.query)
+      TextField("Menu Search", text: $search.query)
         .font(.system(.title2, design: .rounded))
         .textFieldStyle(.plain)
         .focused($isFocused)
-      if !searchManager.query.isEmpty {
-        Text("\(searchManager.searchResults.count) \(searchManager.searchResults.count == 1 ? "match" : "matches")")
+      if !search.query.isEmpty {
+        Text("\(search.searchResults.count) \(search.searchResults.count == 1 ? "match" : "matches")")
           .font(.system(.subheadline, design: .rounded))
           .foregroundStyle(.secondary)
           .monospacedDigit()
       }
     }
-    .onChange(of: searchManager.focusTrigger) {
+    .onChange(of: search.focusTrigger) {
       isFocused = true
     }
     .onReceive(
-      searchManager.$query.debounce(for: .seconds(0.4), scheduler: DispatchQueue.main)
+      search.$query.debounce(for: .seconds(0.4), scheduler: DispatchQueue.main)
     ) { q in
-      searchManager.search(q)
+      search.search(q)
     }
   }
 }
 
 
 struct ResultsView: View {
-  @EnvironmentObject var searchManager: SearchManager
+  @EnvironmentObject var search: SearchSession
 
   var body: some View {
     ScrollViewReader { proxy in
       ScrollView {
         VStack(alignment: .leading, spacing: 2) {
-          ForEach($searchManager.searchResults.indices, id: \.self) { index in
-            ResultView(result: $searchManager.searchResults[index])
+          ForEach($search.searchResults.indices, id: \.self) { index in
+            ResultView(result: $search.searchResults[index])
               .frame(maxWidth: .infinity, alignment: .leading)
-              .id(searchManager.searchResults[index].id)
+              .id(search.searchResults[index].id)
           }
         }
         .frame(
@@ -183,7 +185,7 @@ struct ResultsView: View {
         .padding(.vertical, 8)
       }
       .frame(maxHeight: 500.0)
-      .onReceive(searchManager.$activeItem) { activeItem in
+      .onReceive(search.$activeItem) { activeItem in
         if let item = activeItem {
           proxy.scrollTo(item.id)
         }
@@ -193,18 +195,18 @@ struct ResultsView: View {
 }
 
 struct ResultView: View {
-  @EnvironmentObject var searchManager: SearchManager
+  @EnvironmentObject var search: SearchSession
   @Binding var result: MenuItem
   @State private var hovering: Bool = false
   @State private var chipScale: CGFloat = 1.0
   @AppStorage("requireShortcutToInvoke") private var requireShortcutToInvoke = true
 
-  private var isActive: Bool { searchManager.activeItem == result }
+  private var isActive: Bool { search.activeItem == result }
 
   var body: some View {
     HStack(alignment: .center, spacing: 10) {
       VStack(alignment: .leading, spacing: 1) {
-        Text(fuzzyHighlight(result.title, query: searchManager.query))
+        Text(fuzzyHighlight(result.title, query: search.query))
           .font(.system(.body))
           .foregroundStyle(isActive ? AnyShapeStyle(Color.white) : AnyShapeStyle(.primary))
           .lineLimit(1)
@@ -222,7 +224,7 @@ struct ResultView: View {
         )
         .scaleEffect(chipScale)
         .animation(.interpolatingSpring(stiffness: 400, damping: 12), value: chipScale)
-        .onChange(of: searchManager.blockedReturnPulse) {
+        .onChange(of: search.blockedReturnPulse) {
           guard isActive else { return }
           chipScale = 1.2
           DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
@@ -250,11 +252,11 @@ struct ResultView: View {
 
 
 struct FooterHintView: View {
-  @EnvironmentObject var searchManager: SearchManager
+  @EnvironmentObject var search: SearchSession
   @AppStorage("requireShortcutToInvoke") private var requireShortcutToInvoke = true
 
   var body: some View {
-    let shortcut = searchManager.activeItem?.command.stringValue ?? ""
+    let shortcut = search.activeItem?.command.stringValue ?? ""
     let hint: String
     if requireShortcutToInvoke && !shortcut.isEmpty {
       hint = "Press \(shortcut) to invoke"

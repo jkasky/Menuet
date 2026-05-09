@@ -36,8 +36,8 @@
 		D17BF6CD21BD172200E70660 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17BF6CC21BD172200E70660 /* Menu.swift */; };
 		D17BF6CE21BD172200E70660 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17BF6CC21BD172200E70660 /* Menu.swift */; };
 		D19451ED21D62A80003607D2 /* AXClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CECD301EA4A0BF007BD237 /* AXClient.swift */; };
-		D19451F021D78A27003607D2 /* SearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19451EF21D78A27003607D2 /* SearchManager.swift */; };
-		D19503F721F08C730059A7AA /* SearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19451EF21D78A27003607D2 /* SearchManager.swift */; };
+		D19451F021D78A27003607D2 /* SearchSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19451EF21D78A27003607D2 /* SearchSession.swift */; };
+		D19503F721F08C730059A7AA /* SearchSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19451EF21D78A27003607D2 /* SearchSession.swift */; };
 		D88853A8B57E4930827220E8 /* MenuIndexProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A258BA5DF5F4493AE440F96 /* MenuIndexProvider.swift */; };
 		11490736946B40F0B124B979 /* MenuIndexProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A258BA5DF5F4493AE440F96 /* MenuIndexProvider.swift */; };
 		6375ED7C280E4AB2B0C5C3C9 /* CheatsheetSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F1BE68D3E244688412BBA3 /* CheatsheetSession.swift */; };
@@ -92,7 +92,7 @@
 		6F5023C43CA04FF5BE52F0BB /* AXMenuIndexerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AXMenuIndexerTests.swift; sourceTree = "<group>"; };
 		88769A3377EB4A3E8C9E0411 /* FakeAXElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeAXElement.swift; sourceTree = "<group>"; };
 		D17BF6CC21BD172200E70660 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
-		D19451EF21D78A27003607D2 /* SearchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchManager.swift; sourceTree = "<group>"; };
+		D19451EF21D78A27003607D2 /* SearchSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchSession.swift; sourceTree = "<group>"; };
 		6A258BA5DF5F4493AE440F96 /* MenuIndexProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuIndexProvider.swift; sourceTree = "<group>"; };
 		E5F1BE68D3E244688412BBA3 /* CheatsheetSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheatsheetSession.swift; sourceTree = "<group>"; };
 		F0FA1A4500000000000FA001 /* FuzzyMatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FuzzyMatch.swift; sourceTree = "<group>"; };
@@ -172,7 +172,7 @@
 				481CCC070CCCCCCCCCCC0007 /* PanelChrome.swift */,
 				48D557D72B2D7D4300956ABA /* Preferences.swift */,
 				482C8A902A6BA7F300A8B5DB /* SettingsView.swift */,
-				D19451EF21D78A27003607D2 /* SearchManager.swift */,
+				D19451EF21D78A27003607D2 /* SearchSession.swift */,
 				6A258BA5DF5F4493AE440F96 /* MenuIndexProvider.swift */,
 				E5F1BE68D3E244688412BBA3 /* CheatsheetSession.swift */,
 				F0FA1A4500000000000FA001 /* FuzzyMatch.swift */,
@@ -373,7 +373,7 @@
 				48CECD311EA4A0BF007BD237 /* AXClient.swift in Sources */,
 				4822C9D12A1733FE00CD843B /* MenuBarApp.swift in Sources */,
 				D17BF6CD21BD172200E70660 /* Menu.swift in Sources */,
-				D19451F021D78A27003607D2 /* SearchManager.swift in Sources */,
+				D19451F021D78A27003607D2 /* SearchSession.swift in Sources */,
 				D88853A8B57E4930827220E8 /* MenuIndexProvider.swift in Sources */,
 				6375ED7C280E4AB2B0C5C3C9 /* CheatsheetSession.swift in Sources */,
 				48D557D82B2D7D4300956ABA /* Preferences.swift in Sources */,
@@ -391,7 +391,7 @@
 			files = (
 				48AE1CA227082A2300EF0234 /* AXMenu.swift in Sources */,
 				48AE1CA1270829F500EF0234 /* AXElement.swift in Sources */,
-				D19503F721F08C730059A7AA /* SearchManager.swift in Sources */,
+				D19503F721F08C730059A7AA /* SearchSession.swift in Sources */,
 				11490736946B40F0B124B979 /* MenuIndexProvider.swift in Sources */,
 				8D3ED5DD08AB461BB50AC966 /* CheatsheetSession.swift in Sources */,
 				4853E21F1F37FC6E00D96A08 /* AX.swift in Sources */,

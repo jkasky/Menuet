@@ -32,20 +32,21 @@ class AppState: ObservableObject {
     // Walk the target app's menu BEFORE we activate or take key window,
     // so menu items aren't disabled by the target app in response to
     // resigning key/first-responder.
-    SearchManager.shared.activate()
-    SearchManager.shared.clear()
+    MenuIndexProvider.shared.refresh()
+    SearchSession.shared.clear()
     activate()
     if searchPanel == nil {
       searchPanel = MenuSearchPanel(contentRect: NSRect(x: 0, y: 0, width: 600, height: 50)) {
         MenuSearchView()
           .environmentObject(self)
-          .environmentObject(SearchManager.shared)
+          .environmentObject(SearchSession.shared)
+          .environmentObject(MenuIndexProvider.shared)
       }
     }
     searchPanel?.center()
     searchPanel?.makeKeyAndOrderFront(nil)
     DispatchQueue.main.async {
-      SearchManager.shared.focusTrigger.toggle()
+      SearchSession.shared.focusTrigger.toggle()
     }
   }
 
@@ -119,7 +120,6 @@ struct MenuBarContent: View {
 struct MenuBarApp: App {
 
   @StateObject private var appState = AppState()
-  @StateObject private var searchManager = SearchManager.shared
 
   var body: some Scene {
     // TODO: use the system image? loading StatusBarIcon not working

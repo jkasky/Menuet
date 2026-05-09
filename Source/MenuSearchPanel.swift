@@ -77,13 +77,12 @@ class MenuSearchPanel: NSPanel {
   }
 
   override func performKeyEquivalent(with event: NSEvent) -> Bool {
-    let searchManager = SearchManager.shared
     var characters = event.charactersIgnoringModifiers?.uppercased()
     if characters == nil || characters != "" {
       characters = event.characters?.uppercased()
     }
 
-    if let itemWithEquivalent = searchManager.findMatchingResult({
+    if let itemWithEquivalent = SearchSession.shared.findMatchingResult({
       $0.command.character.uppercased() == characters?.uppercased() &&
       $0.command.modifiers == event.modifierFlags
     }) {
@@ -97,7 +96,7 @@ class MenuSearchPanel: NSPanel {
   // window and its first responder.
   private func dismiss() {
     resignMain()
-    SearchManager.shared.currentApp?.activate(options: [.activateAllWindows])
+    MenuIndexProvider.shared.currentApp?.activate(options: [.activateAllWindows])
   }
 
   func dismissAndPerform(_ command: MenuItemCommand) {
