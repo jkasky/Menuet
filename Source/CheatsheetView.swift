@@ -1,9 +1,9 @@
 import SwiftUI
 
 
-struct MenuCheatsheetView: View {
+struct CheatsheetView: View {
   @EnvironmentObject var cheatsheet: CheatsheetSession
-  @EnvironmentObject var menus: MenuIndexProvider
+  @EnvironmentObject var menus: IndexProvider
   @Environment(\.cheatsheetSize) private var sizeAction
 
   private static let scrollTopID = "cheatsheet.top"

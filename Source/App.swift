@@ -5,8 +5,8 @@ import SwiftUI
 @MainActor
 class AppState: ObservableObject {
   private var application: NSApplication = NSApplication.shared
-  private var searchPanel: MenuSearchPanel?
-  private var cheatsheetPanel: MenuCheatsheetPanel?
+  private var searchPanel: SearchPanel?
+  private var cheatsheetPanel: CheatsheetPanel?
 
   init() {
     UserDefaults.standard.register(defaults: ["requireShortcutToInvoke": true])
@@ -34,15 +34,15 @@ class AppState: ObservableObject {
     // Walk the target app's menu BEFORE we activate or take key window,
     // so menu items aren't disabled by the target app in response to
     // resigning key/first-responder.
-    MenuIndexProvider.shared.refresh()
+    IndexProvider.shared.refresh()
     SearchSession.shared.clear()
     activate()
     if searchPanel == nil {
-      searchPanel = MenuSearchPanel(contentRect: NSRect(x: 0, y: 0, width: 600, height: 50)) {
-        MenuSearchView()
+      searchPanel = SearchPanel(contentRect: NSRect(x: 0, y: 0, width: 600, height: 50)) {
+        SearchView()
           .environmentObject(self)
           .environmentObject(SearchSession.shared)
-          .environmentObject(MenuIndexProvider.shared)
+          .environmentObject(IndexProvider.shared)
       }
     }
     searchPanel?.center()
@@ -55,17 +55,17 @@ class AppState: ObservableObject {
   func showCheatsheetPanel() {
     // Walk first, then activate, so the target app's menu items aren't
     // disabled in response to resigning key/first-responder.
-    MenuIndexProvider.shared.refresh()
+    IndexProvider.shared.refresh()
     CheatsheetSession.shared.load()
     activate()
     if cheatsheetPanel == nil {
-      cheatsheetPanel = MenuCheatsheetPanel(
+      cheatsheetPanel = CheatsheetPanel(
         contentRect: NSRect(x: 0, y: 0, width: 1100, height: 720)
       ) {
-        MenuCheatsheetView()
+        CheatsheetView()
           .environmentObject(self)
           .environmentObject(CheatsheetSession.shared)
-          .environmentObject(MenuIndexProvider.shared)
+          .environmentObject(IndexProvider.shared)
       }
     }
     cheatsheetPanel?.positionAtTop()

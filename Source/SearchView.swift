@@ -22,9 +22,9 @@ struct PendingSearchAction: Equatable {
   }
 }
 
-struct MenuSearchView: View {
+struct SearchView: View {
   @EnvironmentObject var search: SearchSession
-  @EnvironmentObject var menus: MenuIndexProvider
+  @EnvironmentObject var menus: IndexProvider
   // .onKeyPress fires inside a SwiftUI view update, so mutating @Published
   // state directly there triggers "Publishing changes from within view
   // updates is not allowed". Instead we record the intent in @State and
@@ -40,7 +40,7 @@ struct MenuSearchView: View {
   var body: some View {
     PanelBackground {
       VStack(alignment: .leading, spacing: 0) {
-        SearchView()
+        SearchField()
           .padding(.horizontal, 16)
           .padding(.vertical, 8)
         if showNotResponding {
@@ -105,7 +105,7 @@ struct MenuSearchView: View {
       let hasShortcut = !item.command.stringValue.isEmpty
       if hasShortcut && UserDefaults.standard.requireShortcutToInvoke {
         search.blockedReturnPulse += 1
-      } else if let panel = NSApp.keyWindow as? MenuSearchPanel {
+      } else if let panel = NSApp.keyWindow as? SearchPanel {
         panel.dismissAndPerform(item.command)
       }
     }
@@ -114,17 +114,17 @@ struct MenuSearchView: View {
 
 struct MenuSearchView_Previews: PreviewProvider {
     static var previews: some View {
-      let menus = MenuIndexProvider()
+      let menus = IndexProvider()
       let search = SearchSession(menus: menus)
       search.query = "About"
-      return MenuSearchView()
+      return SearchView()
         .environmentObject(search)
         .environmentObject(menus)
     }
 }
 
 struct AppIcon: View {
-  @EnvironmentObject var menus: MenuIndexProvider
+  @EnvironmentObject var menus: IndexProvider
   private var placeholder = Image(systemName: "app")
 
   var body: some View {
@@ -140,7 +140,7 @@ struct AppIcon: View {
   }
 }
 
-struct SearchView: View {
+struct SearchField: View {
   @EnvironmentObject var search: SearchSession
   @FocusState private var isFocused: Bool
 

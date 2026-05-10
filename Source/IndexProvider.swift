@@ -12,7 +12,7 @@ import Sentry
 /// `MenuIndex`. This is the single source of truth for "what menu does the
 /// target app have right now"; sessions read from it.
 @MainActor
-final class MenuIndexProvider: ObservableObject {
+final class IndexProvider: ObservableObject {
 
   /// Wall-clock budget for a single menu walk. Once exceeded, the walker
   /// bails and `MenuIndex.isComplete` is flipped to false so views can
@@ -27,7 +27,7 @@ final class MenuIndexProvider: ObservableObject {
     return stored > 0 ? stored : defaultWalkDeadline
   }
 
-  static let shared = MenuIndexProvider()
+  static let shared = IndexProvider()
 
   @Published private(set) var currentApp: NSRunningApplication?
   @Published private(set) var index: MenuIndex = MenuIndex()

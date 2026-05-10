@@ -21,12 +21,12 @@ class SearchSession: ObservableObject {
   @Published var focusTrigger: Bool = false
   @Published var blockedReturnPulse: Int = 0
 
-  private let menus: MenuIndexProvider
+  private let menus: IndexProvider
   private var selectedResult: Int
 
   public var totalResults: Int { searchResults.count }
 
-  init(menus: MenuIndexProvider = .shared) {
+  init(menus: IndexProvider = .shared) {
     self.menus = menus
     searchResults = []
     query = ""

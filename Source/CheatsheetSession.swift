@@ -24,9 +24,9 @@ final class CheatsheetSession: ObservableObject {
   @Published private(set) var modifierFilter: NSEvent.ModifierFlags = []
 
   private var matchOrder: [MenuItem] = []
-  private let menus: MenuIndexProvider
+  private let menus: IndexProvider
 
-  init(menus: MenuIndexProvider = .shared) {
+  init(menus: IndexProvider = .shared) {
     self.menus = menus
   }
 

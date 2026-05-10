@@ -7,7 +7,7 @@
 import SwiftUI
 
 
-class MenuSearchPanel: NSPanel {
+class SearchPanel: NSPanel {
 
   init(contentRect: NSRect, view: () -> some View) {
 
@@ -96,7 +96,7 @@ class MenuSearchPanel: NSPanel {
   // window and its first responder.
   private func dismiss() {
     resignMain()
-    MenuIndexProvider.shared.currentApp?.activate(options: [.activateAllWindows])
+    IndexProvider.shared.currentApp?.activate(options: [.activateAllWindows])
   }
 
   func dismissAndPerform(_ command: MenuItemCommand) {

@@ -2,7 +2,7 @@ import Carbon.HIToolbox
 import SwiftUI
 
 
-class MenuCheatsheetPanel: NSPanel {
+class CheatsheetPanel: NSPanel {
 
   init(contentRect: NSRect, view: () -> some View) {
 
@@ -116,7 +116,7 @@ class MenuCheatsheetPanel: NSPanel {
 
   private func dismiss() {
     resignMain()
-    MenuIndexProvider.shared.currentApp?.activate(options: [.activateAllWindows])
+    IndexProvider.shared.currentApp?.activate(options: [.activateAllWindows])
   }
 
   func dismissAndPerform(_ command: MenuItemCommand) {
