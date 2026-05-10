@@ -86,6 +86,23 @@ class CheatsheetPanel: NSPanel {
       return
     }
 
+    // Down / Up → cycle next / previous match. Left / Right are
+    // swallowed without effect — proper spatial navigation across the
+    // masonry columns is its own design problem and treating them as
+    // typed characters would inject Apple's NSF1FunctionKey-range
+    // private-use codepoints into the query.
+    if Int(event.keyCode) == kVK_DownArrow {
+      cheatsheet.selectNextMatch()
+      return
+    }
+    if Int(event.keyCode) == kVK_UpArrow {
+      cheatsheet.selectPreviousMatch()
+      return
+    }
+    if Int(event.keyCode) == kVK_LeftArrow || Int(event.keyCode) == kVK_RightArrow {
+      return
+    }
+
     // Return / numpad Enter → invoke highlighted item.
     if Int(event.keyCode) == kVK_Return || Int(event.keyCode) == kVK_ANSI_KeypadEnter {
       if let item = cheatsheet.activeItem {
@@ -101,9 +118,13 @@ class CheatsheetPanel: NSPanel {
     }
 
     // Append printable characters with no command-class modifiers
-    // (Shift is permitted so capitals/symbols still type).
+    // (Shift is permitted so capitals/symbols still type). Reject any
+    // event AppKit flags as a special key (function keys, page nav,
+    // home/end, etc.) so those don't get rendered as private-use
+    // codepoints in the query.
     let blocking: NSEvent.ModifierFlags = [.command, .control, .option]
     if event.modifierFlags.intersection(blocking).isEmpty,
+       event.specialKey == nil,
        let chars = event.charactersIgnoringModifiers,
        !chars.isEmpty,
        chars.unicodeScalars.allSatisfy({ $0.value >= 0x20 && $0.value != 0x7F }) {

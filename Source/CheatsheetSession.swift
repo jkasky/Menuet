@@ -85,6 +85,18 @@ final class CheatsheetSession: ObservableObject {
     activeItem = matchOrder[nextIndex]
   }
 
+  func selectPreviousMatch() {
+    guard !matchOrder.isEmpty else { return }
+    let prevIndex: Int
+    if let active = activeItem,
+       let i = matchOrder.firstIndex(where: { $0.id == active.id }) {
+      prevIndex = (i - 1 + matchOrder.count) % matchOrder.count
+    } else {
+      prevIndex = matchOrder.count - 1
+    }
+    activeItem = matchOrder[prevIndex]
+  }
+
   private func recomputeMatches() {
     if query.isEmpty {
       matchOrder = []
