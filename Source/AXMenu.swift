@@ -7,6 +7,18 @@
 import Foundation
 
 
+/// Receives a depth-first traversal of an application's menu tree.
+///
+/// Callback ordering for any menu (the menu bar's children or a submenu):
+/// 1. `enterMenu` fires for the menu's owning element (a `MenuBarItem` for
+///    a top-level menu, or a `MenuItem` whose role contains a `Menu` for a
+///    submenu) before any of its descendants are visited.
+/// 2. The menu's children are walked in order: leaves call `visitMenuItem`;
+///    items that contain a submenu recurse via `enterMenu` / `leaveMenu`.
+/// 3. `leaveMenu` fires after every descendant has been visited.
+///
+/// A leaf item (no submenu) receives only `visitMenuItem` — never
+/// `enterMenu` / `leaveMenu`.
 protocol AXMenuVisitor {
 
   func enterMenu(_: AX.Element)

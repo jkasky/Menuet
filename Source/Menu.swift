@@ -388,13 +388,58 @@ struct MenuItemShortcut {
 }
 
 
+/// Tracks the walker's position in the menu tree.
+///
+/// At any point during a walk, the tracker carries two parallel facts about
+/// the chain of ancestors from the menu bar down to the current cursor:
+/// - `titles` — display titles, used to build `MenuItem.path`
+/// - `positions` — each ancestor's index among its parent's children, used
+///   by `AXMenuItemPath` to re-resolve a menu item by tree position when
+///   the captured `AX.Element` has been invalidated
+///
+/// Mutations are paired with the visitor callbacks: `push` on `enterMenu`,
+/// `pop` on `leaveMenu`, `recordLeaf` on `visitMenuItem`. The tracker
+/// internally maintains `nextChildIndex` so siblings get sequential
+/// positions without the caller doing arithmetic.
+struct MenuPathTracker {
+
+  private(set) var titles: [String] = []
+  private(set) var positions: [UInt] = []
+  private var nextChildIndex: UInt = 0
+  private var nextChildIndexStack: [UInt] = []
+
+  mutating func push(title: String) {
+    titles.append(title)
+    positions.append(nextChildIndex)
+    nextChildIndexStack.append(nextChildIndex)
+    nextChildIndex = 0
+  }
+
+  mutating func pop() {
+    titles.removeLast()
+    positions.removeLast()
+    let parentSlot = nextChildIndexStack.removeLast()
+    nextChildIndex = parentSlot + 1
+  }
+
+  /// Snapshots the leaf's full title path and positional path, then bumps
+  /// the next-sibling cursor so the following leaf in the same parent
+  /// records the correct position.
+  mutating func recordLeaf(title: String) -> (titles: [String], positions: [UInt]) {
+    let leafTitles = titles + [title]
+    let leafPositions = positions + [nextChildIndex]
+    nextChildIndex += 1
+    return (leafTitles, leafPositions)
+  }
+}
+
+
 class AXMenuIndexer: AXMenuVisitor {
 
   private let indexAppleMenu: Bool
   private let logger: Logger = Logger()
 
-  private var path: [String] = []
-  private var indexPath: [UInt] = []
+  private var tracker = MenuPathTracker()
   private var index: MenuIndex
 
   init(index: MenuIndex, indexAppleMenu: Bool = UserDefaults.standard.searchAppleMenu) {
@@ -403,43 +448,29 @@ class AXMenuIndexer: AXMenuVisitor {
   }
 
   func enterMenu(_ menu: AX.Element) {
-    if let title: String = try? menu.get(.Title) {
-      path.append(title)
-      indexPath.append(0)
-    }
+    tracker.push(title: menu.title)
   }
 
   func leaveMenu(_: AX.Element) {
-    _ = path.popLast()
-    _ = indexPath.popLast()
-    if !indexPath.isEmpty {
-      indexPath[indexPath.endIndex.advanced(by: -1)] += 1
-    }
+    tracker.pop()
   }
 
   func visitMenuItem(_ item: AX.Element) {
     let title = item.title
-    path.append(title)
-    if indexPath.count < path.count {
-      indexPath.append(0)
-    }
-    defer {
-      _ = path.popLast()
-      indexPath[indexPath.endIndex.advanced(by: -1)] += 1
-    }
-    if !indexAppleMenu && path[0] == MenuItem.appleMenuTitle {
+    let (titles, positions) = tracker.recordLeaf(title: title)
+    if !indexAppleMenu && titles.first == MenuItem.appleMenuTitle {
       return
     }
     let shortcut = MenuItemShortcut.extract(from: item, logger: logger)
-    let delegate = AXMenuItemDelegate(item, path: indexPath)
+    let delegate = AXMenuItemDelegate(item, path: positions)
     let menuItem = MenuItem(
       title: title,
       command: MenuItemCommand(
         character: shortcut.character ?? "",
         modifiers: shortcut.modifiers ?? Modifiers.noCommand,
         delegate: delegate),
-      path: path,
+      path: titles,
       delegate: delegate)
-    index.add(item: menuItem, path: path.joined(separator: " > "))
+    index.add(item: menuItem, path: titles.joined(separator: " > "))
   }
 }
