@@ -112,7 +112,7 @@ struct ShortcutChip: View {
 
 func fuzzyHighlight(_ title: String, query: String) -> AttributedString {
   guard !query.isEmpty else { return AttributedString(title) }
-  let caseSensitive = UserDefaults.standard.searchCaseSensitive
+  let caseSensitive = UserDefaults.standard.searchMatchCase
   guard let match = FuzzyMatch.score(
     query: query, candidate: title, caseSensitive: caseSensitive
   ) else {

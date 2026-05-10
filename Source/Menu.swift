@@ -361,7 +361,7 @@ class MenuIndex {
 
   func find(query: String) -> [MenuItem] {
     guard !query.isEmpty else { return [] }
-    let caseSensitive = UserDefaults.standard.searchCaseSensitive
+    let caseSensitive = UserDefaults.standard.searchMatchCase
     let showDisabled = UserDefaults.standard.showDisabledItems
 
     var scored: [(MenuItem, Int)] = []

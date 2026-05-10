@@ -88,7 +88,7 @@ final class CheatsheetSession: ObservableObject {
       activeItem = nil
       return
     }
-    let caseSensitive = UserDefaults.standard.searchCaseSensitive
+    let caseSensitive = UserDefaults.standard.searchMatchCase
     // Walk groups in display order so Tab visits matches top-to-bottom
     // through the rendered list. Keep the score so we can still seed the
     // initial highlight with the best fuzzy match.

@@ -226,7 +226,7 @@ struct ResultView: View {
   @Binding var result: MenuItem
   @State private var hovering: Bool = false
   @State private var chipScale: CGFloat = 1.0
-  @AppStorage("requireShortcutToInvoke") private var requireShortcutToInvoke = true
+  @AppStorage(Preference.requireShortcutToInvoke) private var requireShortcutToInvoke = true
 
   private var isActive: Bool { search.activeItem == result }
 
@@ -280,7 +280,7 @@ struct ResultView: View {
 
 struct FooterHintView: View {
   @EnvironmentObject var search: SearchSession
-  @AppStorage("requireShortcutToInvoke") private var requireShortcutToInvoke = true
+  @AppStorage(Preference.requireShortcutToInvoke) private var requireShortcutToInvoke = true
 
   var body: some View {
     let shortcut = search.activeItem?.command.stringValue ?? ""

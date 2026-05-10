@@ -8,11 +8,11 @@ import SwiftUI
 import KeyboardShortcuts
 
 struct SettingsView: View {
-  @AppStorage("menuSearchAppleMenu") private var searchAppleMenu = false
-  @AppStorage("menuSearchMatchCase") private var matchCase = false
-  @AppStorage("menuSearchShowDisabled") private var includeDisabled = false
-  @AppStorage("requireShortcutToInvoke") private var requireShortcutToInvoke = true
-  @AppStorage(Telemetry.crashReportingEnabledKey) private var crashReportingEnabled = true
+  @AppStorage(Preference.searchAppleMenu) private var searchAppleMenu = false
+  @AppStorage(Preference.searchMatchCase) private var matchCase = false
+  @AppStorage(Preference.searchShowDisabled) private var includeDisabled = false
+  @AppStorage(Preference.requireShortcutToInvoke) private var requireShortcutToInvoke = true
+  @AppStorage(Preference.crashReportingEnabled) private var crashReportingEnabled = true
 
   var body: some View {
     Form {

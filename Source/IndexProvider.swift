@@ -23,7 +23,7 @@ final class IndexProvider: ObservableObject {
   static let defaultWalkDeadline: TimeInterval = 2.0
 
   static var configuredWalkDeadline: TimeInterval {
-    let stored = UserDefaults.standard.double(forKey: "axWalkDeadline")
+    let stored = UserDefaults.standard.double(forKey: Preference.axWalkDeadline)
     return stored > 0 ? stored : defaultWalkDeadline
   }
 

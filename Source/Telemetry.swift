@@ -3,16 +3,10 @@ import Sentry
 
 enum Telemetry {
 
-  static let crashReportingEnabledKey = "crashReportingEnabled"
-
-  static func registerDefaults() {
-    UserDefaults.standard.register(defaults: [crashReportingEnabledKey: true])
-  }
-
   static func startIfEnabled() {
     let dsn = Bundle.main.object(forInfoDictionaryKey: "SentryDSN") as? String ?? ""
     guard !dsn.isEmpty else { return }
-    guard UserDefaults.standard.bool(forKey: crashReportingEnabledKey) else { return }
+    guard UserDefaults.standard.bool(forKey: Preference.crashReportingEnabled) else { return }
     SentrySDK.start { options in
       options.dsn = dsn
       options.sendDefaultPii = false

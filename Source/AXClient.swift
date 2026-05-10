@@ -70,7 +70,7 @@ class AXClient: AccessibilityClient {
   static let defaultMessagingTimeout: Float = 0.5
 
   static var configuredMessagingTimeout: Float {
-    let stored = UserDefaults.standard.float(forKey: "axMessagingTimeout")
+    let stored = UserDefaults.standard.float(forKey: Preference.axMessagingTimeout)
     return stored > 0 ? stored : defaultMessagingTimeout
   }
 

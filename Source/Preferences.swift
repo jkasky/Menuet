@@ -2,10 +2,42 @@
 //  Preferences.swift
 //  Menuet
 //
+//  Single source of truth for UserDefaults keys, registered defaults,
+//  and the typed accessors used throughout the app.
 //
 
 import KeyboardShortcuts
 import SwiftUI
+
+
+enum Preference {
+  // User-facing toggles. These are covered by registerPreferenceDefaults.
+  static let searchAppleMenu        = "menuSearchAppleMenu"
+  static let searchMatchCase        = "menuSearchMatchCase"
+  static let searchShowDisabled     = "menuSearchShowDisabled"
+  static let requireShortcutToInvoke = "requireShortcutToInvoke"
+  static let crashReportingEnabled  = "crashReportingEnabled"
+
+  // Developer overrides — set via `defaults write app.menuet …`.
+  // Intentionally NOT covered by registerPreferenceDefaults: as
+  // the actual default is hard coded.
+  static let axMessagingTimeout = "axMessagingTimeout"
+  static let axWalkDeadline     = "axWalkDeadline"
+}
+
+
+/// Populates the UserDefaults registration domain with every default
+/// for keys the app reads. Call once at app launch (MenuBarApp.init)
+/// before any preference is consulted.
+func registerPreferenceDefaults() {
+  UserDefaults.standard.register(defaults: [
+    Preference.searchAppleMenu:         false,
+    Preference.searchMatchCase:         false,
+    Preference.searchShowDisabled:      false,
+    Preference.requireShortcutToInvoke: true,
+    Preference.crashReportingEnabled:   true,
+  ])
+}
 
 
 extension KeyboardShortcuts.Name {
@@ -14,41 +46,21 @@ extension KeyboardShortcuts.Name {
 }
 
 
-extension UserDefaults  {
+extension UserDefaults {
 
   var searchAppleMenu: Bool {
-    get {
-      return bool(forKey: "menuSearchAppleMenu")
-    }
-    set {
-      setValue(newValue, forKey: "menuSearchAppleMenu")
-    }
+    bool(forKey: Preference.searchAppleMenu)
   }
 
-  var searchCaseSensitive: Bool {
-    get {
-      return bool(forKey: "menuSearchCaseSensitive")
-    }
-    set {
-      setValue(newValue, forKey: "menuSearchCaseSensitive")
-    }
+  var searchMatchCase: Bool {
+    bool(forKey: Preference.searchMatchCase)
   }
 
   var showDisabledItems: Bool {
-    get {
-      return bool(forKey: "showDisabledItems")
-    }
-    set {
-      setValue(newValue, forKey: "showDisabledItems")
-    }
+    bool(forKey: Preference.searchShowDisabled)
   }
 
   var requireShortcutToInvoke: Bool {
-    get {
-      return bool(forKey: "requireShortcutToInvoke")
-    }
-    set {
-      setValue(newValue, forKey: "requireShortcutToInvoke")
-    }
+    bool(forKey: Preference.requireShortcutToInvoke)
   }
 }

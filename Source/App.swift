@@ -13,8 +13,6 @@ class AppState: ObservableObject {
   private var cheatsheetPanel: CheatsheetPanel?
 
   init() {
-    UserDefaults.standard.register(defaults: ["requireShortcutToInvoke": true])
-
     // KeyboardShortcuts dispatches the callback on main; assumeIsolated
     // bridges the non-isolated closure into our @MainActor methods.
     KeyboardShortcuts.onKeyUp(for: .menuSearchShortcut) {
@@ -129,13 +127,11 @@ struct MenuBarApp: App {
   @StateObject private var appState = AppState()
 
   init() {
-    Telemetry.registerDefaults()
+    registerPreferenceDefaults()
     Telemetry.startIfEnabled()
   }
 
   var body: some Scene {
-    // TODO: use the system image? loading StatusBarIcon not working
-    // MenuBarExtra("Menuet", image: "StatusBarIcon") {
     MenuBarExtra("Menuet", systemImage: "menubar.rectangle") {
       MenuBarContent()
         .environmentObject(appState)
