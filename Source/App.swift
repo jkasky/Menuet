@@ -111,7 +111,7 @@ struct MenuBarContent: View {
     Divider()
 
     Button("Settings...") {
-      NSApp.activate(ignoringOtherApps: true)
+      NSApp.activate()
       openSettings()
     }
 
