@@ -161,8 +161,12 @@ struct SearchField: View {
     .onChange(of: search.focusTrigger) {
       isFocused = true
     }
+    // Fuzzy match against a typical menu (~few hundred items) finishes in
+    // well under 1ms, so the debounce only exists to coalesce bursts from
+    // very fast typists. 75ms is well below human perception (~100ms) but
+    // long enough that two keystrokes ~50ms apart batch into one search.
     .onReceive(
-      search.$query.debounce(for: .seconds(0.4), scheduler: DispatchQueue.main)
+      search.$query.debounce(for: .seconds(0.075), scheduler: DispatchQueue.main)
     ) { q in
       search.search(q)
     }
