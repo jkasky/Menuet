@@ -130,8 +130,8 @@ final class CheatsheetSession: ObservableObject {
     var order: [String] = []
     var buckets: [String: [MenuItem]] = [:]
     for item in items {
+      if item.isAppleMenu { continue }
       guard let menu = item.path.first, !menu.isEmpty else { continue }
-      if menu == MenuItem.appleMenuTitle { continue }
       if buckets[menu] == nil {
         order.append(menu)
         buckets[menu] = []

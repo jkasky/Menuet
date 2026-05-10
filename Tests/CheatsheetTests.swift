@@ -36,11 +36,21 @@ private func makeMenuBarItem(title: String, items: [FakeAXElement]) -> FakeAXEle
 }
 
 
-private func makeMenuBar(_ items: [FakeAXElement]) -> FakeAXElement {
+/// Real macOS menu bars always start with the system Apple menu at
+/// position 0. The indexer identifies the Apple menu by position
+/// (locale-independent), so fixtures that want their menus to be treated
+/// as non-Apple must mirror that layout. Default is `applePrefixed: true`
+/// so individual tests don't have to remember; tests that explicitly
+/// exercise the Apple-menu filter pass `applePrefixed: false`.
+private func makeMenuBar(_ items: [FakeAXElement], applePrefixed: Bool = true) -> FakeAXElement {
   let menuBar = FakeAXElement()
   menuBar.role = .MenuBar
-  menuBar.children = items
+  menuBar.children = applePrefixed ? [makeAppleStub()] + items : items
   return menuBar
+}
+
+private func makeAppleStub() -> FakeAXElement {
+  return makeMenuBarItem(title: "Apple", items: [])
 }
 
 
@@ -106,9 +116,25 @@ class CheatsheetGroupingTests: XCTestCase {
     let menuBar = makeMenuBar([
       makeMenuBarItem(title: "Apple", items: [makeItem("Force Quit", cmdChar: "Q", modifiers: 1)]),
       makeMenuBarItem(title: "File",  items: [makeItem("New",        cmdChar: "N")]),
-    ])
+    ], applePrefixed: false)
     // indexAppleMenu: true ensures Apple items reach the index — grouping
     // should still drop them.
+    let items = buildIndex(menuBar, indexAppleMenu: true).itemsWithShortcuts()
+
+    let groups = CheatsheetSession.groupForCheatsheet(items)
+
+    XCTAssertEqual(groups.map(\.menu), ["File"])
+  }
+
+  // Apple menu detection is positional, not title-based: AX's title for
+  // the system menu is implementation-defined (the visible UI is the
+  // apple glyph). Use a deliberately unrelated title at position 0 to
+  // verify grouping doesn't fall back to a string check.
+  func testExcludesAppleMenuByPositionRegardlessOfTitle() {
+    let menuBar = makeMenuBar([
+      makeMenuBarItem(title: "NotApple", items: [makeItem("Force Quit", cmdChar: "Q", modifiers: 1)]),
+      makeMenuBarItem(title: "File",     items: [makeItem("New",        cmdChar: "N")]),
+    ], applePrefixed: false)
     let items = buildIndex(menuBar, indexAppleMenu: true).itemsWithShortcuts()
 
     let groups = CheatsheetSession.groupForCheatsheet(items)

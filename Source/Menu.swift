@@ -288,8 +288,6 @@ protocol MenuItemDelegate {
 
 class MenuItem: CustomDebugStringConvertible, Equatable, Identifiable {
 
-  static let appleMenuTitle = "Apple"
-
   static func == (left: MenuItem, right: MenuItem) -> Bool {
     return left.id == right.id
   }
@@ -299,13 +297,19 @@ class MenuItem: CustomDebugStringConvertible, Equatable, Identifiable {
   let command: MenuItemCommand
   let path: [String]
   let enabled: Bool
+  /// True when this item lives under the Apple (system) menu — i.e. the
+  /// first top-level menu of the menu bar. Determined by position rather
+  /// than by matching a string against `AXTitle`: AX's title for the
+  /// Apple menu is implementation-defined (the rendered UI is the apple
+  /// glyph, not text), so position is the only stable signal.
+  let isAppleMenu: Bool
 
   var debugDescription: String {
     return "MenuItem<path:\(path.joined(separator: "/"))>"
   }
 
   var pathDescription: String {
-    if path[0] == MenuItem.appleMenuTitle {
+    if isAppleMenu {
       return ([KeyGlyph.Apple.characters] + path[1...]).joined(separator: " > ")
     } else {
       return path.joined(separator: " > ")
@@ -313,14 +317,15 @@ class MenuItem: CustomDebugStringConvertible, Equatable, Identifiable {
   }
 
   private let delegate: MenuItemDelegate
-  
+
   init(title: String, command: MenuItemCommand, path: [String],
-       delegate:MenuItemDelegate) {
+       isAppleMenu: Bool, delegate: MenuItemDelegate) {
     self.id = UUID()
     self.title = title
     self.command = command
     self.path = path
     self.enabled = delegate.isEnabled
+    self.isAppleMenu = isAppleMenu
     self.delegate = delegate
   }
 }
@@ -496,7 +501,12 @@ class AXMenuIndexer: AXMenuVisitor {
   func visitMenuItem(_ item: AX.Element) {
     let title = item.title
     let (titles, positions) = tracker.recordLeaf(title: title)
-    if !indexAppleMenu && titles.first == MenuItem.appleMenuTitle {
+    // Apple menu is always the first top-level menu of an app's menu
+    // bar. Keying on position avoids depending on what AX returns for
+    // the menu's title — the rendered UI is the apple glyph, and the
+    // AXTitle behind it is implementation-defined.
+    let isAppleMenu = positions.first == 0
+    if !indexAppleMenu && isAppleMenu {
       return
     }
     let shortcut = MenuItemShortcut.extract(from: item, logger: logger)
@@ -508,6 +518,7 @@ class AXMenuIndexer: AXMenuVisitor {
         modifiers: shortcut.modifiers ?? Modifiers.noCommand,
         delegate: delegate),
       path: titles,
+      isAppleMenu: isAppleMenu,
       delegate: delegate)
     index.add(item: menuItem, path: titles.joined(separator: " > "))
   }
