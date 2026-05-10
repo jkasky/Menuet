@@ -23,35 +23,39 @@ struct MenuCheatsheetView: View {
 
         Divider().opacity(0.4)
 
-        GeometryReader { geo in
-          ScrollViewReader { proxy in
-            ScrollView {
-              Color.clear.frame(height: 0).id(Self.scrollTopID)
-              MasonryColumns(
-                groups: cheatsheet.filteredGroups,
-                availableWidth: geo.size.width - 40
-              )
-              .padding(20)
-              .background(
-                GeometryReader { inner in
-                  Color.clear.preference(
-                    key: ContentHeightKey.self,
-                    value: inner.size.height
-                  )
-                }
-              )
-            }
-            .onChange(of: cheatsheet.resetTrigger) { _, _ in
-              proxy.scrollTo(Self.scrollTopID, anchor: .top)
-            }
-            .onChange(of: cheatsheet.activeItem?.id) { _, newID in
-              guard let id = newID else { return }
-              withAnimation(.easeOut(duration: 0.15)) {
-                proxy.scrollTo(id, anchor: .center)
+        if !menus.index.isComplete && menus.index.isEmpty {
+          NotRespondingView(appName: menus.currentApp?.localizedName ?? "This app")
+        } else {
+          GeometryReader { geo in
+            ScrollViewReader { proxy in
+              ScrollView {
+                Color.clear.frame(height: 0).id(Self.scrollTopID)
+                MasonryColumns(
+                  groups: cheatsheet.filteredGroups,
+                  availableWidth: geo.size.width - 40
+                )
+                .padding(20)
+                .background(
+                  GeometryReader { inner in
+                    Color.clear.preference(
+                      key: ContentHeightKey.self,
+                      value: inner.size.height
+                    )
+                  }
+                )
               }
-            }
-            .onPreferenceChange(ContentHeightKey.self) { height in
-              sizeAction.report(height)
+              .onChange(of: cheatsheet.resetTrigger) { _, _ in
+                proxy.scrollTo(Self.scrollTopID, anchor: .top)
+              }
+              .onChange(of: cheatsheet.activeItem?.id) { _, newID in
+                guard let id = newID else { return }
+                withAnimation(.easeOut(duration: 0.15)) {
+                  proxy.scrollTo(id, anchor: .center)
+                }
+              }
+              .onPreferenceChange(ContentHeightKey.self) { height in
+                sizeAction.report(height)
+              }
             }
           }
         }

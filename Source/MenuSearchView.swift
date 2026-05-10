@@ -24,6 +24,7 @@ struct PendingSearchAction: Equatable {
 
 struct MenuSearchView: View {
   @EnvironmentObject var search: SearchSession
+  @EnvironmentObject var menus: MenuIndexProvider
   // .onKeyPress fires inside a SwiftUI view update, so mutating @Published
   // state directly there triggers "Publishing changes from within view
   // updates is not allowed". Instead we record the intent in @State and
@@ -32,13 +33,21 @@ struct MenuSearchView: View {
   // trigger .onChange (key-repeat correctness).
   @State private var pendingAction: PendingSearchAction?
 
+  private var showNotResponding: Bool {
+    !menus.index.isComplete && menus.index.isEmpty
+  }
+
   var body: some View {
     PanelBackground {
       VStack(alignment: .leading, spacing: 0) {
         SearchView()
           .padding(.horizontal, 16)
           .padding(.vertical, 8)
-        if !search.searchResults.isEmpty {
+        if showNotResponding {
+          Divider().opacity(0.4)
+          NotRespondingView(appName: menus.currentApp?.localizedName ?? "This app")
+            .frame(minHeight: 140)
+        } else if !search.searchResults.isEmpty {
           Divider().opacity(0.4)
           ResultsView()
           Divider().opacity(0.4)

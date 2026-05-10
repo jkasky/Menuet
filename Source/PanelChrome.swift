@@ -25,6 +25,28 @@ struct PanelBackground<Content: View>: View {
 }
 
 
+struct NotRespondingView: View {
+  let appName: String
+
+  var body: some View {
+    VStack(spacing: 8) {
+      Image(systemName: "exclamationmark.triangle")
+        .font(.system(size: 28))
+        .foregroundStyle(.secondary)
+      Text("\(appName) isn't responding right now.")
+        .font(.system(.body, design: .rounded))
+        .foregroundStyle(.primary)
+      Text("Try again in a moment.")
+        .font(.system(.subheadline, design: .rounded))
+        .foregroundStyle(.secondary)
+    }
+    .multilineTextAlignment(.center)
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .padding(24)
+  }
+}
+
+
 struct ShortcutChip: View {
   let text: String
   var minWidth: CGFloat = 56
