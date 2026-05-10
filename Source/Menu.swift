@@ -240,6 +240,35 @@ final class MenuItemCommand: @unchecked Sendable {
   func perform() {
     delegate?.press()
   }
+
+  /// Polls the delegate's `isEnabled` at `pollInterval` and presses the
+  /// moment it reports enabled, falling through to press anyway after
+  /// `timeout`. Used by the panels to wait for the target app to
+  /// re-validate first-responder-dependent menu items (Cut/Copy/etc.)
+  /// after we resign main and the target reactivates — NSMenu
+  /// validation is lazy, so the press needs to happen *after* the
+  /// target's runloop has processed the activation event. Polling the
+  /// actual enabled signal beats a fixed defer.
+  ///
+  /// Each `isEnabled` read is itself bounded by the system-wide AX
+  /// messaging timeout, so a hung target can't stall the poll loop.
+  func performWhenEnabled(
+    timeout: TimeInterval = 1.0,
+    pollInterval: TimeInterval = 0.05
+  ) {
+    let deadline = Date().addingTimeInterval(timeout)
+    pollUntilEnabled(deadline: deadline, pollInterval: pollInterval)
+  }
+
+  private func pollUntilEnabled(deadline: Date, pollInterval: TimeInterval) {
+    if delegate?.isEnabled == true || Date() >= deadline {
+      perform()
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + pollInterval) { [self] in
+      pollUntilEnabled(deadline: deadline, pollInterval: pollInterval)
+    }
+  }
 }
 
 
@@ -308,7 +337,7 @@ class MenuIndex {
 
   var size: Int {
     return items.count
-  }
+  } 
 
   var isEmpty: Bool {
     return items.isEmpty

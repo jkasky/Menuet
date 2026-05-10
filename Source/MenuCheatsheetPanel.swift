@@ -121,9 +121,7 @@ class MenuCheatsheetPanel: NSPanel {
 
   func dismissAndPerform(_ command: MenuItemCommand) {
     dismiss()
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-      command.perform()
-    }
+    command.performWhenEnabled()
   }
 
   static let topBuffer: CGFloat = 80

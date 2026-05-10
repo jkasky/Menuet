@@ -101,12 +101,6 @@ class MenuSearchPanel: NSPanel {
 
   func dismissAndPerform(_ command: MenuItemCommand) {
     dismiss()
-    // NSMenu validation is lazy: items that depend on first-responder
-    // context (Cut/Copy/etc.) can still be flagged disabled at the
-    // moment of activation. Yield the runloop so the target processes
-    // its activation event before we press.
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-      command.perform()
-    }
+    command.performWhenEnabled()
   }
 }

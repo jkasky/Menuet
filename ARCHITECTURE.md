@@ -78,7 +78,7 @@ their key window resigns key — if we walk after that point, those items
 appear missing. The walk happens once per panel open; the sessions
 query the cached index per keystroke.
 
-## Critical invariant: dismiss → activate target → defer press
+## Critical invariant: dismiss → activate target → press when enabled
 
 `MenuSearchPanel.dismissAndPerform` and the corresponding cheatsheet
 flow are the single paths for invoking a result (Return, ⌘1–7, matched
@@ -86,10 +86,14 @@ shortcut). They:
 1. Close the panel (`resignMain()`).
 2. Activate the target with `.activateAllWindows` so AppKit restores its
    previously-key window and first responder.
-3. Defer the AX press one runloop tick — NSMenu validation is lazy, so
-   items dependent on first-responder context can still be flagged
-   disabled at the instant of activation. The yield lets the target
-   re-validate.
+3. Hand off to `MenuItemCommand.performWhenEnabled`, which polls the
+   item's `isEnabled` at 50ms intervals and presses the moment it
+   reports enabled — falling through to press anyway after a 1s
+   timeout. NSMenu validation is lazy: items dependent on first-
+   responder context need at least one runloop tick after activation
+   to re-evaluate. Polling the actual signal is more reliable than a
+   fixed defer, and each `isEnabled` read is bounded by the system-wide
+   AX messaging timeout so a hung target can't stall the loop.
 
 If you're adding a new way to invoke a result, route it through
 `dismissAndPerform`.
