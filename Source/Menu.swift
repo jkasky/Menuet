@@ -9,6 +9,9 @@ import Foundation
 import OSLog
 
 
+private let logger = Logger(subsystem: "app.menuet", category: "menu")
+
+
 /**
  * A coded symbol (i.e. glyph) that represents a non-printable key.
  */
@@ -397,11 +400,17 @@ class AXMenuItemDelegate: MenuItemDelegate {
       try element.perform(action: .Press)
       return
     } catch {
+      // Initial press threw — typically because the captured element
+      // was invalidated between the walk and the press. Try resolving
+      // by index path. Both perform throws and resolution failures
+      // need to surface: AXElement.perform already logs its own
+      // failure, so we only need to log the unresolved-path case.
       let path = AXMenuItemPath(application: element.application, path: indexPath)
-      guard let element = path.get() else {
+      guard let resolved = path.get() else {
+        logger.error("press: could not resolve menu item by path \(self.indexPath, privacy: .public) after initial press failed")
         return
       }
-      try? element.perform(action: AX.Action.Press)
+      try? resolved.perform(action: .Press)
     }
   }
 }
@@ -480,7 +489,6 @@ struct MenuPathTracker {
 class AXMenuIndexer: AXMenuVisitor {
 
   private let indexAppleMenu: Bool
-  private let logger = Logger(subsystem: "app.menuet", category: "menu.indexer")
 
   private var tracker = MenuPathTracker()
   private var index: MenuIndex
