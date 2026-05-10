@@ -23,7 +23,9 @@ struct CheatsheetView: View {
 
         Divider().opacity(0.4)
 
-        if !menus.index.isComplete && menus.index.isEmpty {
+        if !menus.isTrusted {
+          NeedsAccessibilityView()
+        } else if !menus.index.isComplete && menus.index.isEmpty {
           NotRespondingView(appName: menus.currentApp?.localizedName ?? "This app")
         } else {
           GeometryReader { geo in

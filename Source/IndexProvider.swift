@@ -31,6 +31,12 @@ final class IndexProvider: ObservableObject {
 
   @Published private(set) var currentApp: NSRunningApplication?
   @Published private(set) var index: MenuIndex = MenuIndex()
+  /// Reflects `AXIsProcessTrusted()` as of the most recent `refresh()`.
+  /// Defaults to `true` so the panels don't flash a "needs permission"
+  /// state on the very first hotkey before we've checked. Updated on
+  /// every refresh, so revoking permission while Menuet is running is
+  /// detected on the next invocation.
+  @Published private(set) var isTrusted: Bool = true
 
   private let axClient: AX.Client
   private let workspace: NSWorkspace
@@ -50,6 +56,18 @@ final class IndexProvider: ObservableObject {
       transaction.finish()
       SentrySDK.configureScope { $0.span = nil }
     }
+
+    // Re-check on every refresh so a permission revoke (or a grant after
+    // first launch without quitting) is reflected in the next panel
+    // open rather than silently producing empty results.
+    guard axClient.isProcessTrusted() else {
+      transaction.setData(value: "untrusted", key: "result")
+      isTrusted = false
+      currentApp = nil
+      index = MenuIndex()
+      return
+    }
+    isTrusted = true
 
     guard let app = workspace.menuBarOwningApplication else {
       transaction.setData(value: "no_menubar_owner", key: "result")

@@ -34,7 +34,7 @@ struct SearchView: View {
   @State private var pendingAction: PendingSearchAction?
 
   private var showNotResponding: Bool {
-    !menus.index.isComplete && menus.index.isEmpty
+    menus.isTrusted && !menus.index.isComplete && menus.index.isEmpty
   }
 
   var body: some View {
@@ -43,7 +43,11 @@ struct SearchView: View {
         SearchField()
           .padding(.horizontal, 16)
           .padding(.vertical, 8)
-        if showNotResponding {
+        if !menus.isTrusted {
+          Divider().opacity(0.4)
+          NeedsAccessibilityView()
+            .frame(minHeight: 200)
+        } else if showNotResponding {
           Divider().opacity(0.4)
           NotRespondingView(appName: menus.currentApp?.localizedName ?? "This app")
             .frame(minHeight: 140)
@@ -125,16 +129,26 @@ struct MenuSearchView_Previews: PreviewProvider {
 
 struct AppIcon: View {
   @EnvironmentObject var menus: IndexProvider
-  private var placeholder = Image(systemName: "app")
 
   var body: some View {
-    if let icon = menus.currentApp?.icon {
+    if !menus.isTrusted {
+      // Replace the target-app icon slot with a warning so the empty
+      // search field doesn't read as "ready" when AX permission is
+      // actually missing.
+      Image(systemName: "exclamationmark.triangle.fill")
+        .resizable()
+        .aspectRatio(contentMode: .fit)
+        .symbolRenderingMode(.hierarchical)
+        .foregroundStyle(.orange)
+        .frame(width: 40, height: 40)
+        .padding(4)
+    } else if let icon = menus.currentApp?.icon {
       Image(nsImage: icon)
         .resizable()
         .interpolation(.high)
         .frame(width: 48, height: 48)
     } else {
-      placeholder
+      Image(systemName: "app")
         .frame(width: 48, height: 48)
     }
   }

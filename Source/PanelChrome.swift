@@ -47,6 +47,42 @@ struct NotRespondingView: View {
 }
 
 
+struct NeedsAccessibilityView: View {
+  // Legacy URL still resolves on Sonoma/Sequoia and avoids the macOS-13+
+  // pane-id rename. NSWorkspace.open silently no-ops if the URL is
+  // unparseable, so a stale URL degrades to "button does nothing"
+  // rather than crashing.
+  private static let settingsURL = URL(
+    string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")
+
+  var body: some View {
+    VStack(spacing: 10) {
+      Image(systemName: "lock.shield")
+        .font(.system(size: 28))
+        .foregroundStyle(.secondary)
+      Text("Menuet needs Accessibility permission")
+        .font(.system(.body, design: .rounded))
+        .foregroundStyle(.primary)
+      Text("Menuet reads the menus of the frontmost app using macOS Accessibility. Without permission, it can't return any results.")
+        .font(.system(.subheadline, design: .rounded))
+        .foregroundStyle(.secondary)
+        .multilineTextAlignment(.center)
+        .fixedSize(horizontal: false, vertical: true)
+      Button("Open System Settings") {
+        if let url = Self.settingsURL {
+          NSWorkspace.shared.open(url)
+        }
+      }
+      .buttonStyle(.borderedProminent)
+      .padding(.top, 4)
+    }
+    .multilineTextAlignment(.center)
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .padding(24)
+  }
+}
+
+
 struct ShortcutChip: View {
   let text: String
   var minWidth: CGFloat = 56

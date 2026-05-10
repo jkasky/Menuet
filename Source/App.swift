@@ -76,12 +76,13 @@ class AppState: ObservableObject {
   }
 
   private func makeProcessTrusted() {
+    // Triggers Apple's first-launch Accessibility prompt. After grant,
+    // subsequent revoke/regrant cycles are detected by
+    // `IndexProvider.refresh`, which re-checks trust on every panel
+    // open and surfaces `NeedsAccessibilityView` when false.
     let axClient = AXClient()
-    if (!axClient.isProcessTrusted()) {
-      // TODO: the trusted state should be managed globally so the app can
-      // check the state before showing the command window and re-prompt if
-      // necessary.
-      let trusted = axClient.makeProcessTrusted(withPrompt:true)
+    if !axClient.isProcessTrusted() {
+      let trusted = axClient.makeProcessTrusted(withPrompt: true)
       if !trusted {
         NSLog("Process is not trusted.")
       }
