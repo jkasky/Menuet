@@ -107,4 +107,68 @@ class AXMenuWalkerTests: XCTestCase {
     XCTAssertEqual(visitor.left,    ["Font", "Format"])
     XCTAssertEqual(visitor.visited, ["Bold"])
   }
+
+  func testWalkBailsAtDeadline() {
+    let clock = VirtualClock()
+    let bars = (1...10).map { i in
+      makeMenuBarItem(title: "Bar\(i)", items: [makeItem("Leaf\(i)")])
+    }
+    let menuBar = makeMenuBar(bars)
+    injectClock(clock, delay: 0.1, into: menuBar)
+    let app = FakeAXApplication(menuBar: menuBar)
+    let visitor = RecordingVisitor()
+    let deadline = clock.now().addingTimeInterval(0.5)
+
+    let didComplete = AXMenuWalker(application: app, clock: clock)
+      .walk(visitor: visitor, deadline: deadline)
+
+    XCTAssertFalse(didComplete)
+    XCTAssertLessThan(visitor.entered.count, bars.count)
+  }
+
+  func testWalkCompletesUnderDeadline() {
+    let clock = VirtualClock()
+    let menuBar = makeMenuBar([
+      makeMenuBarItem(title: "File", items: [makeItem("New")]),
+      makeMenuBarItem(title: "Edit", items: [makeItem("Cut")]),
+    ])
+    // delay 0 — every read advances the clock by 0; we never approach the deadline
+    injectClock(clock, delay: 0, into: menuBar)
+    let app = FakeAXApplication(menuBar: menuBar)
+    let visitor = RecordingVisitor()
+    let deadline = clock.now().addingTimeInterval(10)
+
+    let didComplete = AXMenuWalker(application: app, clock: clock)
+      .walk(visitor: visitor, deadline: deadline)
+
+    XCTAssertTrue(didComplete)
+    XCTAssertEqual(visitor.entered, ["File", "Edit"])
+    XCTAssertEqual(visitor.visited, ["New", "Cut"])
+  }
+
+  func testWalkWithoutDeadlineAlwaysCompletes() {
+    let app = FakeAXApplication(menuBar: makeMenuBar([
+      makeMenuBarItem(title: "File", items: [makeItem("New")]),
+    ]))
+    let didComplete = AXMenuWalker(application: app)
+      .walk(visitor: RecordingVisitor())
+    XCTAssertTrue(didComplete)
+  }
+}
+
+
+/// Recursively wires the same VirtualClock and per-access delay into
+/// every FakeAXElement reachable from `element`. Required because each
+/// fake holds its own clock reference; the test needs all of them to
+/// share one instance so attribute reads cumulatively advance time.
+private func injectClock(
+  _ clock: VirtualClock, delay: TimeInterval, into element: FakeAXElement
+) {
+  element.clock = clock
+  element.responseDelay = delay
+  for child in element.children {
+    if let fake = child as? FakeAXElement {
+      injectClock(clock, delay: delay, into: fake)
+    }
+  }
 }

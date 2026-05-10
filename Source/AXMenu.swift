@@ -33,23 +33,41 @@ protocol AXMenuVisitor {
 class AXMenuWalker {
 
   private let application: AX.Application
+  private let clock: Clock
+  private var deadline: Date?
+  private var didComplete: Bool = true
 
-  init(application: AX.Application) {
+  init(application: AX.Application, clock: Clock = SystemClock()) {
     self.application = application
+    self.clock = clock
   }
 
-  func walk(visitor: AXMenuVisitor) {
-    guard let menuBar = application.menuBar else { return }
+  /// Walks the application's menu tree, calling visitor methods in
+  /// depth-first order (see `AXMenuVisitor`). When `deadline` is set, the
+  /// walker checks it between sibling iterations and bails early when
+  /// exceeded. Items already visited stay in the visitor's accumulated
+  /// state — partial work is not rolled back.
+  ///
+  /// - returns: `true` if the walk visited every menu before `deadline`,
+  ///   `false` if it bailed early. Always `true` when `deadline == nil`.
+  @discardableResult
+  func walk(visitor: AXMenuVisitor, deadline: Date? = nil) -> Bool {
+    self.deadline = deadline
+    self.didComplete = true
+    guard let menuBar = application.menuBar else { return true }
     for menuBarItem in menuBar.findAll(.MenuBarItem) {
+      if hasExpired() { break }
       guard let menu = menuBarItem.find(.Menu) else { continue }
       visitor.enterMenu(menuBarItem)
       walkMenu(menu: menu, visitor: visitor)
       visitor.leaveMenu(menuBarItem)
     }
+    return didComplete
   }
 
   private func walkMenu(menu: AX.Element, visitor: AXMenuVisitor) {
     for item in menu.findAll(.MenuItem) {
+      if hasExpired() { return }
       if let submenu = item.find(.Menu) {
         visitor.enterMenu(item)
         walkMenu(menu: submenu, visitor: visitor)
@@ -58,6 +76,15 @@ class AXMenuWalker {
         visitor.visitMenuItem(item)
       }
     }
+  }
+
+  private func hasExpired() -> Bool {
+    guard let deadline = deadline else { return false }
+    if clock.now() >= deadline {
+      didComplete = false
+      return true
+    }
+    return false
   }
 }
 

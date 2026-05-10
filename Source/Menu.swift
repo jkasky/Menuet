@@ -301,8 +301,17 @@ class MenuIndex {
 
   private var items: [MenuItem] = []
 
+  /// Set to `false` by `MenuIndexProvider.refresh()` when the underlying
+  /// walker bailed at its deadline before visiting every menu. Views use
+  /// this together with `isEmpty` to show "{app} isn't responding."
+  var isComplete: Bool = true
+
   var size: Int {
     return items.count
+  }
+
+  var isEmpty: Bool {
+    return items.isEmpty
   }
 
   func add(item: MenuItem, path: String) {

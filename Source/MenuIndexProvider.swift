@@ -13,6 +13,19 @@ import Foundation
 @MainActor
 final class MenuIndexProvider: ObservableObject {
 
+  /// Wall-clock budget for a single menu walk. Once exceeded, the walker
+  /// bails and `MenuIndex.isComplete` is flipped to false so views can
+  /// surface "{app} isn't responding."
+  ///
+  /// Override at runtime via `defaults write app.menuet axWalkDeadline -float 1.5`.
+  /// Values <= 0 fall back to the hardcoded default.
+  static let defaultWalkDeadline: TimeInterval = 2.0
+
+  static var configuredWalkDeadline: TimeInterval {
+    let stored = UserDefaults.standard.double(forKey: "axWalkDeadline")
+    return stored > 0 ? stored : defaultWalkDeadline
+  }
+
   static let shared = MenuIndexProvider()
 
   @Published private(set) var currentApp: NSRunningApplication?
@@ -37,7 +50,9 @@ final class MenuIndexProvider: ObservableObject {
     }
     let next = MenuIndex()
     let walker = AXMenuWalker(application: axClient.createApplication(application: app))
-    walker.walk(visitor: AXMenuIndexer(index: next))
+    let deadline = Date().addingTimeInterval(Self.configuredWalkDeadline)
+    let didComplete = walker.walk(visitor: AXMenuIndexer(index: next), deadline: deadline)
+    next.isComplete = didComplete
     currentApp = app
     index = next
   }

@@ -46,6 +46,9 @@
 		F0FA1A4500000002000FA001 /* FuzzyMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FA1A4500000000000FA001 /* FuzzyMatch.swift */; };
 		F0FA1A4500000004000FA001 /* FuzzyMatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FA1A4500000003000FA001 /* FuzzyMatchTests.swift */; };
 		FA57919B06734D2BBBEBDD96 /* AXMenuIndexerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5023C43CA04FF5BE52F0BB /* AXMenuIndexerTests.swift */; };
+		AC10C0000002000000000001 /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC10C0000001000000000001 /* Clock.swift */; };
+		AC10C0000003000000000001 /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC10C0000001000000000001 /* Clock.swift */; };
+		BC10C0000002000000000001 /* VirtualClock.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC10C0000001000000000001 /* VirtualClock.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +100,8 @@
 		E5F1BE68D3E244688412BBA3 /* CheatsheetSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheatsheetSession.swift; sourceTree = "<group>"; };
 		F0FA1A4500000000000FA001 /* FuzzyMatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FuzzyMatch.swift; sourceTree = "<group>"; };
 		F0FA1A4500000003000FA001 /* FuzzyMatchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FuzzyMatchTests.swift; sourceTree = "<group>"; };
+		AC10C0000001000000000001 /* Clock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clock.swift; sourceTree = "<group>"; };
+		BC10C0000001000000000001 /* VirtualClock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualClock.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -161,6 +166,7 @@
 				48C044D51D23B1DA00F49A94 /* AX.swift */,
 				4875779B1B51E7B900339D78 /* AXApplication.swift */,
 				48CECD301EA4A0BF007BD237 /* AXClient.swift */,
+				AC10C0000001000000000001 /* Clock.swift */,
 				48F9819225D2716800920957 /* AXElement.swift */,
 				48F9819625D2733300920957 /* AXMenu.swift */,
 				D17BF6CC21BD172200E70660 /* Menu.swift */,
@@ -198,6 +204,7 @@
 				88769A3377EB4A3E8C9E0411 /* FakeAXElement.swift */,
 				18356E1DC4F7489CB7A35E9C /* FakeAXApplication.swift */,
 				19CB2B9446B84F94851F9AE1 /* FakeAXClient.swift */,
+				BC10C0000001000000000001 /* VirtualClock.swift */,
 				35B4849149CA4EB3A1650A95 /* AXMenuWalkerTests.swift */,
 				6F5023C43CA04FF5BE52F0BB /* AXMenuIndexerTests.swift */,
 				481CCC050CCCCCCCCCCC0005 /* CheatsheetTests.swift */,
@@ -371,6 +378,7 @@
 				48C044D61D23B1DA00F49A94 /* AX.swift in Sources */,
 				4875779C1B51E7B900339D78 /* AXApplication.swift in Sources */,
 				48CECD311EA4A0BF007BD237 /* AXClient.swift in Sources */,
+				AC10C0000002000000000001 /* Clock.swift in Sources */,
 				4822C9D12A1733FE00CD843B /* MenuBarApp.swift in Sources */,
 				D17BF6CD21BD172200E70660 /* Menu.swift in Sources */,
 				D19451F021D78A27003607D2 /* SearchSession.swift in Sources */,
@@ -397,6 +405,8 @@
 				4853E21F1F37FC6E00D96A08 /* AX.swift in Sources */,
 				4853E2211F37FC6E00D96A08 /* AXApplication.swift in Sources */,
 				D19451ED21D62A80003607D2 /* AXClient.swift in Sources */,
+				AC10C0000003000000000001 /* Clock.swift in Sources */,
+				BC10C0000002000000000001 /* VirtualClock.swift in Sources */,
 				D17BF6CE21BD172200E70660 /* Menu.swift in Sources */,
 				F0FA1A4500000002000FA001 /* FuzzyMatch.swift in Sources */,
 				48D557D92B2D7D4300956ABA /* Preferences.swift in Sources */,
