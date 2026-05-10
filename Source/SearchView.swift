@@ -268,6 +268,11 @@ struct ResultView: View {
         .fill(rowBackground)
     )
     .onHover { hovering = $0 }
+    // Match the NSMenu convention for disabled items at ~50% opacity.
+    // Applied to the whole row (text + chip + selection highlight) so a
+    // disabled item that's currently selected still reads as both
+    // "selected" and "dim/non-actionable" simultaneously.
+    .opacity(result.enabled ? 1.0 : 0.5)
   }
 
   private var rowBackground: Color {

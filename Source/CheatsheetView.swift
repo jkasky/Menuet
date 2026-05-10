@@ -199,8 +199,6 @@ private struct ShortcutRow: View {
   var body: some View {
     let query = cheatsheet.query
     let isActive = cheatsheet.activeItem?.id == item.id
-    let isMatch = query.isEmpty || cheatsheet.matchIDs.contains(item.id)
-    let dimmed = !query.isEmpty && !isMatch
 
     Button {
       invoke.perform(item.command)
@@ -232,7 +230,11 @@ private struct ShortcutRow: View {
     }
     .buttonStyle(.plain)
     .onHover { hovering = $0 }
-    .opacity(dimmed ? 0.35 : 1.0)
+    // Disabled cue at 50% — matches SearchView and the NSMenu
+    // convention. Safe here because non-matches are filtered out by
+    // `CheatsheetSession.filteredGroups` rather than dimmed, so opacity
+    // is unambiguous.
+    .opacity(item.enabled ? 1.0 : 0.5)
     .id(item.id)
   }
 

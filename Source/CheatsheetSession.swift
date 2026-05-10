@@ -31,10 +31,14 @@ final class CheatsheetSession: ObservableObject {
   }
 
   var filteredGroups: [CheatsheetGroup] {
-    if modifierFilter.isEmpty { return groups }
+    let queryActive = !query.isEmpty
+    if !queryActive && modifierFilter.isEmpty { return groups }
     return groups.compactMap { group in
-      let items = group.items.filter {
-        $0.command.modifiers.containsFilter(modifierFilter)
+      let items = group.items.filter { item in
+        let matchesModifier = modifierFilter.isEmpty
+          || item.command.modifiers.containsFilter(modifierFilter)
+        let matchesQuery = !queryActive || matchIDs.contains(item.id)
+        return matchesModifier && matchesQuery
       }
       return items.isEmpty ? nil : CheatsheetGroup(menu: group.menu, items: items)
     }
