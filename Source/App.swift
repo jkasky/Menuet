@@ -1,5 +1,9 @@
 import KeyboardShortcuts
+import OSLog
 import SwiftUI
+
+
+private let logger = Logger(subsystem: "app.menuet", category: "app")
 
 
 @MainActor
@@ -84,7 +88,7 @@ class AppState: ObservableObject {
     if !axClient.isProcessTrusted() {
       let trusted = axClient.makeProcessTrusted(withPrompt: true)
       if !trusted {
-        NSLog("Process is not trusted.")
+        logger.warning("Process is not trusted; AX queries will return nothing until granted.")
       }
     }
   }

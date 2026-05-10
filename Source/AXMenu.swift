@@ -5,6 +5,10 @@
 //
 
 import Foundation
+import OSLog
+
+
+private let logger = Logger(subsystem: "app.menuet", category: "ax.menu")
 
 
 /// Receives a depth-first traversal of an application's menu tree.
@@ -129,7 +133,8 @@ class AXMenuLogger: AXMenuVisitor {
 
   func enterMenu(_ menu: AX.Element) {
     if let title: String = try? menu.get(.Title) {
-      NSLog(String(repeating: " ", count: indent) + "\(title)")
+      let prefix = String(repeating: " ", count: indent)
+      logger.debug("\(prefix, privacy: .public)\(title, privacy: .public)")
       indent += 2
     }
   }
@@ -148,8 +153,8 @@ class AXMenuLogger: AXMenuVisitor {
         character:commandChar,
         modifiers:modifiers,
         delegate:AXMenuItemDelegate(item, path: []))
-      NSLog(String(repeating: " ", count: indent) +
-        "\(title), Command:\(commandItem.stringValue), Enabled:\(enabled)")
+      let prefix = String(repeating: " ", count: indent)
+      logger.debug("\(prefix, privacy: .public)\(title, privacy: .public), Command:\(commandItem.stringValue, privacy: .public), Enabled:\(enabled)")
     }
   }
 }

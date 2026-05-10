@@ -480,7 +480,7 @@ struct MenuPathTracker {
 class AXMenuIndexer: AXMenuVisitor {
 
   private let indexAppleMenu: Bool
-  private let logger: Logger = Logger()
+  private let logger = Logger(subsystem: "app.menuet", category: "menu.indexer")
 
   private var tracker = MenuPathTracker()
   private var index: MenuIndex

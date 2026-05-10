@@ -6,6 +6,10 @@
 
 import ApplicationServices
 import Foundation
+import OSLog
+
+
+private let logger = Logger(subsystem: "app.menuet", category: "ax")
 
 
 extension AX {
@@ -36,9 +40,7 @@ class AXApplication: AccessibilityApplication {
         let menuBar: AX.Element = try topElement.get(.MenuBar)
         return menuBar
       } catch {
-        #if DEBUG
-        NSLog("failed to get menubar for \(topElement)")
-        #endif
+        logger.error("failed to get menubar: \(error.localizedDescription, privacy: .public)")
       }
       return nil
     }

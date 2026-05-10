@@ -7,6 +7,10 @@
 
 import ApplicationServices
 import Foundation
+import OSLog
+
+
+private let logger = Logger(subsystem: "app.menuet", category: "ax")
 
 
 extension AX {
@@ -265,9 +269,7 @@ class AXElement: AX.Element {
     let status = AXUIElementPerformAction(element, action.rawValue as NSString)
     guard status == .success else {
       let error = AX.APIError(code: status)
-      #if DEBUG
-      NSLog("Failed to perform '\(action)' on \(self): \(error.localizedDescription)")
-      #endif
+      logger.error("failed to perform '\(action.rawValue, privacy: .public)': \(error.localizedDescription, privacy: .public)")
       throw error
     }
   }
