@@ -1,0 +1,4 @@
+// Per-developer overrides live in Menuet.local.xcconfig (gitignored).
+// Define values like SENTRY_DSN there for IDE builds; CI passes them via
+// `xcodebuild SENTRY_DSN=...` instead.
+#include? "Menuet.local.xcconfig"

@@ -5,6 +5,7 @@
 
 import AppKit
 import Foundation
+import Sentry
 
 
 /// Walks the AX menu tree of the frontmost app and exposes the resulting
@@ -43,18 +44,33 @@ final class MenuIndexProvider: ObservableObject {
   /// publishes a fresh index. Must be called before stealing key focus —
   /// see CLAUDE.md "walk before stealing focus."
   func refresh() {
+    let transaction = SentrySDK.startTransaction(
+      name: "menu.refresh", operation: "ax.walk", bindToScope: true)
+    defer {
+      transaction.finish()
+      SentrySDK.configureScope { $0.span = nil }
+    }
+
     guard let app = workspace.menuBarOwningApplication else {
+      transaction.setData(value: "no_menubar_owner", key: "result")
       currentApp = nil
       index = MenuIndex()
       return
     }
+    transaction.setData(value: app.bundleIdentifier ?? "unknown", key: "target.bundle_id")
+
     let next = MenuIndex()
     let walker = AXMenuWalker(application: axClient.createApplication(application: app))
     let deadline = Date().addingTimeInterval(Self.configuredWalkDeadline)
-    let didComplete = walker.walk(visitor: AXMenuIndexer(index: next), deadline: deadline)
+    let visitor = TracingMenuVisitor(
+      AXMenuIndexer(index: next), bundleId: app.bundleIdentifier ?? "unknown")
+    let didComplete = walker.walk(visitor: visitor, deadline: deadline)
     next.isComplete = didComplete
     currentApp = app
     index = next
+
+    transaction.setData(value: didComplete, key: "walk.complete")
+    transaction.setData(value: next.size, key: "menu.size")
   }
 
   func clear() {
@@ -62,5 +78,45 @@ final class MenuIndexProvider: ObservableObject {
     if index.size > 0 {
       index = MenuIndex()
     }
+  }
+}
+
+
+/// Wraps another visitor and starts a Sentry child span for each top-level
+/// menu (depth-0 enterMenu/leaveMenu pair). No spans for nested submenus or
+/// individual items — keeps span count bounded to ~10 per walk.
+private final class TracingMenuVisitor: AXMenuVisitor {
+
+  private let inner: AXMenuVisitor
+  private let bundleId: String
+  private var depth = 0
+  private var spanStack: [Span] = []
+
+  init(_ inner: AXMenuVisitor, bundleId: String) {
+    self.inner = inner
+    self.bundleId = bundleId
+  }
+
+  func enterMenu(_ element: AX.Element) {
+    if depth == 0, let parent = SentrySDK.span {
+      let title: String = (try? element.get(.Title)) ?? "?"
+      let span = parent.startChild(operation: "ax.walk.menu", description: title)
+      span.setData(value: bundleId, key: "target.bundle_id")
+      spanStack.append(span)
+    }
+    depth += 1
+    inner.enterMenu(element)
+  }
+
+  func leaveMenu(_ element: AX.Element) {
+    depth -= 1
+    inner.leaveMenu(element)
+    if depth == 0, let span = spanStack.popLast() {
+      span.finish()
+    }
+  }
+
+  func visitMenuItem(_ element: AX.Element) {
+    inner.visitMenuItem(element)
   }
 }

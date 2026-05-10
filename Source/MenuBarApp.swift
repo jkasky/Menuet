@@ -123,6 +123,11 @@ struct MenuBarApp: App {
 
   @StateObject private var appState = AppState()
 
+  init() {
+    Telemetry.registerDefaults()
+    Telemetry.startIfEnabled()
+  }
+
   var body: some Scene {
     // TODO: use the system image? loading StatusBarIcon not working
     // MenuBarExtra("Menuet", image: "StatusBarIcon") {

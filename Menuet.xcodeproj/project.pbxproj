@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		11490736946B40F0B124B979 /* MenuIndexProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A258BA5DF5F4493AE440F96 /* MenuIndexProvider.swift */; };
 		2B60469A65B3451E92B04495 /* AXMenuWalkerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B4849149CA4EB3A1650A95 /* AXMenuWalkerTests.swift */; };
 		2C883B5A332545F78CFD0CEF /* FakeAXApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18356E1DC4F7489CB7A35E9C /* FakeAXApplication.swift */; };
 		481490262A6D7A26000F2627 /* MenuSearchPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481490252A6D7A26000F2627 /* MenuSearchPanel.swift */; };
@@ -29,26 +30,27 @@
 		48D557D82B2D7D4300956ABA /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D557D72B2D7D4300956ABA /* Preferences.swift */; };
 		48D557D92B2D7D4300956ABA /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D557D72B2D7D4300956ABA /* Preferences.swift */; };
 		48F1B0C92ADFBA3900E6492E /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 48F1B0C82ADFBA3900E6492E /* KeyboardShortcuts */; };
+		48F1B0CB2ADFBA3900E6492E /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 48F1B0CA2ADFBA3900E6492E /* Sentry */; };
+		48F1B0CE2ADFBA3900E6492E /* Telemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F1B0CD2ADFBA3900E6492E /* Telemetry.swift */; };
 		48F9819325D2716800920957 /* AXElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F9819225D2716800920957 /* AXElement.swift */; };
 		48F9819725D2733300920957 /* AXMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F9819625D2733300920957 /* AXMenu.swift */; };
+		6375ED7C280E4AB2B0C5C3C9 /* CheatsheetSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F1BE68D3E244688412BBA3 /* CheatsheetSession.swift */; };
 		715E07FDD7D34E48A0A53271 /* FakeAXElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88769A3377EB4A3E8C9E0411 /* FakeAXElement.swift */; };
+		8D3ED5DD08AB461BB50AC966 /* CheatsheetSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F1BE68D3E244688412BBA3 /* CheatsheetSession.swift */; };
+		AC10C0000002000000000001 /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC10C0000001000000000001 /* Clock.swift */; };
+		AC10C0000003000000000001 /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC10C0000001000000000001 /* Clock.swift */; };
 		B1A4DE3555B64713B756BDAD /* FakeAXClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19CB2B9446B84F94851F9AE1 /* FakeAXClient.swift */; };
+		BC10C0000002000000000001 /* VirtualClock.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC10C0000001000000000001 /* VirtualClock.swift */; };
 		D17BF6CD21BD172200E70660 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17BF6CC21BD172200E70660 /* Menu.swift */; };
 		D17BF6CE21BD172200E70660 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17BF6CC21BD172200E70660 /* Menu.swift */; };
 		D19451ED21D62A80003607D2 /* AXClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CECD301EA4A0BF007BD237 /* AXClient.swift */; };
 		D19451F021D78A27003607D2 /* SearchSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19451EF21D78A27003607D2 /* SearchSession.swift */; };
 		D19503F721F08C730059A7AA /* SearchSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19451EF21D78A27003607D2 /* SearchSession.swift */; };
 		D88853A8B57E4930827220E8 /* MenuIndexProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A258BA5DF5F4493AE440F96 /* MenuIndexProvider.swift */; };
-		11490736946B40F0B124B979 /* MenuIndexProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A258BA5DF5F4493AE440F96 /* MenuIndexProvider.swift */; };
-		6375ED7C280E4AB2B0C5C3C9 /* CheatsheetSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F1BE68D3E244688412BBA3 /* CheatsheetSession.swift */; };
-		8D3ED5DD08AB461BB50AC966 /* CheatsheetSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F1BE68D3E244688412BBA3 /* CheatsheetSession.swift */; };
 		F0FA1A4500000001000FA001 /* FuzzyMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FA1A4500000000000FA001 /* FuzzyMatch.swift */; };
 		F0FA1A4500000002000FA001 /* FuzzyMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FA1A4500000000000FA001 /* FuzzyMatch.swift */; };
 		F0FA1A4500000004000FA001 /* FuzzyMatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FA1A4500000003000FA001 /* FuzzyMatchTests.swift */; };
 		FA57919B06734D2BBBEBDD96 /* AXMenuIndexerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5023C43CA04FF5BE52F0BB /* AXMenuIndexerTests.swift */; };
-		AC10C0000002000000000001 /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC10C0000001000000000001 /* Clock.swift */; };
-		AC10C0000003000000000001 /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC10C0000001000000000001 /* Clock.swift */; };
-		BC10C0000002000000000001 /* VirtualClock.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC10C0000001000000000001 /* VirtualClock.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +73,8 @@
 		481CCC050CCCCCCCCCCC0005 /* CheatsheetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheatsheetTests.swift; sourceTree = "<group>"; };
 		481CCC070CCCCCCCCCCC0007 /* PanelChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelChrome.swift; sourceTree = "<group>"; };
 		4822C9D02A1733FE00CD843B /* MenuBarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarApp.swift; sourceTree = "<group>"; };
+		48F1B0CD2ADFBA3900E6492E /* Telemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Telemetry.swift; sourceTree = "<group>"; };
+		48F1B0CF2ADFBA3900E6492E /* Menuet.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Menuet.xcconfig; sourceTree = "<group>"; };
 		482C8A902A6BA7F300A8B5DB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4853E21A1F37FA6900D96A08 /* MenuItemCommandTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuItemCommandTests.swift; sourceTree = "<group>"; };
 		4853E2251F37FFD400D96A08 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -92,16 +96,16 @@
 		48F9817F25C69C8D00920957 /* MenuetDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MenuetDebug.entitlements; sourceTree = "<group>"; };
 		48F9819225D2716800920957 /* AXElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AXElement.swift; sourceTree = "<group>"; };
 		48F9819625D2733300920957 /* AXMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AXMenu.swift; sourceTree = "<group>"; };
+		6A258BA5DF5F4493AE440F96 /* MenuIndexProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuIndexProvider.swift; sourceTree = "<group>"; };
 		6F5023C43CA04FF5BE52F0BB /* AXMenuIndexerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AXMenuIndexerTests.swift; sourceTree = "<group>"; };
 		88769A3377EB4A3E8C9E0411 /* FakeAXElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeAXElement.swift; sourceTree = "<group>"; };
+		AC10C0000001000000000001 /* Clock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clock.swift; sourceTree = "<group>"; };
+		BC10C0000001000000000001 /* VirtualClock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualClock.swift; sourceTree = "<group>"; };
 		D17BF6CC21BD172200E70660 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 		D19451EF21D78A27003607D2 /* SearchSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchSession.swift; sourceTree = "<group>"; };
-		6A258BA5DF5F4493AE440F96 /* MenuIndexProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuIndexProvider.swift; sourceTree = "<group>"; };
 		E5F1BE68D3E244688412BBA3 /* CheatsheetSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheatsheetSession.swift; sourceTree = "<group>"; };
 		F0FA1A4500000000000FA001 /* FuzzyMatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FuzzyMatch.swift; sourceTree = "<group>"; };
 		F0FA1A4500000003000FA001 /* FuzzyMatchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FuzzyMatchTests.swift; sourceTree = "<group>"; };
-		AC10C0000001000000000001 /* Clock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clock.swift; sourceTree = "<group>"; };
-		BC10C0000001000000000001 /* VirtualClock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualClock.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -114,6 +118,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				48F1B0C92ADFBA3900E6492E /* KeyboardShortcuts in Frameworks */,
+				48F1B0CB2ADFBA3900E6492E /* Sentry in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -144,6 +149,7 @@
 				48F6AF6B2F9DBEAD00400ED8 /* .claude */,
 				48E24E3F271154470087D9F8 /* Scripts */,
 				48F9817D25C69C8D00920957 /* Entitlements */,
+				48F1B0CF2ADFBA3900E6492E /* Menuet.xcconfig */,
 				4878358F1B3B91E700BC911B /* Source */,
 				487835A21B3B91E700BC911B /* Tests */,
 				4878358E1B3B91E700BC911B /* Products */,
@@ -178,6 +184,7 @@
 				481CCC070CCCCCCCCCCC0007 /* PanelChrome.swift */,
 				48D557D72B2D7D4300956ABA /* Preferences.swift */,
 				482C8A902A6BA7F300A8B5DB /* SettingsView.swift */,
+				48F1B0CD2ADFBA3900E6492E /* Telemetry.swift */,
 				D19451EF21D78A27003607D2 /* SearchSession.swift */,
 				6A258BA5DF5F4493AE440F96 /* MenuIndexProvider.swift */,
 				E5F1BE68D3E244688412BBA3 /* CheatsheetSession.swift */,
@@ -257,6 +264,7 @@
 			name = Menuet;
 			packageProductDependencies = (
 				48F1B0C82ADFBA3900E6492E /* KeyboardShortcuts */,
+				48F1B0CA2ADFBA3900E6492E /* Sentry */,
 			);
 			productName = Menuet;
 			productReference = 4878358D1B3B91E700BC911B /* Menuet.app */;
@@ -315,6 +323,7 @@
 			mainGroup = 487835841B3B91E600BC911B;
 			packageReferences = (
 				48F1B0C72ADFBA3900E6492E /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
+				48F1B0CC2ADFBA3900E6492E /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 			);
 			productRefGroup = 4878358E1B3B91E700BC911B /* Products */;
 			projectDirPath = "";
@@ -390,6 +399,7 @@
 				48F9819325D2716800920957 /* AXElement.swift in Sources */,
 				48F9819725D2733300920957 /* AXMenu.swift in Sources */,
 				482C8A912A6BA7F300A8B5DB /* SettingsView.swift in Sources */,
+				48F1B0CE2ADFBA3900E6492E /* Telemetry.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -557,6 +567,7 @@
 		};
 		487835AA1B3B91E700BC911B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 48F1B0CF2ADFBA3900E6492E /* Menuet.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
@@ -589,6 +600,7 @@
 		};
 		487835AB1B3B91E700BC911B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 48F1B0CF2ADFBA3900E6492E /* Menuet.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
@@ -740,6 +752,14 @@
 				minimumVersion = 2.4.0;
 			};
 		};
+		48F1B0CC2ADFBA3900E6492E /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/getsentry/sentry-cocoa";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.12.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -747,6 +767,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 48F1B0C72ADFBA3900E6492E /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
 			productName = KeyboardShortcuts;
+		};
+		48F1B0CA2ADFBA3900E6492E /* Sentry */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 48F1B0CC2ADFBA3900E6492E /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = Sentry;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
