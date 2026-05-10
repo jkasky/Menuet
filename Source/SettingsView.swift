@@ -23,17 +23,32 @@ struct SettingsView: View {
 
       Section(header: Text("Search Options")) {
         Toggle(isOn: $searchAppleMenu) {
-          Text("Search \(String(describing: KeyGlyph.Apple)) Apple menu")
+          VStack(alignment: .leading, spacing: 2) {
+            Text("Search \(String(describing: KeyGlyph.Apple)) Apple menu")
+            Text("Include items from the system menu (System Settings, Force Quit, Sleep) in results.")
+              .font(.caption)
+              .foregroundStyle(.secondary)
+          }
         }
         .toggleStyle(.switch)
 
         Toggle(isOn: $matchCase) {
-          Text("Match case")
+          VStack(alignment: .leading, spacing: 2) {
+            Text("Match case")
+            Text("Treat queries as case-sensitive. Off matches regardless of case.")
+              .font(.caption)
+              .foregroundStyle(.secondary)
+          }
         }
         .toggleStyle(.switch)
 
         Toggle(isOn: $includeDisabled) {
-          Text("Include disabled menu items")
+          VStack(alignment: .leading, spacing: 2) {
+            Text("Include disabled menu items")
+            Text("Show items the app currently reports as disabled. Invoking them may do nothing.")
+              .font(.caption)
+              .foregroundStyle(.secondary)
+          }
         }.toggleStyle(.switch)
 
         Toggle(isOn: $requireShortcutToInvoke) {
