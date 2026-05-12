@@ -42,8 +42,16 @@
 		AC10C0000003000000000001 /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC10C0000001000000000001 /* Clock.swift */; };
 		B1A4DE3555B64713B756BDAD /* FakeAXClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19CB2B9446B84F94851F9AE1 /* FakeAXClient.swift */; };
 		BC10C0000002000000000001 /* VirtualClock.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC10C0000001000000000001 /* VirtualClock.swift */; };
-		D17BF6CD21BD172200E70660 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17BF6CC21BD172200E70660 /* Menu.swift */; };
-		D17BF6CE21BD172200E70660 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17BF6CC21BD172200E70660 /* Menu.swift */; };
+		BB10000000000000000000A1 /* KeyGlyph.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB10000000000000000000A0 /* KeyGlyph.swift */; };
+		BB10000000000000000000A2 /* KeyGlyph.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB10000000000000000000A0 /* KeyGlyph.swift */; };
+		BB10000000000000000000B1 /* Modifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB10000000000000000000B0 /* Modifiers.swift */; };
+		BB10000000000000000000B2 /* Modifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB10000000000000000000B0 /* Modifiers.swift */; };
+		BB10000000000000000000C1 /* MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB10000000000000000000C0 /* MenuItem.swift */; };
+		BB10000000000000000000C2 /* MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB10000000000000000000C0 /* MenuItem.swift */; };
+		BB10000000000000000000D1 /* MenuIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB10000000000000000000D0 /* MenuIndex.swift */; };
+		BB10000000000000000000D2 /* MenuIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB10000000000000000000D0 /* MenuIndex.swift */; };
+		BB10000000000000000000E1 /* AXMenuIndexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB10000000000000000000E0 /* AXMenuIndexer.swift */; };
+		BB10000000000000000000E2 /* AXMenuIndexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB10000000000000000000E0 /* AXMenuIndexer.swift */; };
 		D19451ED21D62A80003607D2 /* AXClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CECD301EA4A0BF007BD237 /* AXClient.swift */; };
 		D19451F021D78A27003607D2 /* SearchSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19451EF21D78A27003607D2 /* SearchSession.swift */; };
 		D19503F721F08C730059A7AA /* SearchSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19451EF21D78A27003607D2 /* SearchSession.swift */; };
@@ -103,7 +111,11 @@
 		88769A3377EB4A3E8C9E0411 /* FakeAXElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeAXElement.swift; sourceTree = "<group>"; };
 		AC10C0000001000000000001 /* Clock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clock.swift; sourceTree = "<group>"; };
 		BC10C0000001000000000001 /* VirtualClock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualClock.swift; sourceTree = "<group>"; };
-		D17BF6CC21BD172200E70660 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
+		BB10000000000000000000A0 /* KeyGlyph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyGlyph.swift; sourceTree = "<group>"; };
+		BB10000000000000000000B0 /* Modifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modifiers.swift; sourceTree = "<group>"; };
+		BB10000000000000000000C0 /* MenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItem.swift; sourceTree = "<group>"; };
+		BB10000000000000000000D0 /* MenuIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuIndex.swift; sourceTree = "<group>"; };
+		BB10000000000000000000E0 /* AXMenuIndexer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AXMenuIndexer.swift; sourceTree = "<group>"; };
 		D19451EF21D78A27003607D2 /* SearchSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchSession.swift; sourceTree = "<group>"; };
 		E5F1BE68D3E244688412BBA3 /* CheatsheetSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheatsheetSession.swift; sourceTree = "<group>"; };
 		F0FA1A4500000000000FA001 /* FuzzyMatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FuzzyMatch.swift; sourceTree = "<group>"; };
@@ -179,7 +191,11 @@
 				E5F1BE68D3E244688412BBA3 /* CheatsheetSession.swift */,
 				AC10C0000001000000000001 /* Clock.swift */,
 				F0FA1A4500000000000FA001 /* FuzzyMatch.swift */,
-				D17BF6CC21BD172200E70660 /* Menu.swift */,
+				BB10000000000000000000A0 /* KeyGlyph.swift */,
+				BB10000000000000000000B0 /* Modifiers.swift */,
+				BB10000000000000000000C0 /* MenuItem.swift */,
+				BB10000000000000000000D0 /* MenuIndex.swift */,
+				BB10000000000000000000E0 /* AXMenuIndexer.swift */,
 				4822C9D02A1733FE00CD843B /* App.swift */,
 				481CCC010CCCCCCCCCCC0001 /* CheatsheetPanel.swift */,
 				481CCC030CCCCCCCCCCC0003 /* CheatsheetView.swift */,
@@ -392,7 +408,11 @@
 				48CECD311EA4A0BF007BD237 /* AXClient.swift in Sources */,
 				AC10C0000002000000000001 /* Clock.swift in Sources */,
 				4822C9D12A1733FE00CD843B /* App.swift in Sources */,
-				D17BF6CD21BD172200E70660 /* Menu.swift in Sources */,
+				BB10000000000000000000A1 /* KeyGlyph.swift in Sources */,
+				BB10000000000000000000B1 /* Modifiers.swift in Sources */,
+				BB10000000000000000000C1 /* MenuItem.swift in Sources */,
+				BB10000000000000000000D1 /* MenuIndex.swift in Sources */,
+				BB10000000000000000000E1 /* AXMenuIndexer.swift in Sources */,
 				D19451F021D78A27003607D2 /* SearchSession.swift in Sources */,
 				D88853A8B57E4930827220E8 /* IndexProvider.swift in Sources */,
 				6375ED7C280E4AB2B0C5C3C9 /* CheatsheetSession.swift in Sources */,
@@ -420,7 +440,11 @@
 				D19451ED21D62A80003607D2 /* AXClient.swift in Sources */,
 				AC10C0000003000000000001 /* Clock.swift in Sources */,
 				BC10C0000002000000000001 /* VirtualClock.swift in Sources */,
-				D17BF6CE21BD172200E70660 /* Menu.swift in Sources */,
+				BB10000000000000000000A2 /* KeyGlyph.swift in Sources */,
+				BB10000000000000000000B2 /* Modifiers.swift in Sources */,
+				BB10000000000000000000C2 /* MenuItem.swift in Sources */,
+				BB10000000000000000000D2 /* MenuIndex.swift in Sources */,
+				BB10000000000000000000E2 /* AXMenuIndexer.swift in Sources */,
 				F0FA1A4500000002000FA001 /* FuzzyMatch.swift in Sources */,
 				48D557D92B2D7D4300956ABA /* Preferences.swift in Sources */,
 				F0FA1A4500000004000FA001 /* FuzzyMatchTests.swift in Sources */,
