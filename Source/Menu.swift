@@ -272,6 +272,32 @@ final class MenuItemCommand: @unchecked Sendable {
       pollUntilEnabled(deadline: deadline, pollInterval: pollInterval)
     }
   }
+
+  /// True when this command is the keyboard equivalent of `event` — the
+  /// canonical "did the user just type my shortcut?" check used by both
+  /// panels' `performKeyEquivalent`.
+  ///
+  /// Uses `charactersIgnoringModifiers` when present and non-empty so
+  /// dead-key combinations (⌥E → "´") still match the underlying letter,
+  /// and falls back to `characters` only when the modifier-stripped form
+  /// is missing or empty. Empty `character` (items without a shortcut)
+  /// never match.
+  func matches(_ event: NSEvent) -> Bool {
+    guard !character.isEmpty else { return false }
+    guard let target = Self.eventCharacter(event) else { return false }
+    return character.uppercased() == target
+        && modifiers == event.modifierFlags
+  }
+
+  private static func eventCharacter(_ event: NSEvent) -> String? {
+    if let chars = event.charactersIgnoringModifiers, !chars.isEmpty {
+      return chars.uppercased()
+    }
+    if let chars = event.characters, !chars.isEmpty {
+      return chars.uppercased()
+    }
+    return nil
+  }
 }
 
 

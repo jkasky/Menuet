@@ -77,18 +77,11 @@ class SearchPanel: NSPanel {
   }
 
   override func performKeyEquivalent(with event: NSEvent) -> Bool {
-    var characters = event.charactersIgnoringModifiers?.uppercased()
-    if characters == nil || characters != "" {
-      characters = event.characters?.uppercased()
+    if let item = SearchSession.shared.findMatchingResult({ $0.command.matches(event) }) {
+      dismissAndPerform(item.command)
+      return true
     }
-
-    if let itemWithEquivalent = SearchSession.shared.findMatchingResult({
-      $0.command.character.uppercased() == characters?.uppercased() &&
-      $0.command.modifiers == event.modifierFlags
-    }) {
-      dismissAndPerform(itemWithEquivalent.command)
-    }
-    return super.performKeyEquivalent(with:event)
+    return super.performKeyEquivalent(with: event)
   }
 
   // Close the panel and restore the target app as frontmost.

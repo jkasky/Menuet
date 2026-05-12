@@ -126,15 +126,9 @@ final class CheatsheetSession: ObservableObject {
   }
 
   func item(matching event: NSEvent) -> MenuItem? {
-    var characters = event.charactersIgnoringModifiers?.uppercased()
-    if characters == nil || characters == "" {
-      characters = event.characters?.uppercased()
-    }
-    guard let target = characters, !target.isEmpty else { return nil }
     for group in groups {
       for item in group.items {
-        if item.command.character.uppercased() == target
-          && item.command.modifiers == event.modifierFlags {
+        if item.command.matches(event) {
           return item
         }
       }
