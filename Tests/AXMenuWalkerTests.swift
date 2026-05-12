@@ -17,14 +17,9 @@ private class RecordingVisitor: AXMenuVisitor {
 }
 
 
-private func makeItem(_ title: String, role: AX.Role = .MenuItem) -> FakeAXElement {
-  let item = FakeAXElement()
-  item.role = role
-  item.stringAttributes[.Title] = title
-  return item
-}
-
-
+/// Builds a bare submenu (without the wrapping MenuBarItem). Specific
+/// to walker tests' nested-menu scenarios; production menus always have
+/// a MenuBarItem parent.
 private func makeMenu(items: [FakeAXElement]) -> FakeAXElement {
   let menu = FakeAXElement()
   menu.role = .Menu
@@ -33,30 +28,13 @@ private func makeMenu(items: [FakeAXElement]) -> FakeAXElement {
 }
 
 
-private func makeMenuBarItem(title: String, items: [FakeAXElement]) -> FakeAXElement {
-  let bar = FakeAXElement()
-  bar.role = .MenuBarItem
-  bar.stringAttributes[.Title] = title
-  bar.children = [makeMenu(items: items)]
-  return bar
-}
-
-
-private func makeMenuBar(_ items: [FakeAXElement]) -> FakeAXElement {
-  let menuBar = FakeAXElement()
-  menuBar.role = .MenuBar
-  menuBar.children = items
-  return menuBar
-}
-
-
 class AXMenuWalkerTests: XCTestCase {
 
   func testVisitOrderFlatMenu() {
     let app = FakeAXApplication(menuBar: makeMenuBar([
-      makeMenuBarItem(title: "File", items: [makeItem("New"), makeItem("Open")]),
-      makeMenuBarItem(title: "Edit", items: [makeItem("Cut"),  makeItem("Copy")]),
-    ]))
+      makeMenuBarItem(title: "File", items: [makeMenuItem("New"), makeMenuItem("Open")]),
+      makeMenuBarItem(title: "Edit", items: [makeMenuItem("Cut"),  makeMenuItem("Copy")]),
+    ], applePrefixed: false))
     let visitor = RecordingVisitor()
 
     AXMenuWalker(application: app).walk(visitor: visitor)
@@ -83,8 +61,8 @@ class AXMenuWalkerTests: XCTestCase {
     lonely.stringAttributes[.Title] = "Lonely"
     let app = FakeAXApplication(menuBar: makeMenuBar([
       lonely,
-      makeMenuBarItem(title: "Edit", items: [makeItem("Copy")]),
-    ]))
+      makeMenuBarItem(title: "Edit", items: [makeMenuItem("Copy")]),
+    ], applePrefixed: false))
     let visitor = RecordingVisitor()
 
     AXMenuWalker(application: app).walk(visitor: visitor)
@@ -94,11 +72,11 @@ class AXMenuWalkerTests: XCTestCase {
   }
 
   func testNestedSubmenu() {
-    let bold = makeItem("Bold")
-    let font = makeItem("Font")
+    let bold = makeMenuItem("Bold")
+    let font = makeMenuItem("Font")
     font.children = [makeMenu(items: [bold])]
     let format = makeMenuBarItem(title: "Format", items: [font])
-    let app = FakeAXApplication(menuBar: makeMenuBar([format]))
+    let app = FakeAXApplication(menuBar: makeMenuBar([format], applePrefixed: false))
     let visitor = RecordingVisitor()
 
     AXMenuWalker(application: app).walk(visitor: visitor)
@@ -111,9 +89,9 @@ class AXMenuWalkerTests: XCTestCase {
   func testWalkBailsAtDeadline() {
     let clock = VirtualClock()
     let bars = (1...10).map { i in
-      makeMenuBarItem(title: "Bar\(i)", items: [makeItem("Leaf\(i)")])
+      makeMenuBarItem(title: "Bar\(i)", items: [makeMenuItem("Leaf\(i)")])
     }
-    let menuBar = makeMenuBar(bars)
+    let menuBar = makeMenuBar(bars, applePrefixed: false)
     injectClock(clock, delay: 0.1, into: menuBar)
     let app = FakeAXApplication(menuBar: menuBar)
     let visitor = RecordingVisitor()
@@ -129,9 +107,9 @@ class AXMenuWalkerTests: XCTestCase {
   func testWalkCompletesUnderDeadline() {
     let clock = VirtualClock()
     let menuBar = makeMenuBar([
-      makeMenuBarItem(title: "File", items: [makeItem("New")]),
-      makeMenuBarItem(title: "Edit", items: [makeItem("Cut")]),
-    ])
+      makeMenuBarItem(title: "File", items: [makeMenuItem("New")]),
+      makeMenuBarItem(title: "Edit", items: [makeMenuItem("Cut")]),
+    ], applePrefixed: false)
     // delay 0 — every read advances the clock by 0; we never approach the deadline
     injectClock(clock, delay: 0, into: menuBar)
     let app = FakeAXApplication(menuBar: menuBar)
@@ -148,8 +126,8 @@ class AXMenuWalkerTests: XCTestCase {
 
   func testWalkWithoutDeadlineAlwaysCompletes() {
     let app = FakeAXApplication(menuBar: makeMenuBar([
-      makeMenuBarItem(title: "File", items: [makeItem("New")]),
-    ]))
+      makeMenuBarItem(title: "File", items: [makeMenuItem("New")]),
+    ], applePrefixed: false))
     let didComplete = AXMenuWalker(application: app)
       .walk(visitor: RecordingVisitor())
     XCTAssertTrue(didComplete)

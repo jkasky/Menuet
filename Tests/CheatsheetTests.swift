@@ -6,54 +6,6 @@
 import XCTest
 
 
-private func makeItem(
-  _ title: String,
-  cmdChar: String? = nil,
-  modifiers: Int? = nil
-) -> FakeAXElement {
-  let item = FakeAXElement()
-  item.role = .MenuItem
-  item.stringAttributes[.Title] = title
-  item.boolAttributes[.Enabled] = true
-  if let cmdChar = cmdChar {
-    item.stringAttributes[.MenuItemCmdChar] = cmdChar
-    item.intAttributes[.MenuItemCmdModifiers] = modifiers ?? 0
-  }
-  return item
-}
-
-
-private func makeMenuBarItem(title: String, items: [FakeAXElement]) -> FakeAXElement {
-  let menu = FakeAXElement()
-  menu.role = .Menu
-  menu.children = items
-
-  let bar = FakeAXElement()
-  bar.role = .MenuBarItem
-  bar.stringAttributes[.Title] = title
-  bar.children = [menu]
-  return bar
-}
-
-
-/// Real macOS menu bars always start with the system Apple menu at
-/// position 0. The indexer identifies the Apple menu by position
-/// (locale-independent), so fixtures that want their menus to be treated
-/// as non-Apple must mirror that layout. Default is `applePrefixed: true`
-/// so individual tests don't have to remember; tests that explicitly
-/// exercise the Apple-menu filter pass `applePrefixed: false`.
-private func makeMenuBar(_ items: [FakeAXElement], applePrefixed: Bool = true) -> FakeAXElement {
-  let menuBar = FakeAXElement()
-  menuBar.role = .MenuBar
-  menuBar.children = applePrefixed ? [makeAppleStub()] + items : items
-  return menuBar
-}
-
-private func makeAppleStub() -> FakeAXElement {
-  return makeMenuBarItem(title: "Apple", items: [])
-}
-
-
 private func buildIndex(_ menuBar: FakeAXElement, indexAppleMenu: Bool = true) -> MenuIndex {
   let app = FakeAXApplication(menuBar: menuBar)
   let index = MenuIndex()
@@ -68,9 +20,9 @@ class MenuIndexShortcutsTests: XCTestCase {
   func testItemsWithShortcutsExcludesShortcutless() {
     let menuBar = makeMenuBar([
       makeMenuBarItem(title: "File", items: [
-        makeItem("New", cmdChar: "N"),
-        makeItem("Open Recent"),
-        makeItem("Save", cmdChar: "S"),
+        makeMenuItem("New", cmdChar: "N"),
+        makeMenuItem("Open Recent"),
+        makeMenuItem("Save", cmdChar: "S"),
       ]),
     ])
 
@@ -81,7 +33,7 @@ class MenuIndexShortcutsTests: XCTestCase {
 
   func testItemsWithShortcutsEmptyWhenNoneHaveShortcuts() {
     let menuBar = makeMenuBar([
-      makeMenuBarItem(title: "Help", items: [makeItem("About")]),
+      makeMenuBarItem(title: "Help", items: [makeMenuItem("About")]),
     ])
 
     XCTAssertTrue(buildIndex(menuBar).itemsWithShortcuts().isEmpty)
@@ -95,12 +47,12 @@ class CheatsheetGroupingTests: XCTestCase {
   func testGroupsByTopLevelMenuPreservingOrder() {
     let menuBar = makeMenuBar([
       makeMenuBarItem(title: "File", items: [
-        makeItem("New",  cmdChar: "N"),
-        makeItem("Save", cmdChar: "S"),
+        makeMenuItem("New",  cmdChar: "N"),
+        makeMenuItem("Save", cmdChar: "S"),
       ]),
       makeMenuBarItem(title: "Edit", items: [
-        makeItem("Copy",  cmdChar: "C"),
-        makeItem("Paste", cmdChar: "V"),
+        makeMenuItem("Copy",  cmdChar: "C"),
+        makeMenuItem("Paste", cmdChar: "V"),
       ]),
     ])
     let items = buildIndex(menuBar).itemsWithShortcuts()
@@ -114,8 +66,8 @@ class CheatsheetGroupingTests: XCTestCase {
 
   func testExcludesAppleMenu() {
     let menuBar = makeMenuBar([
-      makeMenuBarItem(title: "Apple", items: [makeItem("Force Quit", cmdChar: "Q", modifiers: 1)]),
-      makeMenuBarItem(title: "File",  items: [makeItem("New",        cmdChar: "N")]),
+      makeMenuBarItem(title: "Apple", items: [makeMenuItem("Force Quit", cmdChar: "Q", modifiers: 1)]),
+      makeMenuBarItem(title: "File",  items: [makeMenuItem("New",        cmdChar: "N")]),
     ], applePrefixed: false)
     // indexAppleMenu: true ensures Apple items reach the index — grouping
     // should still drop them.
@@ -132,8 +84,8 @@ class CheatsheetGroupingTests: XCTestCase {
   // verify grouping doesn't fall back to a string check.
   func testExcludesAppleMenuByPositionRegardlessOfTitle() {
     let menuBar = makeMenuBar([
-      makeMenuBarItem(title: "NotApple", items: [makeItem("Force Quit", cmdChar: "Q", modifiers: 1)]),
-      makeMenuBarItem(title: "File",     items: [makeItem("New",        cmdChar: "N")]),
+      makeMenuBarItem(title: "NotApple", items: [makeMenuItem("Force Quit", cmdChar: "Q", modifiers: 1)]),
+      makeMenuBarItem(title: "File",     items: [makeMenuItem("New",        cmdChar: "N")]),
     ], applePrefixed: false)
     let items = buildIndex(menuBar, indexAppleMenu: true).itemsWithShortcuts()
 
@@ -154,13 +106,13 @@ class CheatsheetSearchTests: XCTestCase {
   private func makeManager() -> CheatsheetSession {
     let menuBar = makeMenuBar([
       makeMenuBarItem(title: "File", items: [
-        makeItem("New",       cmdChar: "N"),
-        makeItem("New Window", cmdChar: "N", modifiers: 1),
-        makeItem("Save",      cmdChar: "S"),
+        makeMenuItem("New",       cmdChar: "N"),
+        makeMenuItem("New Window", cmdChar: "N", modifiers: 1),
+        makeMenuItem("Save",      cmdChar: "S"),
       ]),
       makeMenuBarItem(title: "Edit", items: [
-        makeItem("Copy",  cmdChar: "C"),
-        makeItem("Paste", cmdChar: "V"),
+        makeMenuItem("Copy",  cmdChar: "C"),
+        makeMenuItem("Paste", cmdChar: "V"),
       ]),
     ])
     let items = buildIndex(menuBar).itemsWithShortcuts()
@@ -347,8 +299,8 @@ class CheatsheetModifierFilterTests: XCTestCase {
 
   func testFilteredGroupsExcludesNonMatchingItems() {
     let mgr = makeManager(withItems: [
-      makeItem("Copy", cmdChar: "C", modifiers: Self.controlNoCmd),
-      makeItem("Paste", cmdChar: "V", modifiers: Self.noCommand),
+      makeMenuItem("Copy", cmdChar: "C", modifiers: Self.controlNoCmd),
+      makeMenuItem("Paste", cmdChar: "V", modifiers: Self.noCommand),
     ], inMenu: "Edit")
 
     mgr.updateModifierFilter([.control])
@@ -362,8 +314,8 @@ class CheatsheetModifierFilterTests: XCTestCase {
 
   func testEmptyFilterReturnsAllGroups() {
     let mgr = makeManager(withItems: [
-      makeItem("Copy", cmdChar: "C", modifiers: Self.controlNoCmd),
-      makeItem("Paste", cmdChar: "V", modifiers: Self.noCommand),
+      makeMenuItem("Copy", cmdChar: "C", modifiers: Self.controlNoCmd),
+      makeMenuItem("Paste", cmdChar: "V", modifiers: Self.noCommand),
     ], inMenu: "Edit")
 
     mgr.updateModifierFilter([])
@@ -376,8 +328,8 @@ class CheatsheetModifierFilterTests: XCTestCase {
 
   func testFilterClearingShowsAllItemsAgain() {
     let mgr = makeManager(withItems: [
-      makeItem("Copy", cmdChar: "C", modifiers: Self.controlNoCmd),
-      makeItem("Paste", cmdChar: "V", modifiers: Self.noCommand),
+      makeMenuItem("Copy", cmdChar: "C", modifiers: Self.controlNoCmd),
+      makeMenuItem("Paste", cmdChar: "V", modifiers: Self.noCommand),
     ], inMenu: "Edit")
 
     mgr.updateModifierFilter([.control])
@@ -389,7 +341,7 @@ class CheatsheetModifierFilterTests: XCTestCase {
 
   func testCheatsheetClearQueryResetsModifierFilter() {
     let mgr = makeManager(withItems: [
-      makeItem("Copy", cmdChar: "C", modifiers: Self.controlNoCmd),
+      makeMenuItem("Copy", cmdChar: "C", modifiers: Self.controlNoCmd),
     ], inMenu: "Edit")
 
     mgr.updateModifierFilter([.command])
@@ -403,8 +355,8 @@ class CheatsheetModifierFilterTests: XCTestCase {
 
   func testCommandFilterExcludesNonCommandItems() {
     let mgr = makeManager(withItems: [
-      makeItem("Copy", cmdChar: "C", modifiers: Self.hasCommand),
-      makeItem("Paste", cmdChar: "V", modifiers: Self.noCommand),
+      makeMenuItem("Copy", cmdChar: "C", modifiers: Self.hasCommand),
+      makeMenuItem("Paste", cmdChar: "V", modifiers: Self.noCommand),
     ], inMenu: "Edit")
 
     mgr.updateModifierFilter([.command])

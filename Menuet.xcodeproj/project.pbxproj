@@ -51,6 +51,7 @@
 		BB10000000000000000000D2 /* MenuIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB10000000000000000000D0 /* MenuIndex.swift */; };
 		BB10000000000000000000E1 /* AXMenuIndexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB10000000000000000000E0 /* AXMenuIndexer.swift */; };
 		BB10000000000000000000E2 /* AXMenuIndexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB10000000000000000000E0 /* AXMenuIndexer.swift */; };
+		BB10000000000000000000F2 /* MenuBarFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB10000000000000000000F0 /* MenuBarFixtures.swift */; };
 		BC10C0000002000000000001 /* VirtualClock.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC10C0000001000000000001 /* VirtualClock.swift */; };
 		D19451ED21D62A80003607D2 /* AXClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CECD301EA4A0BF007BD237 /* AXClient.swift */; };
 		D19451F021D78A27003607D2 /* SearchSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19451EF21D78A27003607D2 /* SearchSession.swift */; };
@@ -115,6 +116,7 @@
 		BB10000000000000000000C0 /* MenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItem.swift; sourceTree = "<group>"; };
 		BB10000000000000000000D0 /* MenuIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuIndex.swift; sourceTree = "<group>"; };
 		BB10000000000000000000E0 /* AXMenuIndexer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AXMenuIndexer.swift; sourceTree = "<group>"; };
+		BB10000000000000000000F0 /* MenuBarFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarFixtures.swift; sourceTree = "<group>"; };
 		BC10C0000001000000000001 /* VirtualClock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualClock.swift; sourceTree = "<group>"; };
 		D19451EF21D78A27003607D2 /* SearchSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchSession.swift; sourceTree = "<group>"; };
 		E5F1BE68D3E244688412BBA3 /* CheatsheetSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheatsheetSession.swift; sourceTree = "<group>"; };
@@ -206,8 +208,8 @@
 				D19451EF21D78A27003607D2 /* SearchSession.swift */,
 				489EB1732A6C6C30000271CB /* SearchView.swift */,
 				482C8A902A6BA7F300A8B5DB /* SettingsView.swift */,
-				487835901B3B91E700BC911B /* Supporting Files */,
 				48F1B0CD2ADFBA3900E6492E /* Telemetry.swift */,
+				487835901B3B91E700BC911B /* Supporting Files */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -224,16 +226,17 @@
 		487835A21B3B91E700BC911B /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				4853E21A1F37FA6900D96A08 /* MenuItemCommandTests.swift */,
-				F0FA1A4500000003000FA001 /* FuzzyMatchTests.swift */,
-				88769A3377EB4A3E8C9E0411 /* FakeAXElement.swift */,
+				6F5023C43CA04FF5BE52F0BB /* AXMenuIndexerTests.swift */,
+				35B4849149CA4EB3A1650A95 /* AXMenuWalkerTests.swift */,
+				481CCC050CCCCCCCCCCC0005 /* CheatsheetTests.swift */,
 				18356E1DC4F7489CB7A35E9C /* FakeAXApplication.swift */,
 				19CB2B9446B84F94851F9AE1 /* FakeAXClient.swift */,
-				BC10C0000001000000000001 /* VirtualClock.swift */,
-				35B4849149CA4EB3A1650A95 /* AXMenuWalkerTests.swift */,
-				6F5023C43CA04FF5BE52F0BB /* AXMenuIndexerTests.swift */,
-				481CCC050CCCCCCCCCCC0005 /* CheatsheetTests.swift */,
+				88769A3377EB4A3E8C9E0411 /* FakeAXElement.swift */,
+				F0FA1A4500000003000FA001 /* FuzzyMatchTests.swift */,
 				481CCC100CCCCCCCCCCC0010 /* IndexProviderTests.swift */,
+				BB10000000000000000000F0 /* MenuBarFixtures.swift */,
+				4853E21A1F37FA6900D96A08 /* MenuItemCommandTests.swift */,
+				BC10C0000001000000000001 /* VirtualClock.swift */,
 				487835A31B3B91E700BC911B /* Supporting Files */,
 			);
 			path = Tests;
@@ -456,6 +459,7 @@
 				FA57919B06734D2BBBEBDD96 /* AXMenuIndexerTests.swift in Sources */,
 				481CCC060CCCCCCCCCCC0006 /* CheatsheetTests.swift in Sources */,
 				481CCC110CCCCCCCCCCC0011 /* IndexProviderTests.swift in Sources */,
+				BB10000000000000000000F2 /* MenuBarFixtures.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

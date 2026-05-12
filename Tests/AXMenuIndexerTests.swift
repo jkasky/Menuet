@@ -7,50 +7,10 @@ import OSLog
 import XCTest
 
 
-private func makeItem(_ title: String, enabled: Bool = true) -> FakeAXElement {
-  let item = FakeAXElement()
-  item.role = .MenuItem
-  item.stringAttributes[.Title] = title
-  item.boolAttributes[.Enabled] = enabled
-  return item
-}
-
-
-private func makeMenuBarItem(title: String, items: [FakeAXElement]) -> FakeAXElement {
-  let menu = FakeAXElement()
-  menu.role = .Menu
-  menu.children = items
-
-  let bar = FakeAXElement()
-  bar.role = .MenuBarItem
-  bar.stringAttributes[.Title] = title
-  bar.children = [menu]
-  return bar
-}
-
-
-/// Real macOS menu bars always start with the system Apple menu at
-/// position 0. The indexer identifies the Apple menu by position
-/// (locale-independent), so fixtures that want their menus to be treated
-/// as non-Apple must mirror that layout. Default is `applePrefixed: true`
-/// so individual tests don't have to remember; tests that explicitly
-/// exercise the Apple-menu filter pass `applePrefixed: false`.
-private func makeMenuBar(_ items: [FakeAXElement], applePrefixed: Bool = true) -> FakeAXElement {
-  let menuBar = FakeAXElement()
-  menuBar.role = .MenuBar
-  menuBar.children = applePrefixed ? [makeAppleStub()] + items : items
-  return menuBar
-}
-
-private func makeAppleStub() -> FakeAXElement {
-  return makeMenuBarItem(title: "Apple", items: [])
-}
-
-
 class MenuItemShortcutTests: XCTestCase {
 
   func testFromCmdChar() {
-    let item = makeItem("Save")
+    let item = makeMenuItem("Save")
     item.stringAttributes[.MenuItemCmdChar] = "S"
     item.intAttributes[.MenuItemCmdModifiers] = 0
 
@@ -61,7 +21,7 @@ class MenuItemShortcutTests: XCTestCase {
   }
 
   func testNoCharMeansNoModifiers() {
-    let item = makeItem("Plain")
+    let item = makeMenuItem("Plain")
     item.intAttributes[.MenuItemCmdModifiers] = 0
 
     let s = MenuItemShortcut.extract(from: item, logger: Logger())
@@ -71,7 +31,7 @@ class MenuItemShortcutTests: XCTestCase {
   }
 
   func testGlyphTakesPrecedenceOverCmdChar() {
-    let item = makeItem("Item")
+    let item = makeMenuItem("Item")
     // pick any glyph code KeyGlyph recognizes; we only assert the precedence
     // (cmdChar is ignored when a glyph code is present).
     item.intAttributes[.MenuItemCmdGlyph] = -1   // unrecognized glyph
@@ -89,7 +49,7 @@ class AXMenuIndexerTests: XCTestCase {
 
   func testIndexesMenuItemTitleAndPath() {
     let menuBar = makeMenuBar([
-      makeMenuBarItem(title: "File", items: [makeItem("New")]),
+      makeMenuBarItem(title: "File", items: [makeMenuItem("New")]),
     ])
     let app = FakeAXApplication(menuBar: menuBar)
     let index = MenuIndex()
@@ -105,8 +65,8 @@ class AXMenuIndexerTests: XCTestCase {
 
   func testSkipsAppleMenuWhenFlagOff() {
     let menuBar = makeMenuBar([
-      makeMenuBarItem(title: "Apple", items: [makeItem("About")]),
-      makeMenuBarItem(title: "File",  items: [makeItem("New")]),
+      makeMenuBarItem(title: "Apple", items: [makeMenuItem("About")]),
+      makeMenuBarItem(title: "File",  items: [makeMenuItem("New")]),
     ], applePrefixed: false)
     let app = FakeAXApplication(menuBar: menuBar)
     let index = MenuIndex()
@@ -120,7 +80,7 @@ class AXMenuIndexerTests: XCTestCase {
 
   func testIncludesAppleMenuWhenFlagOn() {
     let menuBar = makeMenuBar([
-      makeMenuBarItem(title: "Apple", items: [makeItem("About")]),
+      makeMenuBarItem(title: "Apple", items: [makeMenuItem("About")]),
     ], applePrefixed: false)
     let app = FakeAXApplication(menuBar: menuBar)
     let index = MenuIndex()
@@ -138,8 +98,8 @@ class AXMenuIndexerTests: XCTestCase {
   // to a string check.
   func testSkipsAppleMenuByPositionRegardlessOfTitle() {
     let menuBar = makeMenuBar([
-      makeMenuBarItem(title: "NotApple", items: [makeItem("About")]),
-      makeMenuBarItem(title: "File", items: [makeItem("New")]),
+      makeMenuBarItem(title: "NotApple", items: [makeMenuItem("About")]),
+      makeMenuBarItem(title: "File", items: [makeMenuItem("New")]),
     ], applePrefixed: false)
     let app = FakeAXApplication(menuBar: menuBar)
     let index = MenuIndex()
@@ -153,8 +113,8 @@ class AXMenuIndexerTests: XCTestCase {
 
   func testIsAppleMenuFlagSetByPosition() {
     let menuBar = makeMenuBar([
-      makeMenuBarItem(title: "NotApple", items: [makeItem("About")]),
-      makeMenuBarItem(title: "File", items: [makeItem("New")]),
+      makeMenuBarItem(title: "NotApple", items: [makeMenuItem("About")]),
+      makeMenuBarItem(title: "File", items: [makeMenuItem("New")]),
     ], applePrefixed: false)
     let app = FakeAXApplication(menuBar: menuBar)
     let index = MenuIndex()
