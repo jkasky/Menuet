@@ -2,30 +2,10 @@ import Carbon.HIToolbox
 import SwiftUI
 
 
-class CheatsheetPanel: NSPanel {
+class CheatsheetPanel: FloatingActionPanel {
 
   init(contentRect: NSRect, view: () -> some View) {
-
-    super.init(contentRect: contentRect,
-               styleMask: [.nonactivatingPanel, .fullSizeContentView, .resizable],
-               backing: .buffered,
-               defer: false)
-
-    backgroundColor = NSColor.clear
-    isOpaque = false
-    isMovableByWindowBackground = true
-    collectionBehavior = .moveToActiveSpace
-    isFloatingPanel = true
-    level = .floating
-    collectionBehavior.insert(.fullScreenAuxiliary)
-    hidesOnDeactivate = true
-    animationBehavior = .utilityWindow
-    titleVisibility = .hidden
-    titlebarAppearsTransparent = true
-
-    standardWindowButton(.closeButton)?.isHidden = true
-    standardWindowButton(.miniaturizeButton)?.isHidden = true
-    standardWindowButton(.zoomButton)?.isHidden = true
+    super.init(contentRect: contentRect, styleMask: [.resizable])
 
     // The NSHostingView delivers SwiftUI events on main; assumeIsolated
     // bridges the @Sendable closure into our @MainActor methods.
@@ -44,9 +24,6 @@ class CheatsheetPanel: NSPanel {
     contentView = hostingView
   }
 
-  override var canBecomeKey: Bool { true }
-  override var canBecomeMain: Bool { true }
-
   override func cancelOperation(_ sender: Any?) {
     let cheatsheet = CheatsheetSession.shared
     if !cheatsheet.query.isEmpty {
@@ -55,11 +32,6 @@ class CheatsheetPanel: NSPanel {
       cheatsheet.updateModifierFilter([])
       dismiss()
     }
-  }
-
-  override func resignMain() {
-    super.resignMain()
-    close()
   }
 
   override func flagsChanged(with event: NSEvent) {
@@ -133,16 +105,6 @@ class CheatsheetPanel: NSPanel {
     }
 
     super.keyDown(with: event)
-  }
-
-  private func dismiss() {
-    resignMain()
-    IndexProvider.shared.currentApp?.activate(options: [.activateAllWindows])
-  }
-
-  func dismissAndPerform(_ command: MenuItemCommand) {
-    dismiss()
-    command.performWhenEnabled()
   }
 
   static let topBuffer: CGFloat = 80

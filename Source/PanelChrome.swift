@@ -1,6 +1,69 @@
 import SwiftUI
 
 
+/// Base class for the search and cheatsheet floating panels. Owns the
+/// common NSPanel chrome (clear background, floating level, hides on
+/// deactivate, traffic-light hidden, fullscreen-auxiliary), the focus
+/// behavior (`canBecomeKey/Main = true`), and the dismissal flow
+/// (`resignMain → close`, `dismiss → activate target`,
+/// `dismissAndPerform → dismiss + invoke`).
+///
+/// Subclasses pass any extra `styleMask` bits and install their own
+/// content view; they may override `cancelOperation` for behavior
+/// beyond the default dismiss (the cheatsheet uses this to clear its
+/// query before falling back to closing the panel).
+class FloatingActionPanel: NSPanel {
+
+  init(contentRect: NSRect, styleMask extra: NSWindow.StyleMask = []) {
+    super.init(
+      contentRect: contentRect,
+      styleMask: extra.union([.nonactivatingPanel, .fullSizeContentView]),
+      backing: .buffered,
+      defer: false)
+
+    backgroundColor = .clear
+    isOpaque = false
+    isMovableByWindowBackground = true
+    collectionBehavior = [.moveToActiveSpace, .fullScreenAuxiliary]
+    isFloatingPanel = true
+    level = .floating
+    hidesOnDeactivate = true
+    animationBehavior = .utilityWindow
+    titleVisibility = .hidden
+    titlebarAppearsTransparent = true
+
+    standardWindowButton(.closeButton)?.isHidden = true
+    standardWindowButton(.miniaturizeButton)?.isHidden = true
+    standardWindowButton(.zoomButton)?.isHidden = true
+  }
+
+  override var canBecomeKey: Bool { true }
+  override var canBecomeMain: Bool { true }
+
+  override func resignMain() {
+    super.resignMain()
+    close()
+  }
+
+  override func cancelOperation(_ sender: Any?) {
+    dismiss()
+  }
+
+  /// Close the panel and restore the previous frontmost app.
+  /// `.activateAllWindows` lets AppKit restore the target's
+  /// previously-key window and its first responder.
+  func dismiss() {
+    resignMain()
+    IndexProvider.shared.currentApp?.activate(options: [.activateAllWindows])
+  }
+
+  func dismissAndPerform(_ command: MenuItemCommand) {
+    dismiss()
+    command.performWhenEnabled()
+  }
+}
+
+
 struct PanelBackground<Content: View>: View {
   private let cornerRadius: CGFloat
   private let content: Content
