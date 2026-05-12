@@ -6,6 +6,11 @@ struct CheatsheetView: View {
   @EnvironmentObject var menus: IndexProvider
   @Environment(\.cheatsheetSize) private var sizeAction
 
+  // Tracked locally so the activeItem onChange can decide whether to
+  // animate-scroll. When content fits the ScrollView, calling scrollTo
+  // can still shift visible items by a pixel — guard against that.
+  @State private var contentHeight: CGFloat = 0
+
   private static let scrollTopID = "cheatsheet.top"
 
   var body: some View {
@@ -51,11 +56,16 @@ struct CheatsheetView: View {
               }
               .onChange(of: cheatsheet.activeItem?.id) { _, newID in
                 guard let id = newID else { return }
+                // Only scroll when content actually overflows the
+                // visible area. The 0.5 tolerance absorbs rounding
+                // between the GeometryReader's two height sources.
+                guard contentHeight > geo.size.height + 0.5 else { return }
                 withAnimation(.easeOut(duration: 0.15)) {
                   proxy.scrollTo(id, anchor: .center)
                 }
               }
               .onPreferenceChange(ContentHeightKey.self) { height in
+                contentHeight = height
                 sizeAction.report(height)
               }
             }

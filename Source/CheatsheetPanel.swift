@@ -126,7 +126,11 @@ class CheatsheetPanel: FloatingActionPanel {
   // is still propagating the preference value.
   func applyIdealContentHeight(_ contentHeight: CGFloat) {
     guard let visible = (screen ?? NSScreen.main)?.visibleFrame else { return }
-    let chrome: CGFloat = 65 // header + divider + outer paddings
+    // Header (~64) + divider (1) + a few pixels of slack. Without the
+    // slack, layout settling can leave the panel a hair shorter than
+    // the content actually needs, making it scrollable by a pixel or
+    // two even when the visible items would have fit.
+    let chrome: CGFloat = 75
     let ideal = contentHeight + chrome
     let maxHeight = visible.height - Self.topBuffer - Self.minBottomBuffer
     let newHeight = min(max(ideal, Self.minHeight), maxHeight)
