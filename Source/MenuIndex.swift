@@ -23,7 +23,7 @@ class MenuIndex {
     return items.isEmpty
   }
 
-  func add(item: MenuItem, path: String) {
+  func add(_ item: MenuItem) {
     items.append(item)
   }
 

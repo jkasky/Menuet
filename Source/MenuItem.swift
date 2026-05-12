@@ -20,10 +20,10 @@ final class MenuItemCommand: @unchecked Sendable {
   let character: String
   let modifiers: Modifiers
   let stringValue: String
-  let delegate: MenuItemDelegate?
+  let delegate: AXMenuItemDelegate?
 
   init(character: String, modifiers: Modifiers,
-       delegate: MenuItemDelegate? = nil) {
+       delegate: AXMenuItemDelegate? = nil) {
     self.character = character
     self.modifiers = modifiers
     self.stringValue = modifiers.joinWith(character)
@@ -91,20 +91,6 @@ final class MenuItemCommand: @unchecked Sendable {
 }
 
 
-protocol MenuItemDelegate {
-
-  /**
-   * Returns true if menu item is enabled.
-   */
-  var isEnabled: Bool { get }
-
-  /**
-   * Performs the press action on the menu item.
-   */
-  func press()
-}
-
-
 class MenuItem: CustomDebugStringConvertible, Equatable, Identifiable {
 
   static func == (left: MenuItem, right: MenuItem) -> Bool {
@@ -135,22 +121,19 @@ class MenuItem: CustomDebugStringConvertible, Equatable, Identifiable {
     }
   }
 
-  private let delegate: MenuItemDelegate
-
   init(title: String, command: MenuItemCommand, path: [String],
-       isAppleMenu: Bool, delegate: MenuItemDelegate) {
+       isAppleMenu: Bool, delegate: AXMenuItemDelegate) {
     self.id = UUID()
     self.title = title
     self.command = command
     self.path = path
     self.enabled = delegate.isEnabled
     self.isAppleMenu = isAppleMenu
-    self.delegate = delegate
   }
 }
 
 
-class AXMenuItemDelegate: MenuItemDelegate {
+class AXMenuItemDelegate {
 
   private let element: AX.Element
   private let indexPath: [UInt]

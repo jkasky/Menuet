@@ -122,6 +122,6 @@ class AXMenuIndexer: AXMenuVisitor {
       path: titles,
       isAppleMenu: isAppleMenu,
       delegate: delegate)
-    index.add(item: menuItem, path: titles.joined(separator: " > "))
+    index.add(menuItem)
   }
 }

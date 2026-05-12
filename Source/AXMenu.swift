@@ -127,34 +127,3 @@ class AXMenuItemPath {
 }
 
 
-class AXMenuLogger: AXMenuVisitor {
-
-  var indent:Int = 0
-
-  func enterMenu(_ menu: AX.Element) {
-    if let title: String = try? menu.get(.Title) {
-      let prefix = String(repeating: " ", count: indent)
-      logger.debug("\(prefix, privacy: .public)\(title, privacy: .public)")
-      indent += 2
-    }
-  }
-
-  func leaveMenu(_ menu: AX.Element) {
-    indent -= 2
-  }
-
-  func visitMenuItem(_ item: AX.Element) {
-    if let title: String = try? item.get(.Title) {
-      let enabled: Bool = (try? item.get(.Enabled)) ?? false
-      let commandChar: String = (try? item.get(.MenuItemCmdChar)) ?? ""
-      let commandModifiers: Int = (try? item.get(.MenuItemCmdModifiers)) ?? 0
-      let modifiers = Modifiers(rawValue: commandModifiers)
-      let commandItem = MenuItemCommand(
-        character:commandChar,
-        modifiers:modifiers,
-        delegate:AXMenuItemDelegate(item, path: []))
-      let prefix = String(repeating: " ", count: indent)
-      logger.debug("\(prefix, privacy: .public)\(title, privacy: .public), Command:\(commandItem.stringValue, privacy: .public), Enabled:\(enabled)")
-    }
-  }
-}
