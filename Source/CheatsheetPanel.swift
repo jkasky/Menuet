@@ -4,8 +4,11 @@ import SwiftUI
 
 class CheatsheetPanel: FloatingActionPanel {
 
-  init(contentRect: NSRect, view: () -> some View) {
-    super.init(contentRect: contentRect, styleMask: [.resizable])
+  private let cheatsheet: CheatsheetSession
+
+  init(contentRect: NSRect, menus: IndexProvider, cheatsheet: CheatsheetSession, view: () -> some View) {
+    self.cheatsheet = cheatsheet
+    super.init(contentRect: contentRect, menus: menus, styleMask: [.resizable])
 
     // The NSHostingView delivers SwiftUI events on main; assumeIsolated
     // bridges the @Sendable closure into our @MainActor methods.
@@ -25,7 +28,6 @@ class CheatsheetPanel: FloatingActionPanel {
   }
 
   override func cancelOperation(_ sender: Any?) {
-    let cheatsheet = CheatsheetSession.shared
     if !cheatsheet.query.isEmpty {
       cheatsheet.clearQuery()
     } else {
@@ -37,12 +39,12 @@ class CheatsheetPanel: FloatingActionPanel {
   override func flagsChanged(with event: NSEvent) {
     let mask: NSEvent.ModifierFlags = [.shift, .control, .option, .command, .function]
     let held = event.modifierFlags.intersection(mask)
-    CheatsheetSession.shared.updateModifierFilter(held)
+    cheatsheet.updateModifierFilter(held)
     super.flagsChanged(with: event)
   }
 
   override func performKeyEquivalent(with event: NSEvent) -> Bool {
-    if let item = CheatsheetSession.shared.item(matching: event) {
+    if let item = cheatsheet.item(matching: event) {
       dismissAndPerform(item.command)
       return true
     }
@@ -50,7 +52,6 @@ class CheatsheetPanel: FloatingActionPanel {
   }
 
   override func keyDown(with event: NSEvent) {
-    let cheatsheet = CheatsheetSession.shared
 
     // Tab → cycle to next match (loops at end).
     if Int(event.keyCode) == kVK_Tab {

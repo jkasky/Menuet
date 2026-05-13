@@ -23,8 +23,8 @@ struct PendingSearchAction: Equatable {
 }
 
 struct SearchView: View {
-  @EnvironmentObject var search: SearchSession
-  @EnvironmentObject var menus: IndexProvider
+  @Environment(SearchSession.self) private var search
+  @Environment(IndexProvider.self) private var menus
   // .onKeyPress fires inside a SwiftUI view update, so mutating @Published
   // state directly there triggers "Publishing changes from within view
   // updates is not allowed". Instead we record the intent in @State and
@@ -116,19 +116,17 @@ struct SearchView: View {
   }
 }
 
-struct MenuSearchView_Previews: PreviewProvider {
-    static var previews: some View {
-      let menus = IndexProvider()
-      let search = SearchSession(menus: menus)
-      search.query = "About"
-      return SearchView()
-        .environmentObject(search)
-        .environmentObject(menus)
-    }
+#Preview {
+  let menus = IndexProvider()
+  let search = SearchSession(menus: menus)
+  search.query = "About"
+  return SearchView()
+    .environment(search)
+    .environment(menus)
 }
 
 struct AppIcon: View {
-  @EnvironmentObject var menus: IndexProvider
+  @Environment(IndexProvider.self) private var menus
 
   var body: some View {
     if !menus.isTrusted {
@@ -155,10 +153,12 @@ struct AppIcon: View {
 }
 
 struct SearchField: View {
-  @EnvironmentObject var search: SearchSession
+  @Environment(SearchSession.self) private var search
   @FocusState private var isFocused: Bool
+  @State private var debounceTask: Task<Void, Never>?
 
   var body: some View {
+    @Bindable var search = search
     HStack(spacing: 10) {
       AppIcon()
       TextField("Menu Search", text: $search.query)
@@ -179,19 +179,23 @@ struct SearchField: View {
     // well under 1ms, so the debounce only exists to coalesce bursts from
     // very fast typists. 75ms is well below human perception (~100ms) but
     // long enough that two keystrokes ~50ms apart batch into one search.
-    .onReceive(
-      search.$query.debounce(for: .seconds(0.075), scheduler: DispatchQueue.main)
-    ) { q in
-      search.search(q)
+    .onChange(of: search.query) { _, q in
+      debounceTask?.cancel()
+      debounceTask = Task { @MainActor in
+        try? await Task.sleep(for: .milliseconds(75))
+        guard !Task.isCancelled else { return }
+        search.search(q)
+      }
     }
   }
 }
 
 
 struct ResultsView: View {
-  @EnvironmentObject var search: SearchSession
+  @Environment(SearchSession.self) private var search
 
   var body: some View {
+    @Bindable var search = search
     ScrollViewReader { proxy in
       ScrollView {
         VStack(alignment: .leading, spacing: 2) {
@@ -212,7 +216,7 @@ struct ResultsView: View {
         .padding(.vertical, 8)
       }
       .frame(maxHeight: 500.0)
-      .onReceive(search.$activeItem) { activeItem in
+      .onChange(of: search.activeItem) { _, activeItem in
         if let item = activeItem {
           proxy.scrollTo(item.id)
         }
@@ -222,7 +226,7 @@ struct ResultsView: View {
 }
 
 struct ResultView: View {
-  @EnvironmentObject var search: SearchSession
+  @Environment(SearchSession.self) private var search
   @Binding var result: MenuItem
   @State private var hovering: Bool = false
   @State private var chipScale: CGFloat = 1.0
@@ -301,7 +305,7 @@ struct ResultView: View {
 
 
 struct FooterHintView: View {
-  @EnvironmentObject var search: SearchSession
+  @Environment(SearchSession.self) private var search
   @AppStorage(Preference.requireShortcutToInvoke) private var requireShortcutToInvoke = true
 
   var body: some View {

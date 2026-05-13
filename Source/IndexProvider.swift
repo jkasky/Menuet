@@ -11,8 +11,9 @@ import Sentry
 /// Walks the AX menu tree of the frontmost app and exposes the resulting
 /// `MenuIndex`. This is the single source of truth for "what menu does the
 /// target app have right now"; sessions read from it.
+@Observable
 @MainActor
-final class IndexProvider: ObservableObject {
+final class IndexProvider {
 
   /// Wall-clock budget for a single menu walk. Once exceeded, the walker
   /// bails and `MenuIndex.isComplete` is flipped to false so views can
@@ -27,16 +28,14 @@ final class IndexProvider: ObservableObject {
     return stored > 0 ? stored : defaultWalkDeadline
   }
 
-  static let shared = IndexProvider()
-
-  @Published private(set) var currentApp: NSRunningApplication?
-  @Published private(set) var index: MenuIndex = MenuIndex()
+  private(set) var currentApp: NSRunningApplication?
+  private(set) var index: MenuIndex = MenuIndex()
   /// Reflects `AXIsProcessTrusted()` as of the most recent `refresh()`.
   /// Defaults to `true` so the panels don't flash a "needs permission"
   /// state on the very first hotkey before we've checked. Updated on
   /// every refresh, so revoking permission while Menuet is running is
   /// detected on the next invocation.
-  @Published private(set) var isTrusted: Bool = true
+  private(set) var isTrusted: Bool = true
 
   private let axClient: AX.Client
   private let workspace: NSWorkspace

@@ -11,22 +11,21 @@ import Foundation
 /// displayed, the typed filter query, the modifier-key filter, and which
 /// item is currently highlighted. Reads its source data from a shared
 /// `MenuIndexProvider`.
+@Observable
 @MainActor
-final class CheatsheetSession: ObservableObject {
+final class CheatsheetSession {
 
-  static let shared = CheatsheetSession()
-
-  @Published var groups: [CheatsheetGroup] = []
-  @Published var resetTrigger: Bool = false
-  @Published var query: String = ""
-  @Published var activeItem: MenuItem?
-  @Published private(set) var matchIDs: Set<UUID> = []
-  @Published private(set) var modifierFilter: NSEvent.ModifierFlags = []
+  var groups: [CheatsheetGroup] = []
+  var resetTrigger: Bool = false
+  var query: String = ""
+  var activeItem: MenuItem?
+  private(set) var matchIDs: Set<UUID> = []
+  private(set) var modifierFilter: NSEvent.ModifierFlags = []
 
   private var matchOrder: [MenuItem] = []
   private let menus: IndexProvider
 
-  init(menus: IndexProvider = .shared) {
+  init(menus: IndexProvider) {
     self.menus = menus
   }
 

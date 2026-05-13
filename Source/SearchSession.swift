@@ -10,23 +10,22 @@ import Foundation
 /// State for the menu-search panel: typed query, fuzzy results, current
 /// selection, and the keystroke pulses that drive UI feedback. Reads its
 /// source data from a shared `MenuIndexProvider`.
+@Observable
 @MainActor
-class SearchSession: ObservableObject {
+final class SearchSession {
 
-  static let shared = SearchSession()
-
-  @Published var activeItem: MenuItem?
-  @Published var searchResults: [MenuItem]
-  @Published var query: String
-  @Published var focusTrigger: Bool = false
-  @Published var blockedReturnPulse: Int = 0
+  var activeItem: MenuItem?
+  var searchResults: [MenuItem]
+  var query: String
+  var focusTrigger: Bool = false
+  var blockedReturnPulse: Int = 0
 
   private let menus: IndexProvider
   private var selectedResult: Int
 
   public var totalResults: Int { searchResults.count }
 
-  init(menus: IndexProvider = .shared) {
+  init(menus: IndexProvider) {
     self.menus = menus
     searchResults = []
     query = ""

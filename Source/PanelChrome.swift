@@ -14,7 +14,10 @@ import SwiftUI
 /// query before falling back to closing the panel).
 class FloatingActionPanel: NSPanel {
 
-  init(contentRect: NSRect, styleMask extra: NSWindow.StyleMask = []) {
+  private let menus: IndexProvider
+
+  init(contentRect: NSRect, menus: IndexProvider, styleMask extra: NSWindow.StyleMask = []) {
+    self.menus = menus
     super.init(
       contentRect: contentRect,
       styleMask: extra.union([.nonactivatingPanel, .fullSizeContentView]),
@@ -54,7 +57,7 @@ class FloatingActionPanel: NSPanel {
   /// previously-key window and its first responder.
   func dismiss() {
     resignMain()
-    IndexProvider.shared.currentApp?.activate(options: [.activateAllWindows])
+    menus.currentApp?.activate(options: [.activateAllWindows])
   }
 
   func dismissAndPerform(_ command: MenuItemCommand) {

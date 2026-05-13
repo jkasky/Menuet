@@ -9,8 +9,11 @@ import SwiftUI
 
 class SearchPanel: FloatingActionPanel {
 
-  init(contentRect: NSRect, view: () -> some View) {
-    super.init(contentRect: contentRect)
+  private let search: SearchSession
+
+  init(contentRect: NSRect, menus: IndexProvider, search: SearchSession, view: () -> some View) {
+    self.search = search
+    super.init(contentRect: contentRect, menus: menus)
 
     let hostingView = NSHostingView(rootView: view().ignoresSafeArea())
     hostingView.translatesAutoresizingMaskIntoConstraints = false
@@ -19,7 +22,7 @@ class SearchPanel: FloatingActionPanel {
   }
 
   override func performKeyEquivalent(with event: NSEvent) -> Bool {
-    if let item = SearchSession.shared.findMatchingResult({ $0.command.matches(event) }) {
+    if let item = search.findMatchingResult({ $0.command.matches(event) }) {
       dismissAndPerform(item.command)
       return true
     }

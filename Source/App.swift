@@ -6,13 +6,22 @@ import SwiftUI
 private let logger = Logger(subsystem: "app.menuet", category: "app")
 
 
+@Observable
 @MainActor
-class AppState: ObservableObject {
+final class AppState {
+  let menus: IndexProvider
+  let search: SearchSession
+  let cheatsheet: CheatsheetSession
+
   private var application: NSApplication = NSApplication.shared
   private var searchPanel: SearchPanel?
   private var cheatsheetPanel: CheatsheetPanel?
 
-  init() {
+  init(menus: IndexProvider, search: SearchSession, cheatsheet: CheatsheetSession) {
+    self.menus = menus
+    self.search = search
+    self.cheatsheet = cheatsheet
+
     // KeyboardShortcuts dispatches the callback on main; assumeIsolated
     // bridges the non-isolated closure into our @MainActor methods.
     KeyboardShortcuts.onKeyUp(for: .menuSearchShortcut) {
@@ -36,44 +45,48 @@ class AppState: ObservableObject {
     // Walk the target app's menu BEFORE we activate or take key window,
     // so menu items aren't disabled by the target app in response to
     // resigning key/first-responder.
-    IndexProvider.shared.refresh()
-    SearchSession.shared.clear()
+    menus.refresh()
+    search.clear()
     activate()
     if searchPanel == nil {
-      searchPanel = SearchPanel(contentRect: NSRect(x: 0, y: 0, width: 600, height: 50)) {
+      searchPanel = SearchPanel(
+        contentRect: NSRect(x: 0, y: 0, width: 600, height: 50),
+        menus: menus,
+        search: search
+      ) { [search, menus] in
         SearchView()
-          .environmentObject(self)
-          .environmentObject(SearchSession.shared)
-          .environmentObject(IndexProvider.shared)
+          .environment(search)
+          .environment(menus)
       }
     }
     searchPanel?.center()
     searchPanel?.makeKeyAndOrderFront(nil)
-    DispatchQueue.main.async {
-      SearchSession.shared.focusTrigger.toggle()
+    DispatchQueue.main.async { [search] in
+      search.focusTrigger.toggle()
     }
   }
 
   func showCheatsheetPanel() {
     // Walk first, then activate, so the target app's menu items aren't
     // disabled in response to resigning key/first-responder.
-    IndexProvider.shared.refresh()
-    CheatsheetSession.shared.load()
+    menus.refresh()
+    cheatsheet.load()
     activate()
     if cheatsheetPanel == nil {
       cheatsheetPanel = CheatsheetPanel(
-        contentRect: NSRect(x: 0, y: 0, width: 1100, height: 720)
-      ) {
+        contentRect: NSRect(x: 0, y: 0, width: 1100, height: 720),
+        menus: menus,
+        cheatsheet: cheatsheet
+      ) { [cheatsheet, menus] in
         CheatsheetView()
-          .environmentObject(self)
-          .environmentObject(CheatsheetSession.shared)
-          .environmentObject(IndexProvider.shared)
+          .environment(cheatsheet)
+          .environment(menus)
       }
     }
     cheatsheetPanel?.positionAtTop()
     cheatsheetPanel?.makeKeyAndOrderFront(nil)
-    DispatchQueue.main.async {
-      CheatsheetSession.shared.resetTrigger.toggle()
+    DispatchQueue.main.async { [cheatsheet] in
+      cheatsheet.resetTrigger.toggle()
     }
   }
 
@@ -94,7 +107,7 @@ class AppState: ObservableObject {
 
 
 struct MenuBarContent: View {
-  @EnvironmentObject var appState: AppState
+  @Environment(AppState.self) private var appState
   @Environment(\.openSettings) private var openSettings
 
   var body: some View {
@@ -124,17 +137,21 @@ struct MenuBarContent: View {
 @main
 struct MenuBarApp: App {
 
-  @StateObject private var appState = AppState()
+  @State private var appState: AppState
 
   init() {
     registerPreferenceDefaults()
     Telemetry.startIfEnabled()
+    let menus = IndexProvider()
+    let search = SearchSession(menus: menus)
+    let cheatsheet = CheatsheetSession(menus: menus)
+    _appState = State(initialValue: AppState(menus: menus, search: search, cheatsheet: cheatsheet))
   }
 
   var body: some Scene {
     MenuBarExtra("Menuet", systemImage: "menubar.rectangle") {
       MenuBarContent()
-        .environmentObject(appState)
+        .environment(appState)
     }
 
     Settings() {

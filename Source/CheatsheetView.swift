@@ -2,8 +2,8 @@ import SwiftUI
 
 
 struct CheatsheetView: View {
-  @EnvironmentObject var cheatsheet: CheatsheetSession
-  @EnvironmentObject var menus: IndexProvider
+  @Environment(CheatsheetSession.self) private var cheatsheet
+  @Environment(IndexProvider.self) private var menus
   @Environment(\.cheatsheetSize) private var sizeAction
 
   // Tracked locally so the activeItem onChange can decide whether to
@@ -202,7 +202,7 @@ private struct CheatsheetSection: View {
 private struct ShortcutRow: View {
   let item: MenuItem
 
-  @EnvironmentObject var cheatsheet: CheatsheetSession
+  @Environment(CheatsheetSession.self) private var cheatsheet
   @Environment(\.cheatsheetInvoke) private var invoke
   @State private var hovering = false
 
