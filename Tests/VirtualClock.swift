@@ -12,7 +12,7 @@
 import Foundation
 
 
-final class VirtualClock: Clock {
+final class VirtualClock: WallClock {
 
   private var current: Date
 
