@@ -22,7 +22,7 @@ Typed Swift facade over `ApplicationServices`'s `AXUIElement` C API.
 - `AXClient.init` sets a per-call AX messaging timeout once at startup
   via the system-wide accessibility object — see "Latency bounds" below.
 
-### 2. Menu indexing (`AXMenu.swift`, `Menu.swift`, `FuzzyMatch.swift`)
+### 2. Menu indexing (`AXMenu.swift`, `AXMenuIndexer.swift`, `MenuItem.swift`, `MenuIndex.swift`, `Modifiers.swift`, `KeyGlyph.swift`, `FuzzyMatch.swift`)
 
 - `AXMenuWalker.walk(visitor:deadline:)` traverses
   `MenuBar → MenuBarItem → Menu → MenuItem` recursively in depth-first
@@ -41,23 +41,27 @@ Typed Swift facade over `ApplicationServices`'s `AXUIElement` C API.
   does an `AXPress`, with a path-based fallback (`AXMenuItemPath`) when
   the captured element is no longer valid.
 
-### 3. UI (`MenuBarApp.swift`, `Menu*Panel.swift`, `Menu*View.swift`)
+### 3. UI (`App.swift`, `SearchPanel.swift`, `CheatsheetPanel.swift`, `SearchView.swift`, `CheatsheetView.swift`, `PanelChrome.swift`)
 
 - `MenuBarExtra` for the status item.
-- `MenuSearchPanel` / `MenuSearchView` — the search-and-invoke flow.
-- `MenuCheatsheetPanel` / `MenuCheatsheetView` — the keyboard-shortcut
+- `SearchPanel` / `SearchView` — the search-and-invoke flow.
+- `CheatsheetPanel` / `CheatsheetView` — the keyboard-shortcut
   reference grid (with live modifier-key filtering and incremental
   search).
-- Both panels are `NSPanel`s configured
+- Both panels subclass `FloatingActionPanel` (defined in
+  `PanelChrome.swift`), which configures them as `NSPanel`s with
   `.nonactivatingPanel + .floating + .moveToActiveSpace + .fullScreenAuxiliary`
-  so they overlay the user's current space without disrupting it.
-- `PanelChrome.swift` houses shared chrome — `PanelBackground`,
-  `ShortcutChip`, `NotRespondingView`, `fuzzyHighlight`.
+  so they overlay the user's current space without disrupting it, and
+  owns the shared dismissal flow (`dismiss()` → activate target;
+  `dismissAndPerform(_:)` → dismiss + invoke).
+- `PanelChrome.swift` also houses the shared SwiftUI chrome —
+  `PanelBackground`, `ShortcutChip`, `NotRespondingView`,
+  `NeedsAccessibilityView`, `fuzzyHighlight`.
 
 State is split into three narrow `ObservableObject` types, each
 `@MainActor`-isolated and singleton via `.shared`:
 
-- `MenuIndexProvider` — owns `currentApp` and `index`. The single source
+- `IndexProvider` — owns `currentApp` and `index`. The single source
   of truth for "what menu does the target app have right now"; sessions
   read from it.
 - `SearchSession` — owns the search query, results, selection, focus
@@ -71,7 +75,7 @@ and bridges KeyboardShortcuts callbacks via `MainActor.assumeIsolated`.
 
 ## Critical invariant: walk before stealing focus
 
-`MenuIndexProvider.shared.refresh()` must be called **before** the panel
+`IndexProvider.shared.refresh()` must be called **before** the panel
 takes key focus in `AppState.showSearchPanel` / `showCheatsheetPanel`.
 Many apps disable selection-dependent menu items (Cut/Copy/etc.) when
 their key window resigns key — if we walk after that point, those items
@@ -80,9 +84,9 @@ query the cached index per keystroke.
 
 ## Critical invariant: dismiss → activate target → press when enabled
 
-`MenuSearchPanel.dismissAndPerform` and the corresponding cheatsheet
-flow are the single paths for invoking a result (Return, ⌘1–7, matched
-shortcut). They:
+`FloatingActionPanel.dismissAndPerform` (inherited by both `SearchPanel`
+and `CheatsheetPanel`) is the single path for invoking a result (Return,
+⌘1–7, matched shortcut). It:
 1. Close the panel (`resignMain()`).
 2. Activate the target with `.activateAllWindows` so AppKit restores its
    previously-key window and first responder.
@@ -108,7 +112,7 @@ bounds defend the menu walk:
   object. Default 0.5s, override with
   `defaults write app.menuet axMessagingTimeout -float N`. Bounds any
   single attribute read.
-- **Walk-level wall-clock deadline** — `MenuIndexProvider.refresh`
+- **Walk-level wall-clock deadline** — `IndexProvider.refresh`
   passes `Date() + axWalkDeadline` to `AXMenuWalker.walk`. The walker
   checks `clock.now() < deadline` between sibling iterations and bails
   early when exceeded. Default 2.0s, override with
@@ -127,7 +131,7 @@ intentional.
 `SWIFT_VERSION = 6.0` with `SWIFT_STRICT_CONCURRENCY = complete`. AX
 calls require a single consistent thread (the project chose main) and
 SwiftUI `@Published` mutations must be on main; both invariants are
-compiler-enforced now via `@MainActor` on `MenuIndexProvider`,
+compiler-enforced now via `@MainActor` on `IndexProvider`,
 `SearchSession`, `CheatsheetSession`, and `AppState`. AX wrapper types
 themselves are not main-actor-isolated — they're synchronous and the
 isolation flows through their callers.
