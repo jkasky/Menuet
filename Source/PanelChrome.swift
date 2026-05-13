@@ -169,6 +169,7 @@ struct ShortcutChip: View {
             lineWidth: highlighted ? 1 : 0.5
           )
       )
+      .accessibilityHidden(true)
   }
 }
 

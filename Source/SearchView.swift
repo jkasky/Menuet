@@ -273,6 +273,23 @@ struct ResultView: View {
     // disabled item that's currently selected still reads as both
     // "selected" and "dim/non-actionable" simultaneously.
     .opacity(result.enabled ? 1.0 : 0.5)
+    .accessibilityElement(children: .ignore)
+    .accessibilityLabel(accessibilityLabel)
+    .accessibilityAddTraits(accessibilityTraits)
+  }
+
+  private var accessibilityLabel: String {
+    // Comma separators — `pathDescription`'s " > " is read as "greater than".
+    var label = result.accessibilityPath.joined(separator: ", ")
+    if !result.command.stringValue.isEmpty {
+      label += ", shortcut \(result.command.stringValue)"
+    }
+    return label
+  }
+
+  private var accessibilityTraits: AccessibilityTraits {
+    guard result.enabled else { return [] }
+    return isActive ? [.isButton, .isSelected] : .isButton
   }
 
   private var rowBackground: Color {

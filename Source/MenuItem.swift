@@ -121,6 +121,12 @@ class MenuItem: CustomDebugStringConvertible, Equatable, Identifiable {
     }
   }
 
+  /// VoiceOver-friendly path: spells out "Apple" instead of the glyph so
+  /// screen readers don't announce it as an unknown symbol.
+  var accessibilityPath: [String] {
+    isAppleMenu ? ["Apple"] + Array(path.dropFirst()) : path
+  }
+
   init(title: String, command: MenuItemCommand, path: [String],
        isAppleMenu: Bool, delegate: AXMenuItemDelegate) {
     self.id = UUID()

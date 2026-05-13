@@ -245,6 +245,8 @@ private struct ShortcutRow: View {
     // `CheatsheetSession.filteredGroups` rather than dimmed, so opacity
     // is unambiguous.
     .opacity(item.enabled ? 1.0 : 0.5)
+    .accessibilityLabel(accessibilityLabel)
+    .accessibilityAddTraits(isActive ? .isSelected : [])
     .id(item.id)
   }
 
@@ -257,6 +259,15 @@ private struct ShortcutRow: View {
 
   private var submenuBreadcrumb: String {
     item.path.dropFirst().dropLast().joined(separator: " › ")
+  }
+
+  private var accessibilityLabel: String {
+    var parts: [String] = []
+    if !item.command.stringValue.isEmpty {
+      parts.append("shortcut \(item.command.stringValue)")
+    }
+    parts.append(contentsOf: item.accessibilityPath)
+    return parts.joined(separator: ", ")
   }
 }
 

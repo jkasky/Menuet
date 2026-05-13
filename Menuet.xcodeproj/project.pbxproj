@@ -64,6 +64,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		489149942FB424A400CC3A16 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4891498B2FB424A300CC3A16 /* Menuet.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4878358D1B3B91E700BC911B;
+			remoteInfo = Menuet;
+		};
+		489149962FB424A400CC3A16 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4891498B2FB424A300CC3A16 /* Menuet.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4878359F1B3B91E700BC911B;
+			remoteInfo = MenuetTests;
+		};
 		48AE1C9F2708296400EF0234 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 487835851B3B91E600BC911B /* Project object */;
@@ -94,6 +108,7 @@
 		487835961B3B91E700BC911B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		4878359F1B3B91E700BC911B /* MenuetTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MenuetTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		487835A41B3B91E700BC911B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4891498B2FB424A300CC3A16 /* Menuet.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Menuet.xcodeproj; sourceTree = "<group>"; };
 		489EB1732A6C6C30000271CB /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		48AE1CA327082AEA00EF0234 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/MacOSX.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		48C044D51D23B1DA00F49A94 /* AX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AX.swift; sourceTree = "<group>"; };
@@ -250,6 +265,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		4891498E2FB424A300CC3A16 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				489149952FB424A400CC3A16 /* Menuet.app */,
+				489149972FB424A400CC3A16 /* MenuetTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		48E24E3F271154470087D9F8 /* Scripts */ = {
 			isa = PBXGroup;
 			children = (
@@ -349,6 +373,12 @@
 			);
 			productRefGroup = 4878358E1B3B91E700BC911B /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 4891498E2FB424A300CC3A16 /* Products */;
+					ProjectRef = 4891498B2FB424A300CC3A16 /* Menuet.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				4878358C1B3B91E700BC911B /* Menuet */,
@@ -356,6 +386,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		489149952FB424A400CC3A16 /* Menuet.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = Menuet.app;
+			remoteRef = 489149942FB424A400CC3A16 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		489149972FB424A400CC3A16 /* MenuetTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = MenuetTests.xctest;
+			remoteRef = 489149962FB424A400CC3A16 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		4878358B1B3B91E700BC911B /* Resources */ = {
