@@ -1,5 +1,5 @@
 {
   "permissions": {
-    "allow": ["Bash(xcodebuild *)", "mcp__xcodebuild_*"]
+    "allow": ["Bash(xcodebuild *)", "mcp__xcodebuild__*"]
   }
 }

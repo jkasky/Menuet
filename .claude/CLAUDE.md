@@ -11,6 +11,38 @@ at the repo root.
 
 The Xcode project is `Menuet.xcodeproj` and the scheme is `Menuet`.
 
+### Preferred: XcodeBuildMCP tools
+
+XcodeBuildMCP is configured (`.mcp.json`, `.xcodebuildmcp/config.yaml`). Prefer its
+tools over raw `xcodebuild` Bash calls.
+
+Before the first build or test call in any session, verify session defaults:
+
+```
+session_show_defaults
+```
+
+If project/scheme are missing, set them once per session:
+
+```
+session_set_defaults  projectPath=Menuet.xcodeproj  scheme=Menuet
+```
+
+Then build and test:
+
+```
+mcp__xcodebuild__build_macos              # build
+mcp__xcodebuild__test_macos               # run all tests
+```
+
+Single test:
+
+```
+mcp__xcodebuild__test_macos  extraArgs=["-only-testing:MenuetTests/AXMenuWalkerTests/testWalkBailsAtDeadline"]
+```
+
+### Fallback: raw xcodebuild
+
 ```sh
 # Build
 xcodebuild -project Menuet.xcodeproj -scheme Menuet -configuration Debug build
