@@ -20,7 +20,7 @@ struct CheatsheetView: View {
           appIcon: menus.currentApp?.icon,
           appName: menus.currentApp?.localizedName ?? "Keyboard Shortcuts",
           query: cheatsheet.query,
-          matchCount: cheatsheet.matchIDs.count,
+          matchCount: cheatsheet.matchItems.count,
           modifierFilter: cheatsheet.modifierFilter
         )
           .padding(.horizontal, 16)
@@ -54,14 +54,14 @@ struct CheatsheetView: View {
               .onChange(of: cheatsheet.resetTrigger) { _, _ in
                 proxy.scrollTo(Self.scrollTopID, anchor: .top)
               }
-              .onChange(of: cheatsheet.activeItem?.id) { _, newID in
-                guard let id = newID else { return }
+              .onChange(of: cheatsheet.activeItem) { _, newItem in
+                guard let item = newItem else { return }
                 // Only scroll when content actually overflows the
                 // visible area. The 0.5 tolerance absorbs rounding
                 // between the GeometryReader's two height sources.
                 guard contentHeight > geo.size.height + 0.5 else { return }
                 withAnimation(.easeOut(duration: 0.15)) {
-                  proxy.scrollTo(id, anchor: .center)
+                  proxy.scrollTo(item, anchor: .center)
                 }
               }
               .onPreferenceChange(ContentHeightKey.self) { height in
@@ -208,7 +208,7 @@ private struct ShortcutRow: View {
 
   var body: some View {
     let query = cheatsheet.query
-    let isActive = cheatsheet.activeItem?.id == item.id
+    let isActive = cheatsheet.activeItem == item
 
     Button {
       invoke.perform(item.command)
@@ -247,11 +247,11 @@ private struct ShortcutRow: View {
     .opacity(item.enabled ? 1.0 : 0.5)
     .accessibilityLabel(accessibilityLabel)
     .accessibilityAddTraits(isActive ? .isSelected : [])
-    .id(item.id)
+    .id(item)
   }
 
   private var rowBackground: Color {
-    let isActive = cheatsheet.activeItem?.id == item.id
+    let isActive = cheatsheet.activeItem == item
     if isActive { return Color.accentColor }
     if hovering { return Color.primary.opacity(0.08) }
     return Color.clear

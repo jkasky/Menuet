@@ -91,13 +91,8 @@ final class MenuItemCommand: @unchecked Sendable {
 }
 
 
-class MenuItem: CustomDebugStringConvertible, Equatable, Identifiable {
+struct MenuItem: Hashable, Sendable, Identifiable, CustomDebugStringConvertible {
 
-  static func == (left: MenuItem, right: MenuItem) -> Bool {
-    return left.id == right.id
-  }
-
-  let id: UUID
   let title: String
   let command: MenuItemCommand
   let path: [String]
@@ -108,6 +103,8 @@ class MenuItem: CustomDebugStringConvertible, Equatable, Identifiable {
   /// Apple menu is implementation-defined (the rendered UI is the apple
   /// glyph, not text), so position is the only stable signal.
   let isAppleMenu: Bool
+
+  var id: Self { self }
 
   var debugDescription: String {
     return "MenuItem<path:\(path.joined(separator: "/"))>"
@@ -129,12 +126,34 @@ class MenuItem: CustomDebugStringConvertible, Equatable, Identifiable {
 
   init(title: String, command: MenuItemCommand, path: [String],
        isAppleMenu: Bool, delegate: AXMenuItemDelegate) {
-    self.id = UUID()
     self.title = title
     self.command = command
     self.path = path
     self.enabled = delegate.isEnabled
     self.isAppleMenu = isAppleMenu
+  }
+
+  // `MenuItemCommand` is a class with a non-Hashable `AXMenuItemDelegate?`,
+  // so Hashable/Equatable can't be synthesized. Compare by the user-visible
+  // content of the command (character + modifiers) and skip the delegate —
+  // two walks of the same menu produce equal items even though they hold
+  // fresh delegate instances.
+  static func == (lhs: MenuItem, rhs: MenuItem) -> Bool {
+    lhs.title == rhs.title
+      && lhs.path == rhs.path
+      && lhs.enabled == rhs.enabled
+      && lhs.isAppleMenu == rhs.isAppleMenu
+      && lhs.command.character == rhs.command.character
+      && lhs.command.modifiers == rhs.command.modifiers
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(title)
+    hasher.combine(path)
+    hasher.combine(enabled)
+    hasher.combine(isAppleMenu)
+    hasher.combine(command.character)
+    hasher.combine(command.modifiers.rawValue)
   }
 }
 

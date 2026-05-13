@@ -202,7 +202,7 @@ struct ResultsView: View {
           ForEach($search.searchResults.indices, id: \.self) { index in
             ResultView(result: $search.searchResults[index])
               .frame(maxWidth: .infinity, alignment: .leading)
-              .id(search.searchResults[index].id)
+              .id(search.searchResults[index])
           }
         }
         .frame(
@@ -218,7 +218,7 @@ struct ResultsView: View {
       .frame(maxHeight: 500.0)
       .onChange(of: search.activeItem) { _, activeItem in
         if let item = activeItem {
-          proxy.scrollTo(item.id)
+          proxy.scrollTo(item)
         }
       }
     }

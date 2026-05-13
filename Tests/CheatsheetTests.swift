@@ -128,23 +128,23 @@ class CheatsheetSearchTests: XCTestCase {
 
     XCTAssertEqual(session.query, "c")
     XCTAssertEqual(session.activeItem?.title, "Copy")
-    XCTAssertTrue(session.matchIDs.contains(session.activeItem!.id))
+    XCTAssertTrue(session.matchItems.contains(session.activeItem!))
   }
 
   func testTabCyclesAndLoops() {
     let session = makeCheetsheetSession()
 
     session.append("n")  // Matches "New" and "New Window"
-    let firstID = session.activeItem?.id
-    XCTAssertNotNil(firstID)
+    let first = session.activeItem
+    XCTAssertNotNil(first)
 
     session.selectNextMatch()
-    let secondID = session.activeItem?.id
-    XCTAssertNotNil(secondID)
-    XCTAssertNotEqual(firstID, secondID)
+    let second = session.activeItem
+    XCTAssertNotNil(second)
+    XCTAssertNotEqual(first, second)
 
     session.selectNextMatch()
-    XCTAssertEqual(session.activeItem?.id, firstID, "Tab past end should loop to first")
+    XCTAssertEqual(session.activeItem, first, "Tab past end should loop to first")
   }
 
   func testTabFollowsDisplayOrderNotScore() {
@@ -156,25 +156,24 @@ class CheatsheetSearchTests: XCTestCase {
 
     let displayOrder = session.groups
       .flatMap { $0.items }
-      .filter { session.matchIDs.contains($0.id) }
-      .map(\.id)
-    let startIndex = displayOrder.firstIndex(of: session.activeItem!.id)!
+      .filter { session.matchItems.contains($0) }
+    let startIndex = displayOrder.firstIndex(of: session.activeItem!)!
     let expected = (0..<displayOrder.count).map { displayOrder[(startIndex + $0) % displayOrder.count] }
 
     let visited = sequenceOf(session, count: displayOrder.count)
     XCTAssertEqual(visited, expected)
   }
 
-  // Returns the sequence of active-item IDs across `count` Tab presses,
+  // Returns the sequence of active items across `count` Tab presses,
   // starting from whatever is currently active.
-  private func sequenceOf(_ session: CheatsheetSession, count: Int) -> [UUID] {
-    var ids: [UUID] = []
-    if let id = session.activeItem?.id { ids.append(id) }
+  private func sequenceOf(_ session: CheatsheetSession, count: Int) -> [MenuItem] {
+    var items: [MenuItem] = []
+    if let item = session.activeItem { items.append(item) }
     for _ in 1..<count {
       session.selectNextMatch()
-      if let id = session.activeItem?.id { ids.append(id) }
+      if let item = session.activeItem { items.append(item) }
     }
-    return ids
+    return items
   }
 
   func testClearQueryResetsState() {
@@ -186,7 +185,7 @@ class CheatsheetSearchTests: XCTestCase {
 
     XCTAssertEqual(session.query, "")
     XCTAssertNil(session.activeItem)
-    XCTAssertTrue(session.matchIDs.isEmpty)
+    XCTAssertTrue(session.matchItems.isEmpty)
   }
 
   func testBackspaceOnEmptyIsNoop() {
@@ -217,7 +216,7 @@ class CheatsheetSearchTests: XCTestCase {
     session.append("z")
 
     XCTAssertNil(session.activeItem)
-    XCTAssertTrue(session.matchIDs.isEmpty)
+    XCTAssertTrue(session.matchItems.isEmpty)
   }
 
   func testSelectNextWithNoMatchesIsNoop() {

@@ -19,7 +19,7 @@ final class CheatsheetSession {
   var resetTrigger: Bool = false
   var query: String = ""
   var activeItem: MenuItem?
-  private(set) var matchIDs: Set<UUID> = []
+  private(set) var matchItems: Set<MenuItem> = []
   private(set) var modifierFilter: NSEvent.ModifierFlags = []
 
   private var matchOrder: [MenuItem] = []
@@ -36,7 +36,7 @@ final class CheatsheetSession {
       let items = group.items.filter { item in
         let matchesModifier = modifierFilter.isEmpty
           || item.command.modifiers.containsFilter(modifierFilter)
-        let matchesQuery = !queryActive || matchIDs.contains(item.id)
+        let matchesQuery = !queryActive || matchItems.contains(item)
         return matchesModifier && matchesQuery
       }
       return items.isEmpty ? nil : CheatsheetGroup(menu: group.menu, items: items)
@@ -62,7 +62,7 @@ final class CheatsheetSession {
   func clearQuery() {
     query = ""
     matchOrder = []
-    matchIDs = []
+    matchItems = []
     activeItem = nil
     modifierFilter = []
   }
@@ -75,8 +75,7 @@ final class CheatsheetSession {
   func selectNextMatch() {
     guard !matchOrder.isEmpty else { return }
     let nextIndex: Int
-    if let active = activeItem,
-       let i = matchOrder.firstIndex(where: { $0.id == active.id }) {
+    if let active = activeItem, let i = matchOrder.firstIndex(of: active) {
       nextIndex = (i + 1) % matchOrder.count
     } else {
       nextIndex = 0
@@ -87,8 +86,7 @@ final class CheatsheetSession {
   func selectPreviousMatch() {
     guard !matchOrder.isEmpty else { return }
     let prevIndex: Int
-    if let active = activeItem,
-       let i = matchOrder.firstIndex(where: { $0.id == active.id }) {
+    if let active = activeItem, let i = matchOrder.firstIndex(of: active) {
       prevIndex = (i - 1 + matchOrder.count) % matchOrder.count
     } else {
       prevIndex = matchOrder.count - 1
@@ -99,7 +97,7 @@ final class CheatsheetSession {
   private func recomputeMatches() {
     if query.isEmpty {
       matchOrder = []
-      matchIDs = []
+      matchItems = []
       activeItem = nil
       return
     }
@@ -120,7 +118,7 @@ final class CheatsheetSession {
       }
     }
     matchOrder = inDisplayOrder.map { $0.0 }
-    matchIDs = Set(matchOrder.map(\.id))
+    matchItems = Set(matchOrder)
     activeItem = inDisplayOrder.max { $0.1 < $1.1 }?.0
   }
 
