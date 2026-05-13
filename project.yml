@@ -1,0 +1,153 @@
+name: Menuet
+
+options:
+  bundleIdPrefix: app
+  deploymentTarget:
+    macOS: "14.0"
+  xcodeVersion: "16.4"
+  createIntermediateGroups: true
+
+configFiles:
+  Debug: Menuet.xcconfig
+  Release: Menuet.xcconfig
+
+settings:
+  base:
+    DEAD_CODE_STRIPPING: YES
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+    SDKROOT: macosx
+    STRING_CATALOG_GENERATE_SYMBOLS: YES
+    SWIFT_STRICT_CONCURRENCY: complete
+    SWIFT_VERSION: "6.0"
+  configs:
+    Debug:
+      DEBUG_INFORMATION_FORMAT: dwarf
+      ENABLE_TESTABILITY: YES
+      GCC_PREPROCESSOR_DEFINITIONS: ["DEBUG=1", "$(inherited)"]
+      ONLY_ACTIVE_ARCH: YES
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG
+      SWIFT_OPTIMIZATION_LEVEL: "-Onone"
+    Release:
+      DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
+      ENABLE_NS_ASSERTIONS: NO
+      SWIFT_COMPILATION_MODE: wholemodule
+      SWIFT_OPTIMIZATION_LEVEL: "-O"
+
+packages:
+  KeyboardShortcuts:
+    url: https://github.com/sindresorhus/KeyboardShortcuts
+    minorVersion: "2.4.0"
+  Sentry:
+    url: https://github.com/getsentry/sentry-cocoa
+    minorVersion: "9.12.1"
+
+targets:
+  Menuet:
+    type: application
+    platform: macOS
+    sources:
+      - path: Source
+        excludes:
+          - Info.plist
+    settings:
+      base:
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS: NO
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: Automatic
+        COMBINE_HIDPI_IMAGES: YES
+        DEVELOPMENT_TEAM: YOUR_TEAM_ID
+        ENABLE_HARDENED_RUNTIME: YES
+        INFOPLIST_FILE: Source/Info.plist
+        LD_RUNPATH_SEARCH_PATHS: ["$(inherited)", "@executable_path/../Frameworks"]
+        MARKETING_VERSION: "1.1"
+        PRODUCT_BUNDLE_IDENTIFIER: app.menuet
+        PRODUCT_NAME: "$(TARGET_NAME)"
+        PROVISIONING_PROFILE_SPECIFIER: ""
+        SWIFT_INSTALL_OBJC_HEADER: NO
+        SWIFT_PRECOMPILE_BRIDGING_HEADER: NO
+      configs:
+        Debug:
+          CODE_SIGN_ENTITLEMENTS: Entitlements/MenuetDebug.entitlements
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG
+        Release:
+          CODE_SIGN_ENTITLEMENTS: Entitlements/Menuet.entitlements
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: ""
+    dependencies:
+      - package: KeyboardShortcuts
+      - package: Sentry
+    postBuildScripts:
+      - name: Increment Build Number
+        script: '"${PROJECT_DIR}/Scripts/increment_build.sh" "${PROJECT_DIR}/${INFOPLIST_FILE}"'
+        runOnlyWhenInstalling: true
+        basedOnDependencyAnalysis: false
+
+  MenuetTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: Source
+        excludes:
+          - Info.plist
+          - App.swift
+          - Telemetry.swift
+          - SearchPanel.swift
+          - SearchView.swift
+          - CheatsheetPanel.swift
+          - CheatsheetView.swift
+          - PanelChrome.swift
+          - SettingsView.swift
+          - Images.xcassets
+      - path: Tests
+        excludes:
+          - Info.plist
+    settings:
+      base:
+        BUNDLE_LOADER: "$(TEST_HOST)"
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: Automatic
+        COMBINE_HIDPI_IMAGES: YES
+        DEVELOPMENT_TEAM: YOUR_TEAM_ID
+        EXCLUDED_SOURCE_FILE_NAMES: "*.xcplaygroundpage"
+        FRAMEWORK_SEARCH_PATHS: ["$(DEVELOPER_FRAMEWORKS_DIR)", "$(inherited)"]
+        INFOPLIST_FILE: Tests/Info.plist
+        LD_RUNPATH_SEARCH_PATHS:
+          - "$(inherited)"
+          - "@executable_path/../Frameworks"
+          - "@loader_path/../Frameworks"
+        MF_MAKE_PROCESS_TRUSTED: NO
+        "MF_MAKE_PROCESS_TRUSTED[arch=*]": NO
+        PRODUCT_BUNDLE_IDENTIFIER: "com.codjax.$(PRODUCT_NAME:rfc1034identifier)"
+        PRODUCT_NAME: "$(TARGET_NAME)"
+        PROVISIONING_PROFILE_SPECIFIER: ""
+        SWIFT_INSTALL_OBJC_HEADER: NO
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Menuet.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Menuet"
+      configs:
+        Debug:
+          GCC_PREPROCESSOR_DEFINITIONS: ["DEBUG=1", "$(inherited)"]
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG
+        Release:
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: ""
+          SWIFT_COMPILATION_MODE: wholemodule
+          SWIFT_OPTIMIZATION_LEVEL: "-O"
+    dependencies:
+      - target: Menuet
+      - package: KeyboardShortcuts
+      - package: Sentry
+
+schemes:
+  Menuet:
+    build:
+      targets:
+        Menuet: all
+        MenuetTests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - name: MenuetTests
+          parallelizable: true
+    archive:
+      config: Release

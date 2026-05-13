@@ -9,7 +9,9 @@ at the repo root.
 
 ## Build & Test
 
-The Xcode project is `Menuet.xcodeproj` and the scheme is `Menuet`.
+The Xcode project is `Menuet.xcodeproj` and the scheme is `Menuet`. `project.pbxproj`
+is generated from `project.yml` via XcodeGen and is gitignored — run
+`xcodegen generate` after cloning or editing `project.yml`.
 
 ### Preferred: XcodeBuildMCP tools
 

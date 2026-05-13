@@ -8,7 +8,14 @@ Built on the macOS Accessibility API. Runs as an `LSUIElement` (no Dock icon).
 
 ## Build & Test
 
+The Xcode project is generated from `project.yml` using [XcodeGen](https://github.com/yonaskolb/xcodegen).
+`project.pbxproj` is gitignored — run `xcodegen generate` after cloning or editing `project.yml`.
+
 ```sh
+# One-time setup (also run after editing project.yml)
+brew install xcodegen
+xcodegen generate
+
 # Build
 xcodebuild -project Menuet.xcodeproj -scheme Menuet -configuration Debug build
 

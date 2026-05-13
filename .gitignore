@@ -8,4 +8,5 @@ xcuserdata
 project.xcworkspace
 xcshareddata
 Menuet.local.xcconfig
+Menuet.xcodeproj/project.pbxproj
 .scratch/
