@@ -27,7 +27,7 @@ struct MenuItemShortcut {
     }
     var modifiers: Modifiers?
     if character != nil, let raw: Int = try? item.get(.MenuItemCmdModifiers) {
-      modifiers = Modifiers(rawValue: raw)
+      modifiers = Modifiers(axRawValue: raw)
     }
     return MenuItemShortcut(character: character, modifiers: modifiers)
   }
@@ -117,7 +117,7 @@ class AXMenuIndexer: AXMenuVisitor {
       title: title,
       command: MenuItemCommand(
         character: shortcut.character ?? "",
-        modifiers: shortcut.modifiers ?? Modifiers.noCommand,
+        modifiers: shortcut.modifiers ?? [],
         delegate: delegate),
       path: titles,
       isAppleMenu: isAppleMenu,

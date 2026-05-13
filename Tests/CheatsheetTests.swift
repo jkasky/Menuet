@@ -231,18 +231,20 @@ class CheatsheetSearchTests: XCTestCase {
 }
 
 
-// AX convention: Modifiers' .noCommand bit (rawValue 8) is *set* when the item
-// does NOT use Command. So an item with rawValue 0 has Command; rawValue 8 has
-// no Command. Tests construct items by raw Int matching what AX would emit.
+// AX convention: AXMenuItemCmdModifiers' bit 8 is *set* when the item
+// does NOT use Command. So a raw value of 0 has Command; raw value 8 has
+// no Command. Fixture inputs below are AX raw ints, matching what AX
+// would emit; assertions on `Modifiers` use the positive surface
+// (`.command`, `[.control, .command]`, …).
 @MainActor
 class CheatsheetModifierFilterTests: XCTestCase {
 
   private static let hasCommand = 0
-  private static let noCommand = Modifiers.noCommand.rawValue
-  private static let controlNoCmd = Modifiers.control.union(.noCommand).rawValue
-  private static let optionNoCmd = Modifiers.option.union(.noCommand).rawValue
-  private static let shiftNoCmd = Modifiers.shift.union(.noCommand).rawValue
-  private static let controlAndCommand = Modifiers.control.rawValue
+  private static let noCommand = 8
+  private static let controlNoCmd = 4 | 8
+  private static let optionNoCmd = 2 | 8
+  private static let shiftNoCmd = 1 | 8
+  private static let controlAndCommand = 4
 
   private func makeCheetsheetSession(withItems items: [FakeAXElement], inMenu menuName: String) -> CheatsheetSession {
     let menuBar = makeMenuBar([makeMenuBarItem(title: menuName, items: items)])
@@ -256,43 +258,43 @@ class CheatsheetModifierFilterTests: XCTestCase {
 
   func testEmptyFilterMatchesAllModifiers() {
     XCTAssertTrue(Modifiers().containsFilter([]))
-    XCTAssertTrue(Modifiers.control.union(.noCommand).containsFilter([]))
-    XCTAssertTrue(Modifiers(rawValue: Self.hasCommand).containsFilter([]))
+    XCTAssertTrue(Modifiers([.control]).containsFilter([]))
+    XCTAssertTrue(Modifiers.command.containsFilter([]))
   }
 
   func testControlFilterMatchesControlItems() {
     let flags: NSEvent.ModifierFlags = [.control]
-    XCTAssertTrue(Modifiers.control.union(.noCommand).containsFilter(flags))
-    XCTAssertFalse(Modifiers.noCommand.containsFilter(flags))
-    XCTAssertFalse(Modifiers.control.containsFilter(flags))
-    XCTAssertFalse(Modifiers(rawValue: Self.hasCommand).containsFilter(flags))
+    XCTAssertTrue(Modifiers([.control]).containsFilter(flags))
+    XCTAssertFalse(Modifiers().containsFilter(flags))
+    XCTAssertFalse(Modifiers([.control, .command]).containsFilter(flags))
+    XCTAssertFalse(Modifiers.command.containsFilter(flags))
   }
 
   func testCommandFilterMatchesCommandItems() {
     let flags: NSEvent.ModifierFlags = [.command]
-    XCTAssertTrue(Modifiers(rawValue: Self.hasCommand).containsFilter(flags))
-    XCTAssertFalse(Modifiers.noCommand.containsFilter(flags))
-    XCTAssertFalse(Modifiers.control.union(.noCommand).containsFilter(flags))
+    XCTAssertTrue(Modifiers.command.containsFilter(flags))
+    XCTAssertFalse(Modifiers().containsFilter(flags))
+    XCTAssertFalse(Modifiers([.control]).containsFilter(flags))
   }
 
   func testOptionFilterMatchesOptionItems() {
     let flags: NSEvent.ModifierFlags = [.option]
-    XCTAssertTrue(Modifiers.option.union(.noCommand).containsFilter(flags))
-    XCTAssertFalse(Modifiers.control.union(.noCommand).containsFilter(flags))
+    XCTAssertTrue(Modifiers([.option]).containsFilter(flags))
+    XCTAssertFalse(Modifiers([.control]).containsFilter(flags))
   }
 
   func testShiftFilterMatchesShiftItems() {
     let flags: NSEvent.ModifierFlags = [.shift]
-    XCTAssertTrue(Modifiers.shift.union(.noCommand).containsFilter(flags))
-    XCTAssertFalse(Modifiers.option.union(.noCommand).containsFilter(flags))
+    XCTAssertTrue(Modifiers([.shift]).containsFilter(flags))
+    XCTAssertFalse(Modifiers([.option]).containsFilter(flags))
   }
 
   func testCombinedFilterMatchesItemsWithAllModifiers() {
     let flags: NSEvent.ModifierFlags = [.control, .command]
-    XCTAssertTrue(Modifiers(rawValue: Self.controlAndCommand).containsFilter(flags))
-    XCTAssertFalse(Modifiers.noCommand.containsFilter(flags))
-    XCTAssertTrue(Modifiers.control.containsFilter(flags))
-    XCTAssertFalse(Modifiers(rawValue: Self.hasCommand).containsFilter(flags))
+    XCTAssertTrue(Modifiers([.control, .command]).containsFilter(flags))
+    XCTAssertFalse(Modifiers().containsFilter(flags))
+    XCTAssertFalse(Modifiers.command.containsFilter(flags))
+    XCTAssertFalse(Modifiers([.control]).containsFilter(flags))
   }
 
   // ---------------------------------------------------------------- CheatsheetSession filteredGroups
