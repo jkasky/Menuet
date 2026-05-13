@@ -1,5 +1,5 @@
 //
-//  Clock.swift
+//  WallClock.swift
 //  Menuet
 //
 //  Time source consulted by the menu walker for deadline checks. The
@@ -14,14 +14,14 @@
 import Foundation
 
 
-protocol Clock {
+protocol WallClock {
 
   func now() -> Date
 
 }
 
 
-struct SystemClock: Clock {
+struct SystemClock: WallClock {
 
   func now() -> Date { Date() }
 

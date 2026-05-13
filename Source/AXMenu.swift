@@ -37,11 +37,11 @@ protocol AXMenuVisitor {
 class AXMenuWalker {
 
   private let application: AX.Application
-  private let clock: Clock
+  private let clock: WallClock
   private var deadline: Date?
   private var didComplete: Bool = true
 
-  init(application: AX.Application, clock: Clock = SystemClock()) {
+  init(application: AX.Application, clock: WallClock = SystemClock()) {
     self.application = application
     self.clock = clock
   }
