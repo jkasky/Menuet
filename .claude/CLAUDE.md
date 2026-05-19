@@ -11,7 +11,9 @@ at the repo root.
 
 The Xcode project is `Menuet.xcodeproj` and the scheme is `Menuet`. `project.pbxproj`
 is generated from `project.yml` via XcodeGen and is gitignored — run
-`xcodegen generate` after cloning or editing `project.yml`.
+`xcodegen generate` after cloning, editing `project.yml`, or adding/removing
+files under `Source/` or `Tests/` (sources are path-globbed, so new files
+only land in the project after a regen).
 
 ### Preferred: XcodeBuildMCP tools
 
@@ -64,3 +66,8 @@ SourceKit frequently emits cross-file `Cannot find type/in scope` diagnostics
 for symbols defined in sibling files in `Source/`. These are resolution noise
 from an out-of-sync index, not real errors. Trust `xcodebuild` over the
 diagnostic stream.
+
+## Style
+
+Use `// MARK: -` for section dividers in `.swift` files, not dashed comment
+lines — they appear in Xcode's jump bar.

@@ -145,6 +145,9 @@ schemes:
       config: Debug
     test:
       config: Debug
+      gatherCoverageData: true
+      coverageTargets:
+        - Menuet
       targets:
         - name: MenuetTests
           parallelizable: true
