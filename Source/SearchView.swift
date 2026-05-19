@@ -90,6 +90,10 @@ struct SearchView: View {
     case kVK_UpArrow:
       pendingAction = PendingSearchAction(action: .previous)
       return .handled
+    case kVK_Tab:
+      let action: SearchKeyAction = event.modifierFlags.contains(.shift) ? .previous : .next
+      pendingAction = PendingSearchAction(action: action)
+      return .handled
     case kVK_Return, kVK_ANSI_KeypadEnter:
       pendingAction = PendingSearchAction(action: .invoke)
       return .handled

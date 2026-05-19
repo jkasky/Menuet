@@ -42,18 +42,16 @@ final class SearchSession {
   }
 
   func selectNext() {
-    if selectedResult < searchResults.count - 1 {
-      selectedResult += 1
-      activateSelected()
-    }
+    guard !searchResults.isEmpty else { return }
+    selectedResult = (max(selectedResult, 0) + 1) % searchResults.count
+    activateSelected()
   }
 
   func selectPrevious() {
-    if selectedResult > 0 {
-      selectedResult -= 1
-    } else {
-      selectedResult = -1
-    }
+    guard !searchResults.isEmpty else { return }
+    let count = searchResults.count
+    let current = selectedResult < 0 ? 0 : selectedResult
+    selectedResult = (current - 1 + count) % count
     activateSelected()
   }
 
@@ -66,10 +64,10 @@ final class SearchSession {
   }
 
   func search(_ query: String) {
-    selectedResult = -1
-    activeItem = nil
     if query.count > 0 {
       searchResults = menus.index.find(query: query)
+      selectedResult = searchResults.isEmpty ? -1 : 0
+      activateSelected()
     } else {
       clear()
     }
