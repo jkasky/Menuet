@@ -156,9 +156,7 @@ struct MenuBarApp: App {
 
     Settings() {
       SettingsView()
-        .frame(
-          minWidth: 400, maxWidth: 400,
-          minHeight: 300, maxHeight: 300)
+        .frame(minWidth: 400, maxWidth: 400)
     }
     .defaultPosition(.center)
     .windowResizability(.contentSize)

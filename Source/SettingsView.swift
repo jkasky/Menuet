@@ -13,9 +13,29 @@ struct SettingsView: View {
   @AppStorage(Preference.searchShowDisabled) private var includeDisabled = false
   @AppStorage(Preference.requireShortcutToInvoke) private var requireShortcutToInvoke = true
   @AppStorage(Preference.crashReportingEnabled) private var crashReportingEnabled = true
+  @State private var launchAtLogin = LaunchAtLogin.isEnabled
 
   var body: some View {
     Form {
+      Section(header: Text("General")) {
+        Toggle(isOn: $launchAtLogin) {
+          VStack(alignment: .leading, spacing: 2) {
+            Text("Launch at login")
+            Text("Start Menuet automatically when you sign in to your Mac.")
+              .font(.caption)
+              .foregroundStyle(.secondary)
+          }
+        }
+        .toggleStyle(.switch)
+        .onChange(of: launchAtLogin) { _, newValue in
+          do {
+            try LaunchAtLogin.setEnabled(newValue)
+          } catch {
+            launchAtLogin = LaunchAtLogin.isEnabled
+          }
+        }
+      }
+
       Section(header: Text("Keyboard Shortcuts")) {
         KeyboardShortcuts.Recorder("Search", name: .menuSearchShortcut)
         KeyboardShortcuts.Recorder("Cheatsheet", name: .cheatsheetShortcut)
