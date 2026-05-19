@@ -93,6 +93,7 @@ final class MenuItemCommand: @unchecked Sendable {
 
 struct MenuItem: Hashable, Sendable, Identifiable, CustomDebugStringConvertible {
 
+  let id: UUID
   let title: String
   let command: MenuItemCommand
   let path: [String]
@@ -103,8 +104,6 @@ struct MenuItem: Hashable, Sendable, Identifiable, CustomDebugStringConvertible 
   /// Apple menu is implementation-defined (the rendered UI is the apple
   /// glyph, not text), so position is the only stable signal.
   let isAppleMenu: Bool
-
-  var id: Self { self }
 
   var debugDescription: String {
     return "MenuItem<path:\(path.joined(separator: "/"))>"
@@ -126,6 +125,7 @@ struct MenuItem: Hashable, Sendable, Identifiable, CustomDebugStringConvertible 
 
   init(title: String, command: MenuItemCommand, path: [String],
        isAppleMenu: Bool, delegate: AXMenuItemDelegate) {
+    self.id = UUID()
     self.title = title
     self.command = command
     self.path = path

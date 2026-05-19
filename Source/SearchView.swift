@@ -200,9 +200,9 @@ struct ResultsView: View {
       ScrollView {
         VStack(alignment: .leading, spacing: 2) {
           ForEach($search.searchResults.indices, id: \.self) { index in
-            ResultView(result: $search.searchResults[index])
+            ResultView(result: $search.searchResults[index], index: index)
               .frame(maxWidth: .infinity, alignment: .leading)
-              .id(search.searchResults[index])
+              .id(search.searchResults[index].id)
           }
         }
         .frame(
@@ -216,10 +216,9 @@ struct ResultsView: View {
         .padding(.vertical, 8)
       }
       .frame(maxHeight: 500.0)
-      .onChange(of: search.activeItem) { _, activeItem in
-        if let item = activeItem {
-          proxy.scrollTo(item)
-        }
+      .onChange(of: search.selectedResult) { _, idx in
+        guard idx >= 0 && idx < search.searchResults.count else { return }
+        proxy.scrollTo(search.searchResults[idx].id)
       }
     }
   }
@@ -228,11 +227,12 @@ struct ResultsView: View {
 struct ResultView: View {
   @Environment(SearchSession.self) private var search
   @Binding var result: MenuItem
+  let index: Int
   @State private var hovering: Bool = false
   @State private var chipScale: CGFloat = 1.0
   @AppStorage(Preference.requireShortcutToInvoke) private var requireShortcutToInvoke = true
 
-  private var isActive: Bool { search.activeItem == result }
+  private var isActive: Bool { search.selectedResult == index }
 
   var body: some View {
     HStack(alignment: .center, spacing: 10) {

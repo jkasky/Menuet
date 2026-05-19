@@ -21,7 +21,7 @@ final class SearchSession {
   var blockedReturnPulse: Int = 0
 
   private let menus: IndexProvider
-  private var selectedResult: Int
+  private(set) var selectedResult: Int
 
   public var totalResults: Int { searchResults.count }
 
