@@ -61,8 +61,9 @@ class FloatingActionPanel: NSPanel {
   }
 
   func dismissAndPerform(_ command: MenuItemCommand) {
+    let target = menus.currentApp
     dismiss()
-    command.performWhenEnabled()
+    command.performWhenReady(target: target)
   }
 }
 

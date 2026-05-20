@@ -90,14 +90,21 @@ and `CheatsheetPanel`) is the single path for invoking a result (Return,
 1. Close the panel (`resignMain()`).
 2. Activate the target with `.activateAllWindows` so AppKit restores its
    previously-key window and first responder.
-3. Hand off to `MenuItemCommand.performWhenEnabled`, which polls the
-   item's `isEnabled` at 50ms intervals and presses the moment it
-   reports enabled — falling through to press anyway after a 1s
-   timeout. NSMenu validation is lazy: items dependent on first-
-   responder context need at least one runloop tick after activation
-   to re-evaluate. Polling the actual signal is more reliable than a
-   fixed defer, and each `isEnabled` read is bounded by the system-wide
-   AX messaging timeout so a hung target can't stall the loop.
+3. Hand off to `MenuItemCommand.performWhenReady`, which polls two
+   readiness signals at 50ms intervals and presses the moment both
+   report ready — falling through to press anyway after a 1s timeout:
+   - `target.isActive` (the `NSRunningApplication`): step 2's
+     activation is async and cross-process, so the AX press can land
+     in the target before its previously-key window has been promoted
+     back. Window-menu items that act on `NSApp.keyWindow` (e.g.
+     "Move to ‹Display›") silently no-op if the press races the
+     activation.
+   - `delegate.isEnabled`: NSMenu validation is lazy, and
+     first-responder-dependent items (Cut/Copy/etc.) stay disabled
+     until the target's runloop has re-validated post-activation.
+   Polling the actual signals is more reliable than a fixed defer,
+   and each AX read is bounded by the system-wide messaging timeout
+   so a hung target can't stall the loop.
 
 If you're adding a new way to invoke a result, route it through
 `dismissAndPerform`.

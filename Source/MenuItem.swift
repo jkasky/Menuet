@@ -8,6 +8,22 @@ import Foundation
 import OSLog
 
 
+/// Provides the activation state of the application that owns a menu item.
+/// Injected via `MenuItemCommand.performWhenReady` so the poll loop can
+/// wait until the target's previously-key window has actually been
+/// restored after the panel resigns key. Protocol-fronted so tests can
+/// substitute a fake without booting a real `NSRunningApplication`.
+///
+/// Refines `Sendable` because the poll loop hops between main-queue
+/// dispatch ticks under strict-concurrency.
+protocol MenuItemTarget: Sendable {
+  var isActive: Bool { get }
+}
+
+
+extension NSRunningApplication: MenuItemTarget {}
+
+
 private let logger = Logger(subsystem: "app.menuet", category: "menu")
 
 
@@ -34,32 +50,46 @@ final class MenuItemCommand: @unchecked Sendable {
     delegate?.press()
   }
 
-  /// Polls the delegate's `isEnabled` at `pollInterval` and presses the
-  /// moment it reports enabled, falling through to press anyway after
-  /// `timeout`. Used by the panels to wait for the target app to
-  /// re-validate first-responder-dependent menu items (Cut/Copy/etc.)
-  /// after we resign main and the target reactivates — NSMenu
-  /// validation is lazy, so the press needs to happen *after* the
-  /// target's runloop has processed the activation event. Polling the
-  /// actual enabled signal beats a fixed defer.
+  /// Polls two readiness signals at `pollInterval` and presses the
+  /// moment both report ready, falling through to press anyway after
+  /// `timeout`:
   ///
-  /// Each `isEnabled` read is itself bounded by the system-wide AX
-  /// messaging timeout, so a hung target can't stall the poll loop.
-  func performWhenEnabled(
+  /// 1. `target.isActive` — the cross-process activation requested by
+  ///    `FloatingActionPanel.dismiss` is async. Pressing before the
+  ///    target has actually become frontmost loses Window-menu items
+  ///    that act on `NSApp.keyWindow` (e.g. "Move to ‹Display›"): the
+  ///    AX press races the WindowServer's activation events and the
+  ///    action fires while `NSApp.keyWindow` is still nil, silently
+  ///    no-op'ing.
+  /// 2. `delegate.isEnabled` — first-responder-dependent items
+  ///    (Cut/Copy/etc.) report disabled while the target's key window
+  ///    is gone; NSMenu validation is lazy, so we wait until validation
+  ///    has re-run after activation.
+  ///
+  /// Each AX read is bounded by the system-wide messaging timeout, so
+  /// a hung target can't stall the poll loop.
+  func performWhenReady(
+    target: MenuItemTarget?,
     timeout: TimeInterval = 1.0,
     pollInterval: TimeInterval = 0.05
   ) {
     let deadline = Date().addingTimeInterval(timeout)
-    pollUntilEnabled(deadline: deadline, pollInterval: pollInterval)
+    pollUntilReady(target: target, deadline: deadline, pollInterval: pollInterval)
   }
 
-  private func pollUntilEnabled(deadline: Date, pollInterval: TimeInterval) {
-    if delegate?.isEnabled == true || Date() >= deadline {
+  private func pollUntilReady(
+    target: MenuItemTarget?,
+    deadline: Date,
+    pollInterval: TimeInterval
+  ) {
+    let activated = target?.isActive ?? true
+    let enabled = delegate?.isEnabled == true
+    if (activated && enabled) || Date() >= deadline {
       perform()
       return
     }
     DispatchQueue.main.asyncAfter(deadline: .now() + pollInterval) { [self] in
-      pollUntilEnabled(deadline: deadline, pollInterval: pollInterval)
+      pollUntilReady(target: target, deadline: deadline, pollInterval: pollInterval)
     }
   }
 
