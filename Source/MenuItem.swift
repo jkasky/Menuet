@@ -6,6 +6,7 @@
 import AppKit
 import Foundation
 import OSLog
+import SwiftUI
 
 
 /// Provides the activation state of the application that owns a menu item.
@@ -36,13 +37,34 @@ final class MenuItemCommand: @unchecked Sendable {
   let character: String
   let modifiers: Modifiers
   let stringValue: String
+  /// SF Symbol name when the shortcut's character is best rendered as a
+  /// system symbol rather than its raw unicode form — e.g. Start
+  /// Dictation reports `cmdChar=🎤` which we render as the
+  /// `microphone` SF Symbol to match Apple's own menu drawing. `nil` for
+  /// the common text-only case; `character` retains the original unicode
+  /// so accessibility, search, and matching code paths keep working with
+  /// a plain `String`.
+  let symbolName: String?
   let delegate: AXMenuItemDelegate?
 
+  /// SwiftUI rendering of the shortcut: modifier glyphs followed by
+  /// either the SF Symbol image (when `symbolName` is set) or the
+  /// textual `character`. Consumed by `ShortcutChip`.
+  var displayText: Text {
+    let prefix = Text(modifiers.stringValue)
+    if let symbolName {
+      return prefix + Text(Image(systemName: symbolName))
+    }
+    return prefix + Text(character)
+  }
+
   init(character: String, modifiers: Modifiers,
+       symbolName: String? = nil,
        delegate: AXMenuItemDelegate? = nil) {
     self.character = character
     self.modifiers = modifiers
     self.stringValue = modifiers.joinWith(character)
+    self.symbolName = symbolName
     self.delegate = delegate
   }
 

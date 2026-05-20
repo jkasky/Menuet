@@ -214,7 +214,7 @@ private struct ShortcutRow: View {
       invoke.perform(item.command)
     } label: {
       HStack(alignment: .center, spacing: 10) {
-        ShortcutChip(text: item.command.stringValue)
+        ShortcutChip(content: item.command.displayText)
         VStack(alignment: .leading, spacing: 1) {
           Text(fuzzyHighlight(item.title, query: query))
             .font(.system(.body))

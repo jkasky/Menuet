@@ -151,12 +151,22 @@ struct NeedsAccessibilityView: View {
 
 
 struct ShortcutChip: View {
-  let text: String
+  let content: Text
   var minWidth: CGFloat = 56
   var highlighted: Bool = false
 
+  init(content: Text, minWidth: CGFloat = 56, highlighted: Bool = false) {
+    self.content = content
+    self.minWidth = minWidth
+    self.highlighted = highlighted
+  }
+
+  init(text: String, minWidth: CGFloat = 56, highlighted: Bool = false) {
+    self.init(content: Text(text), minWidth: minWidth, highlighted: highlighted)
+  }
+
   var body: some View {
-    Text(text)
+    content
       .font(.system(.body, design: .rounded).weight(.medium))
       .foregroundStyle(.primary)
       .frame(minWidth: minWidth, alignment: .trailing)

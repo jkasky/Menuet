@@ -254,7 +254,7 @@ struct ResultView: View {
       Spacer(minLength: 0)
       if !result.command.stringValue.isEmpty {
         ShortcutChip(
-          text: result.command.stringValue,
+          content: result.command.displayText,
           highlighted: isActive && requireShortcutToInvoke
         )
         .scaleEffect(chipScale)

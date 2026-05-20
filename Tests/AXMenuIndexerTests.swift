@@ -32,15 +32,29 @@ class MenuItemShortcutTests: XCTestCase {
 
   func testGlyphTakesPrecedenceOverCmdChar() {
     let item = makeMenuItem("Item")
-    // pick any glyph code KeyGlyph recognizes; we only assert the precedence
-    // (cmdChar is ignored when a glyph code is present).
-    item.intAttributes[.MenuItemCmdGlyph] = -1   // unrecognized glyph
+    item.intAttributes[.MenuItemCmdGlyph] = KeyGlyph.Return.code
     item.stringAttributes[.MenuItemCmdChar] = "X"
 
     let s = MenuItemShortcut.extract(from: item, logger: Logger())
 
-    // unrecognized glyph code → character is nil, and cmdChar is NOT consulted
-    XCTAssertNil(s.character)
+    XCTAssertEqual(s.character, KeyGlyph.Return.characters)
+  }
+
+  // Unmapped glyph codes appear on real menu items that *also* report a
+  // useful `MenuItemCmdChar` (e.g. "Emoji & Symbols" reports glyph 0x95
+  // alongside char "E"). Falling back to cmdChar keeps the shortcut
+  // renderable without forcing a manual KeyGlyph entry for every new
+  // glyph Apple ships.
+  func testFallsBackToCmdCharWhenGlyphUnrecognized() {
+    let item = makeMenuItem("Item")
+    item.intAttributes[.MenuItemCmdGlyph] = -1
+    item.stringAttributes[.MenuItemCmdChar] = "X"
+    item.intAttributes[.MenuItemCmdModifiers] = 0
+
+    let s = MenuItemShortcut.extract(from: item, logger: Logger())
+
+    XCTAssertEqual(s.character, "X")
+    XCTAssertNotNil(s.modifiers)
   }
 }
 
