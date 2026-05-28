@@ -84,6 +84,7 @@ final class AppState {
       }
     }
     cheatsheetPanel?.positionAtTop()
+    cheatsheetPanel?.armTriggerModifiers()
     cheatsheetPanel?.makeKeyAndOrderFront(nil)
     DispatchQueue.main.async { [cheatsheet] in
       cheatsheet.resetTrigger.toggle()

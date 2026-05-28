@@ -6,6 +6,12 @@ class CheatsheetPanel: FloatingActionPanel {
 
   private let cheatsheet: CheatsheetSession
 
+  // Modifiers still held from the keyboard shortcut that opened the
+  // panel. We mask these out of the modifier filter until each one is
+  // released, so letting go of the trigger keys doesn't briefly flash
+  // a filtered view on its way back to "no filter".
+  private var triggerModifiers: NSEvent.ModifierFlags = []
+
   init(contentRect: NSRect, menus: IndexProvider, cheatsheet: CheatsheetSession, view: () -> some View) {
     self.cheatsheet = cheatsheet
     super.init(contentRect: contentRect, menus: menus, styleMask: [.resizable])
@@ -39,8 +45,18 @@ class CheatsheetPanel: FloatingActionPanel {
   override func flagsChanged(with event: NSEvent) {
     let mask: NSEvent.ModifierFlags = [.shift, .control, .option, .command, .function]
     let held = event.modifierFlags.intersection(mask)
-    cheatsheet.updateModifierFilter(held)
+    // Drop any trigger modifiers the user has released; once a key
+    // leaves `held`, future presses count as real filter input.
+    triggerModifiers.formIntersection(held)
+    cheatsheet.updateModifierFilter(held.subtracting(triggerModifiers))
     super.flagsChanged(with: event)
+  }
+
+  /// Snapshot the modifiers held at the moment the panel opens so they
+  /// can be ignored until released. Call before `makeKeyAndOrderFront`.
+  func armTriggerModifiers() {
+    let mask: NSEvent.ModifierFlags = [.shift, .control, .option, .command, .function]
+    triggerModifiers = NSEvent.modifierFlags.intersection(mask)
   }
 
   override func performKeyEquivalent(with event: NSEvent) -> Bool {
