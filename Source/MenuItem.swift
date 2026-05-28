@@ -9,20 +9,60 @@ import OSLog
 import SwiftUI
 
 
-/// Provides the activation state of the application that owns a menu item.
-/// Injected via `MenuItemCommand.performWhenReady` so the poll loop can
-/// wait until the target's previously-key window has actually been
-/// restored after the panel resigns key. Protocol-fronted so tests can
-/// substitute a fake without booting a real `NSRunningApplication`.
+/// Readiness signal injected into `MenuItemCommand.performWhenReady` so
+/// the poll loop knows when the target app has finished restoring its
+/// previously-key window after the panel resigned key. Protocol-fronted
+/// so tests can flip the signal manually without booting a real
+/// `NSRunningApplication` or AX bridge.
+///
+/// `hasFocusedWindow` is the cross-process mirror of `NSApp.keyWindow`:
+/// `NSRunningApplication.isActive` flips true at the WindowServer level
+/// well before the target's runloop services activation and re-promotes
+/// a key window, which is what menu items like Window > "Move to ‹Display›"
+/// depend on. Polling `AXFocusedWindow` waits for that runloop tick.
 ///
 /// Refines `Sendable` because the poll loop hops between main-queue
 /// dispatch ticks under strict-concurrency.
 protocol MenuItemTarget: Sendable {
-  var isActive: Bool { get }
+  var hasFocusedWindow: Bool { get }
+  /// Human-readable identifier for logs (bundle id, etc.). Optional —
+  /// fakes can return an empty string.
+  var debugDescription: String { get }
 }
 
 
-extension NSRunningApplication: MenuItemTarget {}
+/// Press surface for `MenuItemCommand`. Lets tests substitute a recording
+/// fake without standing up an `AX.Element`. `AXMenuItemDelegate` is the
+/// production conformer.
+protocol MenuItemPressTarget: AnyObject {
+  var isEnabled: Bool { get }
+  func press()
+}
+
+
+/// Production `MenuItemTarget` that bundles the running-application
+/// activation flag with an AX query for the target's focused window.
+/// `isActive` is checked first as a cheap short-circuit so we avoid a
+/// cross-process AX hop while the activation hasn't even started.
+///
+/// `@unchecked Sendable` because `AX.Application` isn't `Sendable`-bound,
+/// but all production access happens on the main queue (the poll loop
+/// only hops between main-queue dispatch ticks; AX APIs are
+/// main-thread-only).
+struct ActivationTarget: MenuItemTarget, @unchecked Sendable {
+  let runningApp: NSRunningApplication
+  let axApp: AX.Application
+
+  var hasFocusedWindow: Bool {
+    guard runningApp.isActive else { return false }
+    let focused: AX.Element? = try? axApp.topElement.get(.FocusedWindow)
+    return focused != nil
+  }
+
+  var debugDescription: String {
+    return runningApp.bundleIdentifier ?? "pid:\(runningApp.processIdentifier)"
+  }
+}
 
 
 private let logger = Logger(subsystem: "app.menuet", category: "menu")
@@ -45,7 +85,7 @@ final class MenuItemCommand: @unchecked Sendable {
   /// so accessibility, search, and matching code paths keep working with
   /// a plain `String`.
   let symbolName: String?
-  let delegate: AXMenuItemDelegate?
+  let delegate: MenuItemPressTarget?
 
   /// SwiftUI rendering of the shortcut: modifier glyphs followed by
   /// either the SF Symbol image (when `symbolName` is set) or the
@@ -60,7 +100,7 @@ final class MenuItemCommand: @unchecked Sendable {
 
   init(character: String, modifiers: Modifiers,
        symbolName: String? = nil,
-       delegate: AXMenuItemDelegate? = nil) {
+       delegate: MenuItemPressTarget? = nil) {
     self.character = character
     self.modifiers = modifiers
     self.stringValue = modifiers.joinWith(character)
@@ -76,13 +116,13 @@ final class MenuItemCommand: @unchecked Sendable {
   /// moment both report ready, falling through to press anyway after
   /// `timeout`:
   ///
-  /// 1. `target.isActive` — the cross-process activation requested by
-  ///    `FloatingActionPanel.dismiss` is async. Pressing before the
-  ///    target has actually become frontmost loses Window-menu items
-  ///    that act on `NSApp.keyWindow` (e.g. "Move to ‹Display›"): the
-  ///    AX press races the WindowServer's activation events and the
-  ///    action fires while `NSApp.keyWindow` is still nil, silently
-  ///    no-op'ing.
+  /// 1. `target.hasFocusedWindow` — the cross-process activation requested
+  ///    by `FloatingActionPanel.dismiss` is async, and the target's
+  ///    `NSApp.keyWindow` is only re-promoted several runloop ticks after
+  ///    `NSRunningApplication.isActive` flips true. Window-menu items
+  ///    that read `NSApp.keyWindow` (e.g. "Move to ‹Display›") silently
+  ///    no-op if the AX press races that promotion, so we wait for the
+  ///    AX mirror (`AXFocusedWindow`) to be non-nil.
   /// 2. `delegate.isEnabled` — first-responder-dependent items
   ///    (Cut/Copy/etc.) report disabled while the target's key window
   ///    is gone; NSMenu validation is lazy, so we wait until validation
@@ -95,23 +135,35 @@ final class MenuItemCommand: @unchecked Sendable {
     timeout: TimeInterval = 1.0,
     pollInterval: TimeInterval = 0.05
   ) {
-    let deadline = Date().addingTimeInterval(timeout)
-    pollUntilReady(target: target, deadline: deadline, pollInterval: pollInterval)
+    let start = Date()
+    let deadline = start.addingTimeInterval(timeout)
+    logger.debug("performWhenReady start command=\(self.stringValue, privacy: .public) target=\(target?.debugDescription ?? "<none>", privacy: .public) hasFocusedWindow=\(target?.hasFocusedWindow ?? true) isEnabled=\(self.delegate?.isEnabled == true)")
+    pollUntilReady(target: target, start: start, deadline: deadline, pollInterval: pollInterval)
   }
 
   private func pollUntilReady(
     target: MenuItemTarget?,
+    start: Date,
     deadline: Date,
     pollInterval: TimeInterval
   ) {
-    let activated = target?.isActive ?? true
+    let focused = target?.hasFocusedWindow ?? true
     let enabled = delegate?.isEnabled == true
-    if (activated && enabled) || Date() >= deadline {
+    let now = Date()
+    let elapsedMs = Int(now.timeIntervalSince(start) * 1000)
+    if focused && enabled {
+      logger.debug("performWhenReady press command=\(self.stringValue, privacy: .public) reason=ready elapsed=\(elapsedMs)ms")
       perform()
       return
     }
+    if now >= deadline {
+      logger.debug("performWhenReady press command=\(self.stringValue, privacy: .public) reason=deadline elapsed=\(elapsedMs)ms hasFocusedWindow=\(focused) isEnabled=\(enabled)")
+      perform()
+      return
+    }
+    logger.debug("performWhenReady tick command=\(self.stringValue, privacy: .public) elapsed=\(elapsedMs)ms hasFocusedWindow=\(focused) isEnabled=\(enabled)")
     DispatchQueue.main.asyncAfter(deadline: .now() + pollInterval) { [self] in
-      pollUntilReady(target: target, deadline: deadline, pollInterval: pollInterval)
+      pollUntilReady(target: target, start: start, deadline: deadline, pollInterval: pollInterval)
     }
   }
 
@@ -176,12 +228,12 @@ struct MenuItem: Hashable, Sendable, Identifiable, CustomDebugStringConvertible 
   }
 
   init(title: String, command: MenuItemCommand, path: [String],
-       isAppleMenu: Bool, delegate: AXMenuItemDelegate) {
+       enabled: Bool, isAppleMenu: Bool) {
     self.id = UUID()
     self.title = title
     self.command = command
     self.path = path
-    self.enabled = delegate.isEnabled
+    self.enabled = enabled
     self.isAppleMenu = isAppleMenu
   }
 
@@ -210,37 +262,155 @@ struct MenuItem: Hashable, Sendable, Identifiable, CustomDebugStringConvertible 
 }
 
 
-class AXMenuItemDelegate {
+class AXMenuItemDelegate: MenuItemPressTarget {
 
   private let element: AX.Element
   private let indexPath: [UInt]
+  private let title: String
 
+  /// Live `.Enabled` check used by `performWhenReady`'s poll loop to
+  /// decide whether the menu item is currently pressable. Re-resolves
+  /// the element rather than reading the one captured at walk time:
+  /// dynamic Window-menu entries injected by `_NSWindowsMenuUpdater`
+  /// (e.g. Window > Center, Move to ‹Display›) are torn out when the
+  /// menu closes, so the cached `element` would report `.Enabled = false`
+  /// indefinitely and stall the poll until its deadline.
+  ///
+  /// Skips the AXShowMenu step that `press()` does: at the 50ms poll
+  /// cadence, opening the parent menu every tick would visibly flash
+  /// it. When the item isn't currently materialised, report ready and
+  /// let `press()`'s resolution dance handle materialisation.
   var isEnabled: Bool {
-    return (try? element.get(.Enabled)) ?? false
+    guard let leaf = findByPathThenTitle() else {
+      return true
+    }
+    return (try? leaf.get(.Enabled)) ?? false
   }
 
-  init(_ element: AX.Element, path: [UInt]) {
+  init(_ element: AX.Element, path: [UInt], title: String) {
     self.element = element
     self.indexPath = path
+    self.title = title
   }
 
   func press() {
-    try? element.setMessagingTimeout(1.0)
-    do {
-      try element.perform(action: .Press)
+    // Resolution dance for dynamic menus.
+    //
+    // The Window menu in AppKit apps is mutated when the menu opens:
+    // `_NSWindowsMenuUpdater` inserts entries like "Move to ‹Display›"
+    // in `menuNeedsUpdate:`, and tears them back out when the menu
+    // closes. Our walker observes those entries (AX queries trigger
+    // menuNeedsUpdate while the app is frontmost), captures both the
+    // *index path* and the *title*, but by the time the user picks a
+    // result the menu has closed and the dynamic entries are gone.
+    // Re-resolving by path alone then lands on a different sibling
+    // (in Calendar, `[5,12]` points at "Move to Built-in Retina
+    // Display" while the menu is open and at "Calendar" the window-
+    // switcher once it closes). `AXPress` on that wrong item returns
+    // success and silently no-ops the user's intent.
+    //
+    // Strategy:
+    //   1. Resolve by path (`leaf` whose title matches what we captured)
+    //      or scan parent siblings by title (handles index drift when
+    //      *other* dynamic siblings disappeared). Invisible — works for
+    //      static menus (Cut/Copy/...).
+    //   2. If the item is genuinely absent, open every ancestor menu in
+    //      the path via `AXPress`, which fires AppKit's
+    //      `menuNeedsUpdate:` and re-materialises dynamic items. Then
+    //      retry the path-then-title resolution. AppKit closes the
+    //      menu automatically when our final `AXPress` lands on the
+    //      leaf.
+    //   3. Give up and log.
+    guard let resolved = resolveTarget() else {
+      logger.error("press unresolved path=\(self.indexPath, privacy: .public) title=\(self.title, privacy: .public)")
       return
+    }
+    try? resolved.element.setMessagingTimeout(1.0)
+    do {
+      try resolved.element.perform(action: .Press)
+      logger.debug("press succeeded path=\(self.indexPath, privacy: .public) via=\(resolved.via, privacy: .public)")
     } catch {
-      // Initial press threw — typically because the captured element
-      // was invalidated between the walk and the press. Try resolving
-      // by index path. Both perform throws and resolution failures
-      // need to surface: AXElement.perform already logs its own
-      // failure, so we only need to log the unresolved-path case.
-      let path = AXMenuItemPath(application: element.application, path: indexPath)
-      guard let resolved = path.get() else {
-        logger.error("press: could not resolve menu item by path \(self.indexPath, privacy: .public) after initial press failed")
-        return
+      logger.error("press failed path=\(self.indexPath, privacy: .public) via=\(resolved.via, privacy: .public): \(error.localizedDescription, privacy: .public)")
+    }
+  }
+
+  private struct Resolved {
+    let element: AX.Element
+    let via: String  // log tag identifying which strategy matched
+  }
+
+  private func resolveTarget() -> Resolved? {
+    if let leaf = findByPathThenTitle() {
+      return Resolved(element: leaf, via: "static")
+    }
+    openAncestorMenus()
+    if let leaf = findByPathThenTitle() {
+      return Resolved(element: leaf, via: "showmenu")
+    }
+    return nil
+  }
+
+  private func findByPathThenTitle() -> AX.Element? {
+    let path = AXMenuItemPath(application: element.application, path: indexPath)
+    if let leaf = path.get(), (try? leaf.get(.Title) as String) == title {
+      return leaf
+    }
+    if let siblings = parentSiblings() {
+      return siblings.first(where: { (try? $0.get(.Title) as String) == title })
+    }
+    return nil
+  }
+
+  /// Children of the menu that *contains* the leaf — the sibling set
+  /// we'd scan for a title match. The "parent" is whatever path[:-1]
+  /// resolves to: the menu bar for top-level items, a MenuBarItem (its
+  /// `childAt(0)` is the menu) for first-level items, or a MenuItem-
+  /// with-submenu for deeper items.
+  private func parentSiblings() -> [AX.Element]? {
+    guard !indexPath.isEmpty else { return nil }
+    let parentPath = AXMenuItemPath(
+      application: element.application, path: Array(indexPath.dropLast()))
+    guard let parent = parentPath.get() else { return nil }
+    if parent.isA(.MenuBar) {
+      return parent.findAll(.MenuBarItem)
+    }
+    if parent.isA(.MenuBarItem) || parent.isA(.MenuItem) {
+      guard let menu = parent.childAt(0) else { return nil }
+      return menu.findAll(.MenuItem)
+    }
+    return nil
+  }
+
+  /// Walks the path from the menu bar down to (but not including) the
+  /// leaf, sending `AXPress` to every MenuBarItem / MenuItem-with-
+  /// submenu along the way. `AXPress` is the action AppKit honors to
+  /// open a menu bar item's menu or a parent menu item's submenu
+  /// (`AXShowMenu` is for popup buttons and is rejected here with
+  /// `AXError.failure`). Best-effort — failures are logged and we
+  /// continue, since a partial open may still be enough for the
+  /// re-resolution to succeed.
+  private func openAncestorMenus() {
+    var current: AX.Element? = try? element.application.topElement.get(.MenuBar)
+    for (depth, i) in indexPath.enumerated() {
+      guard let el = current else { return }
+      if el.isA(.MenuBar) {
+        current = el.childAt(i)
+        continue
       }
-      try? resolved.perform(action: .Press)
+      if el.isA(.MenuBarItem) || el.isA(.MenuItem) {
+        // We're about to descend into this ancestor's menu via
+        // childAt(0).childAt(i). Open it first so dynamic children
+        // materialise and the menu enters tracking mode (some action
+        // dispatch paths in AppKit only fire during active tracking).
+        do {
+          try el.perform(action: .Press)
+        } catch {
+          logger.debug("openAncestorMenus Press failed depth=\(depth): \(error.localizedDescription, privacy: .public)")
+        }
+        current = el.childAt(0)?.childAt(i)
+        continue
+      }
+      return
     }
   }
 }

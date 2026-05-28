@@ -93,18 +93,50 @@ and `CheatsheetPanel`) is the single path for invoking a result (Return,
 3. Hand off to `MenuItemCommand.performWhenReady`, which polls two
    readiness signals at 50ms intervals and presses the moment both
    report ready — falling through to press anyway after a 1s timeout:
-   - `target.isActive` (the `NSRunningApplication`): step 2's
-     activation is async and cross-process, so the AX press can land
-     in the target before its previously-key window has been promoted
-     back. Window-menu items that act on `NSApp.keyWindow` (e.g.
-     "Move to ‹Display›") silently no-op if the press races the
-     activation.
+   - `target.hasFocusedWindow` — read from the target's
+     `AXFocusedWindow` attribute, which mirrors `NSApp.keyWindow` in
+     the target process. `NSRunningApplication.isActive` is
+     insufficient: it flips true at the WindowServer level several
+     runloop ticks before the target's AppKit re-promotes its
+     previously-key window.
    - `delegate.isEnabled`: NSMenu validation is lazy, and
      first-responder-dependent items (Cut/Copy/etc.) stay disabled
      until the target's runloop has re-validated post-activation.
    Polling the actual signals is more reliable than a fixed defer,
    and each AX read is bounded by the system-wide messaging timeout
    so a hung target can't stall the loop.
+
+## Dynamic menus and the press resolution dance
+
+`AXMenuItemDelegate.press` cannot just `AXPress` the cached element.
+AppKit's `_NSWindowsMenuUpdater` (Window menu) populates entries like
+"Move to ‹Display›" in `menuNeedsUpdate:` and tears them back out when
+the menu closes. The walker captures these dynamic entries (AX
+`AXChildren` queries trigger `menuNeedsUpdate` while the target is
+frontmost), but by the time the user picks a result the menu has
+closed and the entries are gone. Re-resolving by path then lands on
+a *different* sibling — in Calendar, `[5,12]` points at "Move to
+Built-in Retina Display" while the menu is open and at "Calendar"
+(the window-switcher) once it closes. `AXPress` on that wrong item
+returns success and silently invokes the wrong action.
+
+`press()` therefore stores both the captured index path *and* the
+captured title at walk time, and resolves in this order:
+
+1. **`via=static`** — re-walk the path, verify the leaf's `AXTitle`
+   matches the captured title; on mismatch, scan the parent menu's
+   current children for a title match. Invisible — works for static
+   menus (Cut/Copy/...).
+2. **`via=showmenu`** — if the item is genuinely absent, walk the
+   ancestors of the path and send `AXPress` to each MenuBarItem or
+   MenuItem-with-submenu. `AXPress` (not `AXShowMenu`, which is for
+   popup buttons and is rejected with `AXError.failure`) is what
+   AppKit honors to open a menu bar item's menu or a parent menu
+   item's submenu. The act of opening fires `menuNeedsUpdate:` and
+   re-materialises the dynamic items, after which the path-then-title
+   resolution succeeds. AppKit closes the menu automatically when our
+   final `AXPress` lands on the leaf. This causes a brief visible
+   menu flash, but only for items that needed it.
 
 If you're adding a new way to invoke a result, route it through
 `dismissAndPerform`.

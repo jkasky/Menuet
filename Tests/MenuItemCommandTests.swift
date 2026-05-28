@@ -165,3 +165,100 @@ class MenuItemCommandMatchesTests: XCTestCase {
     XCTAssertFalse(cmd.matches(event))
   }
 }
+
+
+final class FakeMenuItemTarget: MenuItemTarget, @unchecked Sendable {
+  var hasFocusedWindow: Bool = false
+  let debugDescription = "fake-target"
+}
+
+
+final class FakePressTarget: MenuItemPressTarget {
+  var isEnabled: Bool = false
+  private(set) var pressCount = 0
+  func press() { pressCount += 1 }
+}
+
+
+@MainActor
+class MenuItemCommandPerformWhenReadyTests: XCTestCase {
+
+  // Spin the main runloop until `predicate` returns true, or `timeout` elapses.
+  // The poll loop schedules ticks via `DispatchQueue.main.asyncAfter`, so the
+  // runloop must be alive for them to fire.
+  private func wait(
+    upTo timeout: TimeInterval,
+    until predicate: @autoclosure () -> Bool
+  ) {
+    let deadline = Date().addingTimeInterval(timeout)
+    while !predicate() && Date() < deadline {
+      RunLoop.main.run(until: Date().addingTimeInterval(0.01))
+    }
+  }
+
+  func testPressesOnceBothSignalsReady() {
+    let target = FakeMenuItemTarget()
+    let press = FakePressTarget()
+    let cmd = MenuItemCommand(character: "M", modifiers: [.command], delegate: press)
+
+    cmd.performWhenReady(target: target, timeout: 1.0, pollInterval: 0.02)
+    // Neither signal is ready — poll should not press yet.
+    wait(upTo: 0.15, until: press.pressCount > 0)
+    XCTAssertEqual(press.pressCount, 0)
+
+    // Flip both signals; next tick should press.
+    target.hasFocusedWindow = true
+    press.isEnabled = true
+    wait(upTo: 0.5, until: press.pressCount > 0)
+    XCTAssertEqual(press.pressCount, 1)
+  }
+
+  func testDoesNotPressUntilFocusedWindowFlips() {
+    let target = FakeMenuItemTarget()
+    let press = FakePressTarget()
+    press.isEnabled = true  // "Move to Display" — enabled from the start.
+    let cmd = MenuItemCommand(character: "M", modifiers: [.command], delegate: press)
+
+    cmd.performWhenReady(target: target, timeout: 1.0, pollInterval: 0.02)
+    wait(upTo: 0.15, until: press.pressCount > 0)
+    XCTAssertEqual(press.pressCount, 0,
+      "isEnabled alone should not unlock the press — focused window must restore first")
+
+    target.hasFocusedWindow = true
+    wait(upTo: 0.5, until: press.pressCount > 0)
+    XCTAssertEqual(press.pressCount, 1)
+  }
+
+  func testFallsThroughAtDeadline() {
+    let target = FakeMenuItemTarget()  // hasFocusedWindow stays false.
+    let press = FakePressTarget()      // isEnabled stays false.
+    let cmd = MenuItemCommand(character: "M", modifiers: [.command], delegate: press)
+
+    cmd.performWhenReady(target: target, timeout: 0.1, pollInterval: 0.02)
+    wait(upTo: 0.5, until: press.pressCount > 0)
+    XCTAssertEqual(press.pressCount, 1,
+      "Should fire once at the deadline even if signals never flip")
+  }
+
+  func testDoesNotPressTwice() {
+    let target = FakeMenuItemTarget()
+    let press = FakePressTarget()
+    target.hasFocusedWindow = true
+    press.isEnabled = true
+    let cmd = MenuItemCommand(character: "M", modifiers: [.command], delegate: press)
+
+    cmd.performWhenReady(target: target, timeout: 0.2, pollInterval: 0.02)
+    wait(upTo: 0.4, until: false)  // burn through any extra scheduled ticks
+    XCTAssertEqual(press.pressCount, 1)
+  }
+
+  func testNilTargetPressesImmediatelyOnEnabled() {
+    let press = FakePressTarget()
+    press.isEnabled = true
+    let cmd = MenuItemCommand(character: "M", modifiers: [.command], delegate: press)
+
+    cmd.performWhenReady(target: nil, timeout: 0.2, pollInterval: 0.02)
+    wait(upTo: 0.2, until: press.pressCount > 0)
+    XCTAssertEqual(press.pressCount, 1)
+  }
+}

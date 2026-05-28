@@ -64,6 +64,7 @@ enum AXAction: String, RawRepresentable {
 enum AXAttribute: String, RawRepresentable {
   case Children = "AXChildren"
   case Enabled = "AXEnabled"
+  case FocusedWindow = "AXFocusedWindow"
   case MenuBar = "AXMenuBar"
   case MenuItemCmdChar = "AXMenuItemCmdChar"
   case MenuItemCmdGlyph = "AXMenuItemCmdGlyph"

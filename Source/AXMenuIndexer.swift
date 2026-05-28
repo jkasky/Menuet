@@ -130,7 +130,8 @@ class AXMenuIndexer: AXMenuVisitor {
       return
     }
     let shortcut = MenuItemShortcut.extract(from: item, logger: logger)
-    let delegate = AXMenuItemDelegate(item, path: positions)
+    let enabled: Bool = (try? item.get(.Enabled)) ?? false
+    let delegate = AXMenuItemDelegate(item, path: positions, title: title)
     let menuItem = MenuItem(
       title: title,
       command: MenuItemCommand(
@@ -139,8 +140,8 @@ class AXMenuIndexer: AXMenuVisitor {
         symbolName: shortcut.symbolName,
         delegate: delegate),
       path: titles,
-      isAppleMenu: isAppleMenu,
-      delegate: delegate)
+      enabled: enabled,
+      isAppleMenu: isAppleMenu)
     index.add(menuItem)
   }
 }

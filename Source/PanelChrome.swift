@@ -61,7 +61,11 @@ class FloatingActionPanel: NSPanel {
   }
 
   func dismissAndPerform(_ command: MenuItemCommand) {
-    let target = menus.currentApp
+    let target = menus.currentApp.map {
+      ActivationTarget(
+        runningApp: $0,
+        axApp: AXApplication(pid: $0.processIdentifier))
+    }
     dismiss()
     command.performWhenReady(target: target)
   }
