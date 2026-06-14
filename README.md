@@ -23,6 +23,15 @@ xcodebuild -project Menuet.xcodeproj -scheme Menuet -configuration Debug build
 xcodebuild -project Menuet.xcodeproj -scheme Menuet test
 ```
 
+For a signed local build, add your Apple Team ID to `Menuet.local.xcconfig`
+(gitignored):
+
+```
+DEVELOPMENT_TEAM = <your Apple Team ID>
+```
+
+CI builds with `CODE_SIGNING_ALLOWED=NO` and needs no team.
+
 First launch prompts for Accessibility permission, which is required for AX
 queries against other apps.
 
