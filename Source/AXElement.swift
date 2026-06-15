@@ -143,6 +143,55 @@ protocol AccessibilityElement {
      - `AX.APIError` if setting the messaging fails
    */
   func setMessagingTimeout(_ seconds: Float) throws
+
+  /**
+   Names of every attribute this element supports
+   (`AXUIElementCopyAttributeNames`). Diagnostic enumeration — unlike the
+   typed `get(_:)` accessors, this surfaces *all* attributes an element
+   exposes, including ones not modeled by `AX.Attribute`. Returns an empty
+   array on failure.
+   */
+  func attributeNames() -> [String]
+
+  /**
+   Names of every action this element supports
+   (`AXUIElementCopyActionNames`). The wrapper otherwise only ever
+   *performs* actions; this lets callers ask whether e.g. `AXPress` is
+   advertised at all. Returns an empty array on failure.
+   */
+  func actionNames() -> [String]
+
+  /**
+   Best-effort string description of an attribute's current value, looked up
+   by raw attribute name. Handles the CF types AX returns (element, string,
+   bool, number, array, `AXValue` geometry). Returns nil when the attribute
+   is absent or unreadable.
+
+   - parameter name: raw attribute name (e.g. `"AXSubrole"`)
+   */
+  func attributeValueDescription(_ name: String) -> String?
+
+  /**
+   Whether an attribute is writable (`AXUIElementIsAttributeSettable`). This is
+   metadata `attributeNames()` can't surface: two elements may both *list*
+   `AXSelected` while only one allows *setting* it — e.g. a real, selectable
+   menu item vs a non-interactive section header. Returns false on failure.
+   */
+  func isAttributeSettable(_ name: String) -> Bool
+
+  /**
+   Names of parameterized attributes (`AXUIElementCopyParameterizedAttributeNames`)
+   — a separate namespace from `attributeNames()` for query-style attributes
+   that take an argument (e.g. `AXStringForRange`). Returns an empty array on
+   failure.
+   */
+  func parameterizedAttributeNames() -> [String]
+
+  /**
+   Human-readable description of an action (`AXUIElementCopyActionDescription`),
+   by raw action name. Returns nil when absent.
+   */
+  func actionDescription(_ name: String) -> String?
 }
 
 
@@ -279,6 +328,108 @@ class AXElement: AX.Element {
     guard status == .success else {
       let error = AX.APIError(code: status)
       throw error
+    }
+  }
+
+  func attributeNames() -> [String] {
+    var names: CFArray?
+    guard AXUIElementCopyAttributeNames(element, &names) == .success,
+          let names = names as? [String] else {
+      return []
+    }
+    return names
+  }
+
+  func actionNames() -> [String] {
+    var names: CFArray?
+    guard AXUIElementCopyActionNames(element, &names) == .success,
+          let names = names as? [String] else {
+      return []
+    }
+    return names
+  }
+
+  func attributeValueDescription(_ name: String) -> String? {
+    var value: AnyObject?
+    guard AXUIElementCopyAttributeValue(element, name as CFString, &value) == .success,
+          let value = value else {
+      return nil
+    }
+    return AXElement.describe(value)
+  }
+
+  func isAttributeSettable(_ name: String) -> Bool {
+    var settable = DarwinBoolean(false)
+    guard AXUIElementIsAttributeSettable(element, name as CFString, &settable) == .success else {
+      return false
+    }
+    return settable.boolValue
+  }
+
+  func parameterizedAttributeNames() -> [String] {
+    var names: CFArray?
+    guard AXUIElementCopyParameterizedAttributeNames(element, &names) == .success,
+          let names = names as? [String] else {
+      return []
+    }
+    return names
+  }
+
+  func actionDescription(_ name: String) -> String? {
+    var description: CFString?
+    guard AXUIElementCopyActionDescription(element, name as CFString, &description) == .success else {
+      return nil
+    }
+    return description as String?
+  }
+
+  /// Best-effort stringify of an arbitrary AX attribute value. Kept narrow
+  /// on purpose: nested elements/arrays are summarized rather than expanded
+  /// so a diagnostic dump of a deep tree can't explode.
+  private static func describe(_ value: AnyObject) -> String {
+    let typeId = CFGetTypeID(value)
+    switch typeId {
+    case AXUIElementGetTypeID():
+      let element = AXElement(element: value as! AXUIElement)
+      let role = (try? element.get(.Role) as String) ?? "?"
+      let title = element.title
+      return title.isEmpty ? role : "\(role) '\(title)'"
+    case CFStringGetTypeID():
+      return value as! CFString as String
+    case CFBooleanGetTypeID():
+      return (value as! CFBoolean) == kCFBooleanTrue ? "true" : "false"
+    case CFNumberGetTypeID():
+      return "\(value as! CFNumber as NSNumber)"
+    case CFArrayGetTypeID():
+      let array = (value as! CFArray) as NSArray
+      return "[\(array.count) item\(array.count == 1 ? "" : "s")]"
+    case AXValueGetTypeID():
+      return describeAXValue(value as! AXValue)
+    default:
+      return CFCopyDescription(value) as String
+    }
+  }
+
+  private static func describeAXValue(_ value: AXValue) -> String {
+    switch AXValueGetType(value) {
+    case .cgPoint:
+      var p = CGPoint.zero
+      AXValueGetValue(value, .cgPoint, &p)
+      return "(x: \(p.x), y: \(p.y))"
+    case .cgSize:
+      var s = CGSize.zero
+      AXValueGetValue(value, .cgSize, &s)
+      return "(w: \(s.width), h: \(s.height))"
+    case .cgRect:
+      var r = CGRect.zero
+      AXValueGetValue(value, .cgRect, &r)
+      return "(x: \(r.origin.x), y: \(r.origin.y), w: \(r.size.width), h: \(r.size.height))"
+    case .cfRange:
+      var range = CFRange()
+      AXValueGetValue(value, .cfRange, &range)
+      return "{location: \(range.location), length: \(range.length)}"
+    default:
+      return CFCopyDescription(value) as String
     }
   }
 }

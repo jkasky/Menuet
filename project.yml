@@ -41,6 +41,9 @@ packages:
   Sentry:
     url: https://github.com/getsentry/sentry-cocoa
     minorVersion: "9.12.1"
+  swift-argument-parser:
+    url: https://github.com/apple/swift-argument-parser
+    from: "1.3.0"
 
 targets:
   Menuet:
@@ -59,7 +62,8 @@ targets:
         COMBINE_HIDPI_IMAGES: YES
         ENABLE_HARDENED_RUNTIME: YES
         INFOPLIST_FILE: Source/Info.plist
-        LD_RUNPATH_SEARCH_PATHS: ["$(inherited)", "@executable_path/../Frameworks"]
+        LD_RUNPATH_SEARCH_PATHS:
+          ["$(inherited)", "@executable_path/../Frameworks"]
         MARKETING_VERSION: "1.1"
         PRODUCT_BUNDLE_IDENTIFIER: app.menuet
         PRODUCT_NAME: "$(TARGET_NAME)"
@@ -101,6 +105,9 @@ targets:
       - path: Tests
         excludes:
           - Info.plist
+      - path: Tools/menutil/DumpModel.swift
+      - path: Tools/menutil/MenuDumpVisitor.swift
+      - path: Tools/menutil/Render.swift
     settings:
       base:
         BUNDLE_LOADER: "$(TEST_HOST)"
@@ -134,6 +141,35 @@ targets:
       - package: KeyboardShortcuts
       - package: Sentry
 
+  menutil:
+    type: tool
+    platform: macOS
+    sources:
+      - path: Source/AX.swift
+      - path: Source/AXApplication.swift
+      - path: Source/AXElement.swift
+      - path: Source/AXMenu.swift
+      - path: Source/WallClock.swift
+      - path: Source/FuzzyMatch.swift
+      - path: Source/Modifiers.swift
+      - path: Source/KeyGlyph.swift
+      - path: Source/MenuItemShortcut.swift
+      - path: Tools/menutil
+    settings:
+      base:
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_ENTITLEMENTS: Entitlements/MenuetDebug.entitlements
+        ENABLE_HARDENED_RUNTIME: YES
+        PRODUCT_BUNDLE_IDENTIFIER: app.menuet.menutil
+        PRODUCT_NAME: menutil
+        PROVISIONING_PROFILE_SPECIFIER: ""
+        SWIFT_INSTALL_OBJC_HEADER: NO
+        SWIFT_PRECOMPILE_BRIDGING_HEADER: NO
+    dependencies:
+      - package: swift-argument-parser
+        product: ArgumentParser
+
 schemes:
   Menuet:
     build:
@@ -150,5 +186,13 @@ schemes:
       targets:
         - name: MenuetTests
           parallelizable: true
+    archive:
+      config: Release
+  menutil:
+    build:
+      targets:
+        menutil: all
+    run:
+      config: Debug
     archive:
       config: Release

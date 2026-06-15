@@ -12,8 +12,12 @@ at the repo root.
 The Xcode project is `Menuet.xcodeproj` and the scheme is `Menuet`. `project.pbxproj`
 is generated from `project.yml` via XcodeGen and is gitignored — run
 `xcodegen generate` after cloning, editing `project.yml`, or adding/removing
-files under `Source/` or `Tests/` (sources are path-globbed, so new files
-only land in the project after a regen).
+files under `Source/`, `Tests/`, or `Tools/menutil/` (sources are path-globbed,
+so new files only land in the project after a regen).
+
+A second scheme/target, `menutil`, builds the CLI menu-diagnostics tool in
+`Tools/menutil/` (reuses the AX layer from `Source/`). Build it separately, e.g.
+`xcodebuild -project Menuet.xcodeproj -scheme menutil build`.
 
 ### Preferred: XcodeBuildMCP tools
 

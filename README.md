@@ -35,12 +35,21 @@ CI builds with `CODE_SIGNING_ALLOWED=NO` and needs no team.
 First launch prompts for Accessibility permission, which is required for AX
 queries against other apps.
 
-## Known Issues
+## Diagnostics: `menutil`
 
-- **Named menu section headers appear as search results.** For example, in
-  Xcode: `Product › Destination › Build` lists "Build" as a section header
-  above the destination items. No AX attribute on macOS 14+ distinguishes
-  section headers from ordinary menu items — `role`, `subrole`, `enabled`,
-  the various `MenuItemCmd*` attrs, and `primaryUIElement` role are all
-  identical between section headers and shortcut-less items. Filtering them
-  out is not currently possible without false positives.
+`menutil` is a command-line menu walker built from the same Accessibility
+layer as the app — it dumps any app's menu tree as text or JSON, with the
+same fuzzy filter Menuet search uses. Useful for debugging AX behavior.
+
+```sh
+# Separate scheme/target
+xcodebuild -project Menuet.xcodeproj -scheme menutil build
+
+menutil apps                                      # list targetable apps
+menutil walk --app <bundle-id> --filter <query>
+menutil walk --app <bundle-id> --ax --json
+menutil --help
+```
+
+First run needs a one-time Accessibility grant; it's code-signed, so the grant
+persists across rebuilds.

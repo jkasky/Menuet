@@ -17,6 +17,14 @@ class FakeAXElement: AccessibilityElement {
   var boolAttributes: [AX.Attribute: Bool] = [:]
   var intAttributes: [AX.Attribute: Int] = [:]
 
+  // Diagnostic enumeration backing stores (used by the CLI dump path).
+  var actionNamesList: [String] = []
+  var attributeNamesList: [String] = []
+  var attributeDescriptions: [String: String] = [:]
+  var settableAttributeNames: Set<String> = []
+  var parameterizedAttributeNamesList: [String] = []
+  var actionDescriptionMap: [String: String] = [:]
+
   /// Optional virtual clock advanced on each attribute access. Tests
   /// share one `VirtualClock` between the walker (via init) and its fake
   /// elements so the walker's deadline check sees time pass as fakes
@@ -90,4 +98,24 @@ class FakeAXElement: AccessibilityElement {
   func perform(action: AX.Action) throws {}
 
   func setMessagingTimeout(_ seconds: Float) throws {}
+
+  func attributeNames() -> [String] { attributeNamesList }
+
+  func actionNames() -> [String] { actionNamesList }
+
+  func attributeValueDescription(_ name: String) -> String? {
+    attributeDescriptions[name]
+  }
+
+  func isAttributeSettable(_ name: String) -> Bool {
+    settableAttributeNames.contains(name)
+  }
+
+  func parameterizedAttributeNames() -> [String] {
+    parameterizedAttributeNamesList
+  }
+
+  func actionDescription(_ name: String) -> String? {
+    actionDescriptionMap[name]
+  }
 }

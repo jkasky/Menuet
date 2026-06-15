@@ -70,6 +70,7 @@ enum AXAttribute: String, RawRepresentable {
   case MenuItemCmdGlyph = "AXMenuItemCmdGlyph"
   case MenuItemCmdModifiers = "AXMenuItemCmdModifiers"
   case Role = "AXRole"
+  case Subrole = "AXSubrole"
   case Title = "AXTitle"
 }
 
