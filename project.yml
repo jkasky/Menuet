@@ -53,10 +53,15 @@ targets:
       - path: Source
         excludes:
           - Info.plist
+      # Liquid Glass app icon (Icon Composer .icon); actool compiles it into
+      # Assets.car and auto-generates the legacy .icns for macOS < 26.
+      - path: Assets/Menuet.icon
+        type: file
+        buildPhase: resources
     settings:
       base:
-        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-        ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS: NO
+        ASSETCATALOG_COMPILER_APPICON_NAME: Menuet
+        ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS: YES
         CODE_SIGN_IDENTITY: "Apple Development"
         CODE_SIGN_STYLE: Automatic
         COMBINE_HIDPI_IMAGES: YES
