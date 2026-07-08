@@ -1,10 +1,26 @@
 # Menuet
 
-A macOS menu-bar utility that lets you search and invoke any menu item in the
-frontmost app via a global hotkey, plus a cheatsheet panel that displays every
-keyboard shortcut available in that app.
+A macOS menu-bar utility that lets you search and invoke any
+menu item in the frontmost app via a global hotkey, plus a
+cheatsheet panel that displays every keyboard shortcut
+available in that app.
 
 Built on the macOS Accessibility API. Runs as an `LSUIElement` (no Dock icon).
+
+## Search
+
+Search the menu for the active application. Use Enter to
+invoke the highlighted item, or press its keyboard shortcut
+directly - no mouse or trackpad needed.
+
+![Search](Screenshots/search.png)
+
+## Cheatsheet
+
+Show a cheatsheet view of the active application's menu items with their keyboard shortcuts. Filter visible shortcuts by
+entering search or holding modifier keys.
+
+![Cheatsheet](Screenshots/cheatsheet.png)
 
 ## Build & Test
 
