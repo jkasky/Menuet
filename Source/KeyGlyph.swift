@@ -156,6 +156,59 @@ struct KeyGlyph {
     return codeMap[code]
   }
 
+  /// The character a physical press of this key delivers in an
+  /// `NSEvent`'s `charactersIgnoringModifiers`, for glyph keys whose
+  /// display form (`characters`, e.g. "F5", "↩", "⌫") differs from what
+  /// the keyboard actually sends (`\u{F708}`, `\r`, `\u{7F}`). Used by
+  /// `MenuItemCommand.matches` to compare a stored shortcut against a
+  /// real key event. `nil` for modifier glyphs (⌘, ⇧, 🌐, …) and any
+  /// glyph that never sits in the key position of a shortcut — those
+  /// either aren't matchable keys or already match by their display
+  /// character.
+  var keyEquivalent: String? { KeyGlyph.keyEquivalentByCode[code] }
+
+  /// Wrap an `NSFunctionKey`-style `Int` codepoint as a single-character
+  /// string.
+  private static func scalar(_ value: Int) -> String {
+    return String(UnicodeScalar(UInt32(value))!)
+  }
+
+  private static let keyEquivalentByCode: [Int: String] = [
+    F1.code: scalar(NSF1FunctionKey),
+    F2.code: scalar(NSF2FunctionKey),
+    F3.code: scalar(NSF3FunctionKey),
+    F4.code: scalar(NSF4FunctionKey),
+    F5.code: scalar(NSF5FunctionKey),
+    F6.code: scalar(NSF6FunctionKey),
+    F7.code: scalar(NSF7FunctionKey),
+    F8.code: scalar(NSF8FunctionKey),
+    F9.code: scalar(NSF9FunctionKey),
+    F10.code: scalar(NSF10FunctionKey),
+    F11.code: scalar(NSF11FunctionKey),
+    F12.code: scalar(NSF12FunctionKey),
+    F13.code: scalar(NSF13FunctionKey),
+    F14.code: scalar(NSF14FunctionKey),
+    F15.code: scalar(NSF15FunctionKey),
+    Return.code: "\r",
+    ReturnNonmarking.code: "\r",
+    Enter.code: "\u{3}",  // numpad enter
+    Delete.code: "\u{7F}",  // ⌫ backspace
+    DeleteRTL.code: scalar(NSDeleteFunctionKey),  // ⌦ forward delete
+    Tab.code: "\t",
+    TabRTL.code: "\u{19}",  // back-tab
+    Up.code: scalar(NSUpArrowFunctionKey),
+    Down.code: scalar(NSDownArrowFunctionKey),
+    Left.code: scalar(NSLeftArrowFunctionKey),
+    Right.code: scalar(NSRightArrowFunctionKey),
+    Home.code: scalar(NSHomeFunctionKey),
+    End.code: scalar(NSEndFunctionKey),
+    PageUp.code: scalar(NSPageUpFunctionKey),
+    PageDown.code: scalar(NSPageDownFunctionKey),
+    Escape.code: "\u{1B}",
+    Space.code: " ",
+    Help.code: scalar(NSHelpFunctionKey),
+  ]
+
   let code: Int
   let characters: String
 

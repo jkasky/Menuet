@@ -12,6 +12,12 @@ struct MenuItemShortcut {
   let character: String?
   let modifiers: Modifiers?
   let symbolName: String?
+  /// The actual event character a physical press of the shortcut key
+  /// delivers, when it differs from the display `character` — set only for
+  /// glyph-derived keys (function keys, Return, Delete, arrows, …). `nil`
+  /// for printable `cmdChar` shortcuts, which match by `character`. Threaded
+  /// into `MenuItemCommand` so `matches` can compare against real key events.
+  let keyEquivalent: String?
 
   /// Apps occasionally publish an icon-style shortcut via `MenuItemCmdChar`
   /// (a single emoji) alongside a generic `MenuItemCmdGlyph` that doesn't
@@ -28,11 +34,14 @@ struct MenuItemShortcut {
     let cmdChar: String? = try? item.get(.MenuItemCmdChar)
     var character: String?
     var symbolName: String?
+    var keyEquivalent: String?
     if let cmdChar, let symbol = cmdCharSymbolOverrides[cmdChar] {
       character = cmdChar
       symbolName = symbol
     } else if let glyphCode: Int = try? item.get(.MenuItemCmdGlyph) {
-      character = KeyGlyph.forCode(glyphCode)?.characters
+      let glyph = KeyGlyph.forCode(glyphCode)
+      character = glyph?.characters
+      keyEquivalent = glyph?.keyEquivalent
       if character == nil {
         logger.info("menu item '\(item.title)' has command with unrecognized glyph code \(glyphCode)")
       }
@@ -44,6 +53,8 @@ struct MenuItemShortcut {
     if character != nil, let raw: Int = try? item.get(.MenuItemCmdModifiers) {
       modifiers = Modifiers(axRawValue: raw)
     }
-    return MenuItemShortcut(character: character, modifiers: modifiers, symbolName: symbolName)
+    return MenuItemShortcut(
+      character: character, modifiers: modifiers,
+      symbolName: symbolName, keyEquivalent: keyEquivalent)
   }
 }

@@ -96,6 +96,7 @@ class AXMenuIndexer: AXMenuVisitor {
         character: shortcut.character ?? "",
         modifiers: shortcut.modifiers ?? [],
         symbolName: shortcut.symbolName,
+        keyEquivalent: shortcut.keyEquivalent,
         delegate: delegate),
       path: titles,
       enabled: enabled,
