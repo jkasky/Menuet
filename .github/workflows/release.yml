@@ -32,6 +32,11 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_26.6.app/Contents/Developer
 
       - name: Install tools
+        # Skip the implicit `brew update`: it walks every tap already
+        # registered on the runner image (e.g. aws/tap) and warns about
+        # trust for ones we don't use. We only need two stable core formulae.
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: "1"
         run: brew install xcodegen create-dmg
 
       - name: Generate Xcode project
@@ -154,9 +159,15 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          # --target pins the release to this commit directly. Without it, `gh`
+          # tries to verify the tag against the remote and can fail with "tag
+          # exists locally but has not been pushed" on tag-triggered checkouts,
+          # since actions/checkout materializes the tag locally without it
+          # necessarily being resolvable the same way on the remote yet.
           gh release create "$GITHUB_REF_NAME" \
             "Menuet-${GITHUB_REF_NAME#v}.dmg" \
             --title "$GITHUB_REF_NAME" \
+            --target "$GITHUB_SHA" \
             --generate-notes
 
       - name: Clean up credentials
