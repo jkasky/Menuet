@@ -221,12 +221,20 @@ class AXElement: AX.Element {
   var children: [AX.Element] {
     get {
       if cachedChildren.isEmpty {
-        guard let value:AnyObject = try? get(.Children) else {
+        guard let value: AnyObject = try? get(.Children) else {
+          return []
+        }
+        // AXChildren comes from another process; a buggy AX implementation
+        // (Electron, Java, Catalyst) can hand back a wrong-typed value. Verify
+        // the CFTypeID before casting — a force-cast here would crash Menuet,
+        // not the target — mirroring the typed get(_:) accessors below.
+        guard CFGetTypeID(value) == CFArrayGetTypeID() else {
+          logger.error("AXChildren was not an array: \(CFCopyTypeIDDescription(CFGetTypeID(value)) as String, privacy: .public)")
           return []
         }
         let untyped = ((value as! CFArray) as NSArray) as [AnyObject]
-        untyped.forEach {
-          cachedChildren.append(AXElement(element: $0 as! AXUIElement))
+        for child in untyped where CFGetTypeID(child) == AXUIElementGetTypeID() {
+          cachedChildren.append(AXElement(element: child as! AXUIElement))
         }
       }
       return cachedChildren
