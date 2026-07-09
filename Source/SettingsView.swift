@@ -85,7 +85,7 @@ struct SettingsView: View {
         Toggle(isOn: $crashReportingEnabled) {
           VStack(alignment: .leading, spacing: 2) {
             Text("Send anonymous diagnostics")
-            Text("Helps diagnose crashes and slow menu indexing. Sends macOS version, hardware model, app version, the bundle identifiers of apps you invoke Menuet against, and timing of accessibility calls. Does not send your name, email, or menu contents.")
+            Text("Helps diagnose crashes and slow menu indexing. Sends macOS version, hardware model, app version, the bundle identifiers and top-level menu names (File, Edit) of apps you invoke Menuet against, and timing of accessibility calls. Does not send your name, email, or the contents of menus.")
               .font(.caption)
               .foregroundStyle(.secondary)
           }
