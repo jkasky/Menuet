@@ -164,6 +164,79 @@ class MenuItemCommandMatchesTests: XCTestCase {
     let event = makeEvent(characters: "c", flags: [.command])
     XCTAssertFalse(cmd.matches(event))
   }
+
+  // MARK: - Glyph / function-key shortcuts
+
+  // The display `character` for a function key ("F5") is never what the
+  // keyboard delivers (NSF5FunctionKey); matching goes through
+  // `keyEquivalent`. AppKit also stamps `.function` on the event, which the
+  // shortcut doesn't carry, so it must be masked off.
+
+  func testMatchesFunctionKeyWithCommand() {
+    let f5 = KeyGlyph.F5.keyEquivalent!
+    let cmd = MenuItemCommand(
+      character: "F5", modifiers: [.command], keyEquivalent: f5)
+    let event = makeEvent(characters: f5, flags: [.command, .function])
+    XCTAssertTrue(cmd.matches(event))
+  }
+
+  func testMatchesBareFunctionKey() {
+    let f5 = KeyGlyph.F5.keyEquivalent!
+    let cmd = MenuItemCommand(character: "F5", modifiers: [], keyEquivalent: f5)
+    // AppKit sets `.function` even with no shortcut modifiers.
+    let event = makeEvent(characters: f5, flags: [.function])
+    XCTAssertTrue(cmd.matches(event))
+  }
+
+  func testMatchesReturnGlyph() {
+    let cmd = MenuItemCommand(
+      character: KeyGlyph.Return.characters, modifiers: [], keyEquivalent: "\r")
+    // Return doesn't fall in the NSFunctionKey range — no `.function` flag.
+    let event = makeEvent(characters: "\r", flags: [])
+    XCTAssertTrue(cmd.matches(event))
+  }
+
+  func testMatchesDeleteGlyph() {
+    let cmd = MenuItemCommand(
+      character: KeyGlyph.Delete.characters, modifiers: [.command],
+      keyEquivalent: "\u{7F}")
+    let event = makeEvent(characters: "\u{7F}", flags: [.command])
+    XCTAssertTrue(cmd.matches(event))
+  }
+
+  func testMatchesArrowGlyph() {
+    let down = KeyGlyph.Down.keyEquivalent!
+    let cmd = MenuItemCommand(
+      character: KeyGlyph.Down.characters, modifiers: [.command],
+      keyEquivalent: down)
+    // Arrow keys carry both `.function` and `.numericPad`; both are ignored.
+    let event = makeEvent(characters: down, flags: [.command, .function, .numericPad])
+    XCTAssertTrue(cmd.matches(event))
+  }
+
+  func testFunctionKeyDoesNotMatchDifferentFunctionKey() {
+    let cmd = MenuItemCommand(
+      character: "F5", modifiers: [], keyEquivalent: KeyGlyph.F5.keyEquivalent!)
+    let event = makeEvent(characters: KeyGlyph.F6.keyEquivalent!, flags: [.function])
+    XCTAssertFalse(cmd.matches(event))
+  }
+
+  func testFunctionKeyRespectsRealModifiers() {
+    let f5 = KeyGlyph.F5.keyEquivalent!
+    let cmd = MenuItemCommand(character: "F5", modifiers: [], keyEquivalent: f5)
+    // ⇧F5 event should not match a bare-F5 shortcut.
+    let event = makeEvent(characters: f5, flags: [.function, .shift])
+    XCTAssertFalse(cmd.matches(event))
+  }
+
+  // Regression: a Globe (🌐) modifier on a *printable* key sets `.function`
+  // too, but goes through the character path where the bit must survive on
+  // both sides.
+  func testGlobeModifierOnLetterStillMatches() {
+    let cmd = MenuItemCommand(character: "F", modifiers: [.function])
+    let event = makeEvent(characters: "f", flags: [.function])
+    XCTAssertTrue(cmd.matches(event))
+  }
 }
 
 

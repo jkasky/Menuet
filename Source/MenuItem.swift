@@ -85,6 +85,13 @@ final class MenuItemCommand: @unchecked Sendable {
   /// so accessibility, search, and matching code paths keep working with
   /// a plain `String`.
   let symbolName: String?
+  /// The event character a physical press of the shortcut key delivers,
+  /// when it differs from the display `character` — set for glyph-derived
+  /// keys (function keys, Return, Delete, arrows, …) where `character` is a
+  /// display string like "F5"/"↩" that no key event ever reports. `matches`
+  /// compares against this when present; `nil` for printable shortcuts,
+  /// which match by `character`. See `KeyGlyph.keyEquivalent`.
+  let keyEquivalent: String?
   let delegate: MenuItemPressTarget?
 
   /// SwiftUI rendering of the shortcut: modifier glyphs followed by
@@ -100,11 +107,13 @@ final class MenuItemCommand: @unchecked Sendable {
 
   init(character: String, modifiers: Modifiers,
        symbolName: String? = nil,
+       keyEquivalent: String? = nil,
        delegate: MenuItemPressTarget? = nil) {
     self.character = character
     self.modifiers = modifiers
     self.stringValue = modifiers.joinWith(character)
     self.symbolName = symbolName
+    self.keyEquivalent = keyEquivalent
     self.delegate = delegate
   }
 
@@ -171,12 +180,33 @@ final class MenuItemCommand: @unchecked Sendable {
   /// canonical "did the user just type my shortcut?" check used by both
   /// panels' `performKeyEquivalent`.
   ///
-  /// Uses `charactersIgnoringModifiers` when present and non-empty so
-  /// dead-key combinations (⌥E → "´") still match the underlying letter,
-  /// and falls back to `characters` only when the modifier-stripped form
-  /// is missing or empty. Empty `character` (items without a shortcut)
-  /// never match.
+  /// Two paths:
+  ///
+  /// - Glyph/special keys (`keyEquivalent != nil`): the display `character`
+  ///   ("F5", "↩", "⌫") is never what a key event reports, so we compare the
+  ///   event's raw character against `keyEquivalent` (`\u{F708}`, `\r`,
+  ///   `\u{7F}`). AppKit auto-sets the `.function` flag for the whole
+  ///   `NSFunctionKey` range (function keys, arrows, Home/End/Page…), which
+  ///   the shortcut never intends, so `.function` is masked off both sides
+  ///   before comparing modifiers. (Consequence: a hypothetical Globe +
+  ///   function-key combo isn't distinguished — a negligible edge.)
+  ///
+  /// - Printable keys (`keyEquivalent == nil`): compare against the display
+  ///   `character`. Uses `charactersIgnoringModifiers` when present so
+  ///   dead-key combinations (⌥E → "´") still match the underlying letter,
+  ///   falling back to `characters` when the modifier-stripped form is empty.
+  ///   Empty `character` (items without a shortcut) never match. The Globe
+  ///   modifier on a printable key (🌐F) keeps its `.function` bit on both
+  ///   sides and compares normally.
   func matches(_ event: NSEvent) -> Bool {
+    if let keyEquivalent {
+      let chars = event.charactersIgnoringModifiers.flatMap { $0.isEmpty ? nil : $0 }
+        ?? event.characters
+      guard chars == keyEquivalent else { return false }
+      let want = modifiers.subtracting(.function)
+      let got = Modifiers(eventFlags: event.modifierFlags).subtracting(.function)
+      return want == got
+    }
     guard !character.isEmpty else { return false }
     guard let target = Self.eventCharacter(event) else { return false }
     return character.uppercased() == target

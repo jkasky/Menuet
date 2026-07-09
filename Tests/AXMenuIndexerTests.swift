@@ -40,6 +40,31 @@ class MenuItemShortcutTests: XCTestCase {
     XCTAssertEqual(s.character, KeyGlyph.Return.characters)
   }
 
+  // The display `character` is the glyph ("↩") while `keyEquivalent` carries
+  // the scalar a real Return press delivers ("\r") — the split that lets
+  // `MenuItemCommand.matches` compare against actual key events.
+  func testGlyphCarriesKeyEquivalent() {
+    let item = makeMenuItem("Item")
+    item.intAttributes[.MenuItemCmdGlyph] = KeyGlyph.Return.code
+
+    let s = MenuItemShortcut.extract(from: item, logger: Logger())
+
+    XCTAssertEqual(s.character, KeyGlyph.Return.characters)
+    XCTAssertEqual(s.keyEquivalent, "\r")
+  }
+
+  // Printable `cmdChar` shortcuts match by `character`, so they carry no
+  // separate `keyEquivalent`.
+  func testCmdCharHasNoKeyEquivalent() {
+    let item = makeMenuItem("Save")
+    item.stringAttributes[.MenuItemCmdChar] = "S"
+    item.intAttributes[.MenuItemCmdModifiers] = 0
+
+    let s = MenuItemShortcut.extract(from: item, logger: Logger())
+
+    XCTAssertNil(s.keyEquivalent)
+  }
+
   // Unmapped glyph codes appear on real menu items that *also* report a
   // useful `MenuItemCmdChar` (e.g. "Emoji & Symbols" reports glyph 0x95
   // alongside char "E"). Falling back to cmdChar keeps the shortcut
