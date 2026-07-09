@@ -202,7 +202,12 @@ struct ResultsView: View {
     @Bindable var search = search
     ScrollViewReader { proxy in
       ScrollView {
-        VStack(alignment: .leading, spacing: 2) {
+        // LazyVStack so only on-screen rows build their fuzzyHighlight
+        // AttributedString. A plain VStack renders every match eagerly on
+        // each keystroke — for a one-letter query against a large menu
+        // (~600 matches in Xcode) that per-row highlight work measured ~16ms
+        // versus ~0.3ms for the match itself, and it's paid on every stroke.
+        LazyVStack(alignment: .leading, spacing: 2) {
           ForEach($search.searchResults.indices, id: \.self) { index in
             ResultView(result: $search.searchResults[index], index: index)
               .frame(maxWidth: .infinity, alignment: .leading)
